@@ -1,11 +1,10 @@
-import sys
-
+import sys, os
 import win32con, win32api, win32gui, win32print
 from pynput import mouse, keyboard
 import img_process
 
-from PySide6.QtCore import Qt, Signal, QObject, QSortFilterProxyModel
-from PySide6.QtGui import QKeySequence, QShortcut, QIcon
+from PySide6.QtCore import Qt, Signal, QObject, QSortFilterProxyModel, QUrl
+from PySide6.QtGui import QKeySequence, QShortcut, QIcon, QPixmap, QDesktopServices
 from PySide6.QtWidgets import (
     QApplication,
     QLabel,
@@ -14,6 +13,7 @@ from PySide6.QtWidgets import (
     QComboBox,
     QWidget,
     QVBoxLayout,
+    QGridLayout,
     QCompleter
 )
 
@@ -22,13 +22,14 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         # self.setWindowFlags(Qt.WindowStaysOnTopHint)
-        self.setWindowIcon(QIcon('src/avatar/keqing.png'))
+        self.setWindowIcon(QIcon(os.path.join(os.path.dirname(__file__), 'src/keqing.ico')))
         self.setWindowTitle("刻晴办公桌")
         self.move(0, 0)
         self.character = ''
 
-        # 主窗口内容
+        # 选择框
         self.combobox = ExtendedComboBox()
+        self.combobox.currentTextChanged.connect(self.current_text_changed)
         self.combobox.addItem('--请选择角色--')
 
         # 风
@@ -101,8 +102,23 @@ class MainWindow(QMainWindow):
 
         # 草
 
-        self.setCentralWidget(self.combobox)
-        self.combobox.currentTextChanged.connect(self.current_text_changed)
+        # 图标
+        self.label = QLabel()
+        self.label.setFixedSize(16, 16)
+        pixmap = QPixmap('src/GitHub.png')
+        pixmap = pixmap.scaled(16, 16)
+        self.label.setPixmap(pixmap)
+        self.label.setCursor(Qt.PointingHandCursor)
+        self.label.mousePressEvent = self.open_github
+
+        # layout
+        self.layout = QGridLayout()
+        self.layout.addWidget(self.combobox, 0, 0)
+        self.layout.addWidget(self.label, 1, 0, Qt.AlignRight | Qt.AlignBottom)
+
+        self.widget = QWidget()
+        self.widget.setLayout(self.layout)
+        self.setCentralWidget(self.widget)        
 
         # 预先设定好贴图窗口组
         self.pastes = []
@@ -121,6 +137,10 @@ class MainWindow(QMainWindow):
     # 选择框事件
     def current_text_changed(self, s):
         self.character = s
+
+    # 打开外部链接
+    def open_github(self, event):
+        QDesktopServices.openUrl(QUrl('https://github.com/SkeathyTomas/genshin_artifact_auxiliary'))
 
     # 启动贴图弹窗
     def open_new_window(self, x, y):
@@ -185,7 +205,7 @@ class ExtendedComboBox(QComboBox):
     def __init__(self, parent=None):
         super(ExtendedComboBox, self).__init__(parent)
 
-        self.setFocusPolicy(Qt.StrongFocus)
+        self.setFocusPolicy(Qt.ClickFocus)
         self.setEditable(True)
         self.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
 
@@ -239,9 +259,9 @@ class PasteWindow(QWidget):
         self.label = QLabel('E!')
         # 字体大小
         font = self.label.font()
-        font.setPointSize(8)
+        font.setPointSize(14 // SCALE)
         self.label.setFont(font)
-        self.label.setFixedSize(48 // SCALE, 48 // SCALE)
+        self.label.setFixedSize(36 // SCALE, 36 // SCALE)
         self.label.setAlignment(Qt.AlignCenter)
         # qss = 'border-image: url(paste.png);'
         qss = 'background-color: rgb(255, 255, 255)'
@@ -268,24 +288,41 @@ class OutsideMouseManager(QObject):
             self.released.emit(x, y)
 
 def main():
-    # 手动解决一些缩放问题
+    # 手动解决一些不同缩放情况下窗口定位的问题
+    # QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
     global SCALE
     hDC = win32gui.GetDC(0)
     width_r = win32print.GetDeviceCaps(hDC, win32con.DESKTOPHORZRES)
     height_r = win32print.GetDeviceCaps(hDC, win32con.DESKTOPVERTRES)
     width_s = win32api.GetSystemMetrics(0)
+    print(width_r, height_r)
     SCALE = width_r / width_s
 
     # 分辨率适配
-    global x_initial, y_initial, x_offset, y_offset
-    global x_left, x_right, y_top, y_bottom
-    global x_grab, y_grab, w_grab, h_grab
-    # 默认2560*1600
-    x_initial, y_initial, x_offset, y_offset = (490, 320, 156, 188)
-    x_left, x_right, y_top, y_bottom = (382, 512, 182, 346)
-    x_grab, y_grab, w_grab, h_grab = (1684, 560, 350, 168)
+    global x_initial, y_initial, x_offset, y_offset # 第一个贴图坐标及偏移
+    global x_left, x_right, y_top, y_bottom # 第一个圣遗物坐标
+    global x_grab, y_grab, w_grab, h_grab # 截图w, y, w, h
+    # 2560*1600
+    if width_r == 2560 and height_r == 1600:
+        x_initial, y_initial, x_offset, y_offset = (490, 320, 156, 188)
+        x_left, x_right, y_top, y_bottom = (382, 512, 182, 346)
+        x_grab, y_grab, w_grab, h_grab = (1684, 560, 350, 168)
+    # 1920*1080
+    elif width_r == 1920 and height_r == 1080:
+        x_initial, y_initial, x_offset, y_offset = (310, 242, 128, 152)
+        x_left, x_right, y_top, y_bottom = (223, 333, 132, 267)
+        x_grab, y_grab, w_grab, h_grab = (1283, 437, 308, 141)
+    else:
+        print('暂不支持该分辨率，请联系作者。')
 
-    # QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
+    # 任务栏图标问题
+    try:
+        from ctypes import windll  # Only exists on Windows.
+        myappid = 'skeathy.keqing.v0.1.0'
+        windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+    except ImportError:
+        pass
+
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()

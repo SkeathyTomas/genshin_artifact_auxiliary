@@ -145,9 +145,12 @@ def cal_score(txt, character):
 
 def main(character, x, y, w, h):
     print(character)
-    txt = ocr(x, y, w, h)
-    score = cal_score(txt, character)
-    return score
+    try:
+        txt = ocr(x, y, w, h)
+        score = cal_score(txt, character)
+        return score
+    except:
+        print('未检测到tesseract引擎')
 
 if __name__ == '__main__':
     main(character)
