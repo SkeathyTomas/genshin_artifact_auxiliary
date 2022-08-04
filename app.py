@@ -36,8 +36,7 @@ class MainWindow(QMainWindow):
         self.combobox.addItem('鹿野院平藏')
         self.combobox.addItem('旅行者-风')
         self.combobox.addItem('枫原万叶')
-        self.combobox.addItem('温迪-攻爆流')
-        self.combobox.addItem('温迪-精通流')
+        self.combobox.addItem('温迪')
         self.combobox.addItem('琴')
         self.combobox.addItem('魈')
         self.combobox.addItem('早柚')
@@ -47,8 +46,7 @@ class MainWindow(QMainWindow):
         self.combobox.addItem('托马')
         self.combobox.addItem('胡桃')
         self.combobox.addItem('宵宫')
-        self.combobox.addItem('可莉-纯火流')
-        self.combobox.addItem('可莉-反应流')
+        self.combobox.addItem('可莉')
         self.combobox.addItem('迪卢克')
         self.combobox.addItem('班尼特')
         self.combobox.addItem('安柏')
@@ -71,8 +69,7 @@ class MainWindow(QMainWindow):
         self.combobox.addItem('埃洛伊')
         self.combobox.addItem('神里绫华')
         self.combobox.addItem('七七')
-        self.combobox.addItem('甘雨-永冻流')
-        self.combobox.addItem('甘雨-反应流')
+        self.combobox.addItem('甘雨')
         self.combobox.addItem('迪奥娜')
         self.combobox.addItem('重云')
         self.combobox.addItem('罗莎莉亚')
@@ -166,13 +163,10 @@ class MainWindow(QMainWindow):
                         break
                     else:
                         print('detected')
-                        try:
-                            score = img_process.main(self.character, x_grab, y_grab, w_grab, h_grab)
-                            self.pastes[id].label.setText(str(score))
-                        except:
-                            print('图像识别有误！')
+                        score = img_process.main(self.character, x_grab, y_grab, w_grab, h_grab)
+                        self.pastes[id].label.setText(str(score))
                         self.pastes[id].show()
-                        self.pastes[id].move(position[id][0] // SCALE, position[id][1] // SCALE)
+                        self.pastes[id].move(position[id][0] / SCALE, position[id][1] / SCALE)
                         break
 
     # 快捷键Ctrl+Z重置贴图窗口
@@ -256,12 +250,12 @@ class PasteWindow(QWidget):
         # 贴图窗口内容
         layout = QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
-        self.label = QLabel('E!')
+        self.label = QLabel('Er!')
         # 字体大小
         font = self.label.font()
-        font.setPointSize(14 // SCALE)
+        font.setPointSize(14 / SCALE)
         self.label.setFont(font)
-        self.label.setFixedSize(36 // SCALE, 36 // SCALE)
+        self.label.setFixedSize(36 / SCALE, 36 / SCALE)
         self.label.setAlignment(Qt.AlignCenter)
         # qss = 'border-image: url(paste.png);'
         qss = 'background-color: rgb(255, 255, 255)'
@@ -307,11 +301,11 @@ def main():
         x_initial, y_initial, x_offset, y_offset = (490, 320, 156, 188)
         x_left, x_right, y_top, y_bottom = (382, 512, 182, 346)
         x_grab, y_grab, w_grab, h_grab = (1684, 560, 350, 168)
-    # 1920*1080
-    elif width_r == 1920 and height_r == 1080:
-        x_initial, y_initial, x_offset, y_offset = (310, 242, 128, 152)
-        x_left, x_right, y_top, y_bottom = (223, 333, 132, 267)
-        x_grab, y_grab, w_grab, h_grab = (1283, 437, 308, 141)
+    # 1920*1080 / 2560*1440
+    elif (width_r == 1920 and height_r == 1080) or (width_r == 2560 and height_r == 1440):
+        x_initial, y_initial, x_offset, y_offset = (310 / 1920 * width_r, 242 / 1080 * height_r, 128 / 1920 * width_r, 152 / 1080 * height_r)
+        x_left, x_right, y_top, y_bottom = (223 / 1920 * width_r, 333 / 1920 * width_r, 132 / 1080 * height_r, 267 / 1080 * height_r)
+        x_grab, y_grab, w_grab, h_grab = (1283 / 1920 * width_r, 437 / 1080 * height_r, 308 / 1920 * width_r, 141 / 1080 * height_r)
     else:
         print('暂不支持该分辨率，请联系作者。')
 
