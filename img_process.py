@@ -117,7 +117,8 @@ def cal_score(txt, character):
     txt = txt.replace(' ', '')
 
     # 一些误识别兼容
-    txt = txt.replace('L', '1')
+    txt = txt.replace('仿', '伤')
+    txt = txt.replace('传', '伤')
 
     line = txt.splitlines()
     pattern_chinese = '[\u4e00-\u9fa5]+'
@@ -140,13 +141,14 @@ def cal_score(txt, character):
             digit = float(re.search(pattern_digit, item).group())
             # 识别可能出错，词条不在表中
             try:
-                if item[-1] == '%':
+                if '%' in item:
                     score += digit * coefficient[name][0] * valuable[name]
+                    print(name, digit, '%', score)
                 else:
                     score += digit * coefficient[name][1] * valuable[name]
-                print(name, digit, score)
+                    print(name, digit, score)
             except:
-                print(name, digit, score)
+                print(name + ' 识别有误！')
     
     return round(score, 1)
 

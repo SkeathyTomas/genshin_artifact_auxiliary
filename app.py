@@ -119,7 +119,7 @@ class MainWindow(QMainWindow):
 
         # 预先设定好贴图窗口组
         self.pastes = []
-        for i in range(56):
+        for i in range(row * col):
             window = PasteWindow()
             self.pastes.append(window)
 
@@ -141,33 +141,23 @@ class MainWindow(QMainWindow):
 
     # 启动贴图弹窗
     def open_new_window(self, x, y):
-        # 贴图坐标组
-        position = [(x_initial, y_initial), (x_initial + x_offset, y_initial), (x_initial + 2 * x_offset, y_initial), (x_initial + 3 * x_offset, y_initial), (x_initial + 4 * x_offset, y_initial), (x_initial + 5 * x_offset, y_initial), (x_initial + 6 * x_offset, y_initial), (x_initial + 7 * x_offset, y_initial),
-                    (x_initial, y_initial + y_offset), (x_initial + x_offset, y_initial + y_offset), (x_initial + 2 * x_offset, y_initial + y_offset), (x_initial + 3 * x_offset, y_initial + y_offset), (x_initial + 4 * x_offset, y_initial + y_offset), (x_initial + 5 * x_offset, y_initial + y_offset), (x_initial + 6 * x_offset, y_initial + y_offset), (x_initial + 7 * x_offset, y_initial + y_offset),
-                    (x_initial, y_initial + 2 * y_offset), (x_initial + x_offset, y_initial + 2 * y_offset), (x_initial + 2 * x_offset, y_initial + 2 * y_offset), (x_initial + 3 * x_offset, y_initial + 2 * y_offset), (x_initial + 4 * x_offset, y_initial + 2 * y_offset), (x_initial + 5 * x_offset, y_initial + 2 * y_offset), (x_initial + 6 * x_offset, y_initial + 2 * y_offset), (x_initial + 7 * x_offset, y_initial + 2 * y_offset),
-                    (x_initial, y_initial + 3 * y_offset), (x_initial + x_offset, y_initial + 3 * y_offset), (x_initial + 2 * x_offset, y_initial + 3 * y_offset), (x_initial + 3 * x_offset, y_initial + 3 * y_offset), (x_initial + 4 * x_offset, y_initial + 3 * y_offset), (x_initial + 5 * x_offset, y_initial + 3 * y_offset), (x_initial + 6 * x_offset, y_initial + 3 * y_offset), (x_initial + 7 * x_offset, y_initial + 3 * y_offset),
-                    (x_initial, y_initial + 4 * y_offset), (x_initial + x_offset, y_initial + 4 * y_offset), (x_initial + 2 * x_offset, y_initial + 4 * y_offset), (x_initial + 3 * x_offset, y_initial + 4 * y_offset), (x_initial + 4 * x_offset, y_initial + 4 * y_offset), (x_initial + 5 * x_offset, y_initial + 4 * y_offset), (x_initial + 6 * x_offset, y_initial + 4 * y_offset), (x_initial + 7 * x_offset, y_initial + 4 * y_offset),
-                    (x_initial, y_initial + 5 * y_offset), (x_initial + x_offset, y_initial + 5 * y_offset), (x_initial + 2 * x_offset, y_initial + 5 * y_offset), (x_initial + 3 * x_offset, y_initial + 5 * y_offset), (x_initial + 4 * x_offset, y_initial + 5 * y_offset), (x_initial + 5 * x_offset, y_initial + 5 * y_offset), (x_initial + 6 * x_offset, y_initial + 5 * y_offset), (x_initial + 7 * x_offset, y_initial + 5 * y_offset),
-                    (x_initial, y_initial + 6 * y_offset), (x_initial + x_offset, y_initial + 6 * y_offset), (x_initial + 2 * x_offset, y_initial + 6 * y_offset), (x_initial + 3 * x_offset, y_initial + 6 * y_offset), (x_initial + 4 * x_offset, y_initial + 6 * y_offset), (x_initial + 5 * x_offset, y_initial + 6 * y_offset), (x_initial + 6 * x_offset, y_initial + 6 * y_offset), (x_initial + 7 * x_offset, y_initial + 6 * y_offset)]
-        # 鼠标事件有效坐标区间
-        xarray = [(x_left, x_right), (x_left + x_offset, x_right + x_offset), (x_left + 2 * x_offset, x_right + 2 * x_offset), (x_left + 3 * x_offset, x_right + 3 * x_offset), (x_left + 4 * x_offset, x_right + 4 * x_offset), (x_left + 5 * x_offset, x_right + 5 * x_offset), (x_left + 6 * x_offset, x_right + 6 * x_offset), (x_left + 7 * x_offset, x_right + 7 * x_offset)]
-        yarray = [(y_top, y_bottom), (y_top + y_offset, y_bottom + y_offset), (y_top + 2 * y_offset, y_bottom + 2 * y_offset), (y_top + 3 * y_offset, y_bottom + 3 * y_offset), (y_top + 4 * y_offset, y_bottom + 4 * y_offset), (y_top + 5 * y_offset, y_bottom + 5 * y_offset), (y_top + 6 * y_offset, y_bottom + 6 * y_offset), (y_top + 7 * y_offset, y_bottom + 7 * y_offset)]
-
-        # 根据鼠标事件定位贴图，i列j行
-        for i in range(8):
-            for j in range(7):
-                if x >= xarray[i][0] and x <= xarray[i][1] and y >= yarray[j][0] and y <= yarray[j][1]:
-                    id = j * 8 + i
-                    # 判断贴图是否存在，存在则不更新，不在则更新
-                    if self.pastes[id].isVisible():
-                        break
-                    else:
-                        print('detected')
-                        score = img_process.main(self.character, x_grab, y_grab, w_grab, h_grab)
-                        self.pastes[id].label.setText(str(score))
-                        self.pastes[id].show()
-                        self.pastes[id].move(position[id][0] / SCALE, position[id][1] / SCALE)
-                        break
+        # 根据鼠标事件定位贴图
+        for i in range(row):
+            if x >= xarray[i][0] and x <= xarray[i][1]:
+                for j in range(col):
+                    if y >= yarray[j][0] and y <= yarray[j][1]:
+                        id = j * row + i
+                        # 判断贴图是否存在，存在则不更新，不在则更新
+                        if self.pastes[id].isVisible():
+                            break
+                        else:
+                            print('detected')
+                            score = img_process.main(self.character, x_grab, y_grab, w_grab, h_grab)
+                            self.pastes[id].label.setText(str(score))
+                            self.pastes[id].show()
+                            self.pastes[id].move(position[id][0] / SCALE, position[id][1] / SCALE)
+                            break
+                break
 
     # 快捷键Ctrl+Z重置贴图窗口
     def reset(self):
@@ -237,26 +227,41 @@ def main():
     SCALE = width_r / width_s
 
     # 分辨率适配
-    global x_initial, y_initial, x_offset, y_offset # 第一个贴图坐标及偏移
-    global x_left, x_right, y_top, y_bottom # 第一个圣遗物坐标
-    global x_grab, y_grab, w_grab, h_grab # 截图w, y, w, h
+    global x_grab, y_grab, w_grab, h_grab # 截图x, y, w, h
+    global row, col # 圣遗物行列数
     # 2560*1600
     if width_r == 2560 and height_r == 1600:
-        x_initial, y_initial, x_offset, y_offset = (490, 320, 156, 188)
-        x_left, x_right, y_top, y_bottom = (382, 512, 182, 346)
+        x_initial, y_initial, x_offset, y_offset = (490, 320, 156, 188) # 第一个贴图坐标及偏移
+        x_left, x_right, y_top, y_bottom = (382, 512, 182, 346) # 第一个圣遗物坐标
         x_grab, y_grab, w_grab, h_grab = (1684, 560, 350, 168)
-    # 1920*1080 / 2560*1440
+        row, col = (8, 7)
+    # 1920*1080 | 2560*1440
     elif (width_r == 1920 and height_r == 1080) or (width_r == 2560 and height_r == 1440):
         x_initial, y_initial, x_offset, y_offset = (310 / 1920 * width_r, 242 / 1080 * height_r, 128 / 1920 * width_r, 152 / 1080 * height_r)
         x_left, x_right, y_top, y_bottom = (223 / 1920 * width_r, 333 / 1920 * width_r, 132 / 1080 * height_r, 267 / 1080 * height_r)
         x_grab, y_grab, w_grab, h_grab = (1283 / 1920 * width_r, 437 / 1080 * height_r, 308 / 1920 * width_r, 141 / 1080 * height_r)
+        row, col = (8, 6)
     else:
         print('暂不支持该分辨率，请联系作者。')
+    
+    # 贴图坐标组
+    global position
+    position = [(x_initial, y_initial), (x_initial + x_offset, y_initial), (x_initial + 2 * x_offset, y_initial), (x_initial + 3 * x_offset, y_initial), (x_initial + 4 * x_offset, y_initial), (x_initial + 5 * x_offset, y_initial), (x_initial + 6 * x_offset, y_initial), (x_initial + 7 * x_offset, y_initial),
+                (x_initial, y_initial + y_offset), (x_initial + x_offset, y_initial + y_offset), (x_initial + 2 * x_offset, y_initial + y_offset), (x_initial + 3 * x_offset, y_initial + y_offset), (x_initial + 4 * x_offset, y_initial + y_offset), (x_initial + 5 * x_offset, y_initial + y_offset), (x_initial + 6 * x_offset, y_initial + y_offset), (x_initial + 7 * x_offset, y_initial + y_offset),
+                (x_initial, y_initial + 2 * y_offset), (x_initial + x_offset, y_initial + 2 * y_offset), (x_initial + 2 * x_offset, y_initial + 2 * y_offset), (x_initial + 3 * x_offset, y_initial + 2 * y_offset), (x_initial + 4 * x_offset, y_initial + 2 * y_offset), (x_initial + 5 * x_offset, y_initial + 2 * y_offset), (x_initial + 6 * x_offset, y_initial + 2 * y_offset), (x_initial + 7 * x_offset, y_initial + 2 * y_offset),
+                (x_initial, y_initial + 3 * y_offset), (x_initial + x_offset, y_initial + 3 * y_offset), (x_initial + 2 * x_offset, y_initial + 3 * y_offset), (x_initial + 3 * x_offset, y_initial + 3 * y_offset), (x_initial + 4 * x_offset, y_initial + 3 * y_offset), (x_initial + 5 * x_offset, y_initial + 3 * y_offset), (x_initial + 6 * x_offset, y_initial + 3 * y_offset), (x_initial + 7 * x_offset, y_initial + 3 * y_offset),
+                (x_initial, y_initial + 4 * y_offset), (x_initial + x_offset, y_initial + 4 * y_offset), (x_initial + 2 * x_offset, y_initial + 4 * y_offset), (x_initial + 3 * x_offset, y_initial + 4 * y_offset), (x_initial + 4 * x_offset, y_initial + 4 * y_offset), (x_initial + 5 * x_offset, y_initial + 4 * y_offset), (x_initial + 6 * x_offset, y_initial + 4 * y_offset), (x_initial + 7 * x_offset, y_initial + 4 * y_offset),
+                (x_initial, y_initial + 5 * y_offset), (x_initial + x_offset, y_initial + 5 * y_offset), (x_initial + 2 * x_offset, y_initial + 5 * y_offset), (x_initial + 3 * x_offset, y_initial + 5 * y_offset), (x_initial + 4 * x_offset, y_initial + 5 * y_offset), (x_initial + 5 * x_offset, y_initial + 5 * y_offset), (x_initial + 6 * x_offset, y_initial + 5 * y_offset), (x_initial + 7 * x_offset, y_initial + 5 * y_offset),
+                (x_initial, y_initial + 6 * y_offset), (x_initial + x_offset, y_initial + 6 * y_offset), (x_initial + 2 * x_offset, y_initial + 6 * y_offset), (x_initial + 3 * x_offset, y_initial + 6 * y_offset), (x_initial + 4 * x_offset, y_initial + 6 * y_offset), (x_initial + 5 * x_offset, y_initial + 6 * y_offset), (x_initial + 6 * x_offset, y_initial + 6 * y_offset), (x_initial + 7 * x_offset, y_initial + 6 * y_offset)]
+    # 鼠标事件有效坐标区间
+    global xarray, yarray
+    xarray = [(x_left, x_right), (x_left + x_offset, x_right + x_offset), (x_left + 2 * x_offset, x_right + 2 * x_offset), (x_left + 3 * x_offset, x_right + 3 * x_offset), (x_left + 4 * x_offset, x_right + 4 * x_offset), (x_left + 5 * x_offset, x_right + 5 * x_offset), (x_left + 6 * x_offset, x_right + 6 * x_offset), (x_left + 7 * x_offset, x_right + 7 * x_offset)]
+    yarray = [(y_top, y_bottom), (y_top + y_offset, y_bottom + y_offset), (y_top + 2 * y_offset, y_bottom + 2 * y_offset), (y_top + 3 * y_offset, y_bottom + 3 * y_offset), (y_top + 4 * y_offset, y_bottom + 4 * y_offset), (y_top + 5 * y_offset, y_bottom + 5 * y_offset), (y_top + 6 * y_offset, y_bottom + 6 * y_offset), (y_top + 7 * y_offset, y_bottom + 7 * y_offset)]
 
     # 任务栏图标问题
     try:
         from ctypes import windll  # Only exists on Windows.
-        myappid = 'skeathy.keqing.v0.1.0'
+        myappid = 'skeathy.keqing.v0.1.1'
         windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
     except ImportError:
         pass
