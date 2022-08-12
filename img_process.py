@@ -1,3 +1,5 @@
+'''截图、图像识别、文字处理、分数计算'''
+
 from PIL import Image, ImageGrab
 import pytesseract
 import re
@@ -6,7 +8,7 @@ import re
 # 角色面板截图坐标x,y,w,h
 # position = (1820, 422, 364, 152)
 # 背包面板截图坐标x,y,w,h
-# position = (1684, 560, 350, 168)
+x, y, w, h = (1684, 560, 350, 168)
 
 # 角色有效词条
 valuables = {
@@ -97,15 +99,15 @@ coefficient = {
 # '''
 
 # 图片手动识别结果
-# character = ''
-# txt = pytesseract.image_to_string(Image.open('test_img/example3.png'), lang = 'chi_sim')
+character = ''
+txt = pytesseract.image_to_string(Image.open('test/test_img/example.png'), lang = 'chi_sim')
 
 # 截图与ocr识别
 def ocr(x, y, w, h):
     # time.sleep(0.2)
-    img = ImageGrab.grab(bbox = (x, y, x + w, y + h))
     # 可能未安装ocr引擎
     try:
+        img = ImageGrab.grab(bbox = (x, y, x + w, y + h))
         txt = pytesseract.image_to_string(img, lang = 'chi_sim')
         print(txt)
         return txt
@@ -119,6 +121,14 @@ def cal_score(txt, character):
     # 一些误识别兼容
     txt = txt.replace('仿', '伤')
     txt = txt.replace('传', '伤')
+    txt = txt.replace('传', '伤')
+    txt = txt.replace('政', '功')
+    txt = txt.replace('宇', '击')
+    txt = txt.replace('出', '击')
+    txt = txt.replace('宠', '害')
+    txt = txt.replace('宓', '害')
+    txt = txt.replace('演', '爆')
+    txt = txt.replace('宏', '素')
 
     line = txt.splitlines()
     pattern_chinese = '[\u4e00-\u9fa5]+'
@@ -148,7 +158,7 @@ def cal_score(txt, character):
                     score += digit * coefficient[name][1] * valuable[name]
                     print(name, digit, score)
             except:
-                print(name + ' 识别有误！')
+                print(name + ' 词条名称识别有误！')
     
     return round(score, 1)
 
@@ -159,4 +169,4 @@ def main(character, x, y, w, h):
     return score
 
 if __name__ == '__main__':
-    main(character)
+    main(character, x, y, w, h)

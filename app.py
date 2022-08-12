@@ -1,9 +1,10 @@
 import sys, os
-import win32con, win32api, win32gui, win32print
 from pynput import keyboard
 
+import location
 import img_process
 from extention import OutsideMouseManager, ExtendedComboBox
+from paste_window import PasteWindow
 
 from PySide6.QtCore import Qt, QUrl
 from PySide6.QtGui import QKeySequence, QShortcut, QIcon, QPixmap, QDesktopServices
@@ -14,7 +15,8 @@ from PySide6.QtWidgets import (
     QPushButton,
     QWidget,
     QVBoxLayout,
-    QGridLayout
+    QGridLayout,
+    QRadioButton
 )
 
 # 主窗口
@@ -26,6 +28,20 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("刻晴办公桌")
         self.move(0, 0)
         self.character = ''
+
+        # 背包/角色面板选择（Radio）
+        self.radiobtn1 = QRadioButton('背包')
+        self.radiobtn1.setChecked(True)
+        self.radiobtn1.toggled.connect(lambda: self.radiobtn_state(self.radiobtn1))
+        self.radiobtn2 = QRadioButton('角色')
+        self.radiobtn2.toggled.connect(lambda: self.radiobtn_state(self.radiobtn2))
+
+        # 默认坐标信息
+        self.position = location.get_position_A()
+        self.row, self.col = location.get_row_col_A()
+        self.xarray, self.yarray = location.get_xarray_yarray_A()
+        self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.get_x_y_w_h_A()
+        self.SCALE = location.get_scale()
 
         # 选择框
         self.combobox = ExtendedComboBox()
@@ -110,8 +126,10 @@ class MainWindow(QMainWindow):
 
         # layout
         self.layout = QGridLayout()
-        self.layout.addWidget(self.combobox, 0, 0)
-        self.layout.addWidget(self.label, 1, 0, Qt.AlignRight | Qt.AlignBottom)
+        self.layout.addWidget(self.radiobtn1, 0, 0)
+        self.layout.addWidget(self.radiobtn2, 0, 1)
+        self.layout.addWidget(self.combobox, 1, 0, 1, 2)
+        self.layout.addWidget(self.label, 2, 0, 1, 2, Qt.AlignRight | Qt.AlignBottom)
 
         self.widget = QWidget()
         self.widget.setLayout(self.layout)
@@ -119,7 +137,7 @@ class MainWindow(QMainWindow):
 
         # 预先设定好贴图窗口组
         self.pastes = []
-        for i in range(row * col):
+        for i in range(self.row * self.col):
             window = PasteWindow()
             self.pastes.append(window)
 
@@ -131,7 +149,37 @@ class MainWindow(QMainWindow):
         self.manager = OutsideMouseManager()
         self.manager.released.connect(self.open_new_window)
 
-    # 选择框事件
+    # 单选框面板选择事件
+    def radiobtn_state(self, btn):
+        if btn.text() == '背包':
+            if btn.isChecked() == True:
+                # 重置坐标信息
+                self.position = location.get_position_A()
+                self.row, self.col = location.get_row_col_A()
+                self.xarray, self.yarray = location.get_xarray_yarray_A()
+                self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.get_x_y_w_h_A()
+
+                # 重置贴图窗口组
+                self.pastes = []
+                for i in range(self.row * self.col):
+                    window = PasteWindow()
+                    self.pastes.append(window)
+        
+        if btn.text() == '角色':
+            if btn.isChecked() == True:
+                # 重置坐标信息
+                self.position = location.get_position_B()
+                self.row, self.col = location.get_row_col_B()
+                self.xarray, self.yarray = location.get_xarray_yarray_B()
+                self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.get_x_y_w_h_B()
+
+                # 重置贴图窗口组
+                self.pastes = []
+                for i in range(self.row * self.col):
+                    window = PasteWindow()
+                    self.pastes.append(window)
+    
+    # 选择框选择角色事件
     def current_text_changed(self, s):
         self.character = s
 
@@ -142,33 +190,33 @@ class MainWindow(QMainWindow):
     # 启动贴图弹窗
     def open_new_window(self, x, y):
         # 根据鼠标事件定位贴图
-        for i in range(row):
-            if x >= xarray[i][0] and x <= xarray[i][1]:
-                for j in range(col):
-                    if y >= yarray[j][0] and y <= yarray[j][1]:
-                        id = j * row + i
+        for i in range(self.col):
+            if x >= self.xarray[i][0] and x <= self.xarray[i][1]:
+                for j in range(self.row):
+                    if y >= self.yarray[j][0] and y <= self.yarray[j][1]:
+                        id = j * self.col + i
                         # 判断贴图是否存在，存在则不更新，不在则更新
                         if self.pastes[id].isVisible():
                             break
                         else:
                             print('detected')
-                            score = img_process.main(self.character, x_grab, y_grab, w_grab, h_grab)
+                            score = img_process.main(self.character, self.x_grab, self.y_grab, self.w_grab, self.h_grab)
                             self.pastes[id].label.setText(str(score))
                             self.pastes[id].show()
-                            self.pastes[id].move(position[id][0] / SCALE, position[id][1] / SCALE)
+                            self.pastes[id].move(self.position[id][0] / self.SCALE, self.position[id][1] / self.SCALE)
                             break
                 break
-
-    # 快捷键Ctrl+Z重置贴图窗口
-    def reset(self):
-        for item in self.pastes:
-            item.hide()
     
     # 主窗口关闭则所有贴图窗口也关闭
     def closeEvent(self, event):
         for item in self.pastes:
             item.close()
     
+    # 快捷键Ctrl+Z重置贴图窗口
+    def reset(self):
+        for item in self.pastes:
+            item.hide()
+
     # 全局快捷键Ctrl+Z重置贴图窗口
     def hotkey(self):
         def on_activate():
@@ -184,84 +232,11 @@ class MainWindow(QMainWindow):
             on_release = for_canonical(hotkey.release))
         l.start()
 
-# 新增贴图窗口
-class PasteWindow(QWidget):
-    def __init__(self):
-        super().__init__()
-
-        # 设置贴图窗口属性：透明、无边框透明、置顶
-        self.setAttribute(Qt.WA_TranslucentBackground)
-        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
-    
-        # 贴图窗口内容
-        layout = QVBoxLayout()
-        layout.setContentsMargins(0, 0, 0, 0)
-        self.label = QLabel('Er!')
-        # 字体大小
-        font = self.label.font()
-        font.setPointSize(14 / SCALE)
-        self.label.setFont(font)
-        self.label.setFixedSize(36 / SCALE, 36 / SCALE)
-        self.label.setAlignment(Qt.AlignCenter)
-        # qss = 'border-image: url(paste.png);'
-        qss = 'background-color: rgb(255, 255, 255)'
-        self.label.setStyleSheet(qss)
-        layout.addWidget(self.label)
-        self.setLayout(layout)
-    
-    # 按键关闭/重置对应贴图窗口
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Z:
-            print('freshed')
-            self.hide()
-
 def main():
-    # 手动解决一些不同缩放情况下窗口定位的问题
-    # QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
-    global SCALE
-    hDC = win32gui.GetDC(0)
-    width_r = win32print.GetDeviceCaps(hDC, win32con.DESKTOPHORZRES)
-    height_r = win32print.GetDeviceCaps(hDC, win32con.DESKTOPVERTRES)
-    width_s = win32api.GetSystemMetrics(0)
-    print(width_r, height_r)
-    SCALE = width_r / width_s
-
-    # 分辨率适配
-    global x_grab, y_grab, w_grab, h_grab # 截图x, y, w, h
-    global row, col # 圣遗物行列数
-    # 2560*1600
-    if width_r == 2560 and height_r == 1600:
-        x_initial, y_initial, x_offset, y_offset = (490, 320, 156, 188) # 第一个贴图坐标及偏移
-        x_left, x_right, y_top, y_bottom = (382, 512, 182, 346) # 第一个圣遗物坐标
-        x_grab, y_grab, w_grab, h_grab = (1684, 560, 350, 168)
-        row, col = (8, 7)
-    # 1920*1080 | 2560*1440
-    elif (width_r == 1920 and height_r == 1080) or (width_r == 2560 and height_r == 1440):
-        x_initial, y_initial, x_offset, y_offset = (310 / 1920 * width_r, 242 / 1080 * height_r, 128 / 1920 * width_r, 152 / 1080 * height_r)
-        x_left, x_right, y_top, y_bottom = (223 / 1920 * width_r, 333 / 1920 * width_r, 132 / 1080 * height_r, 267 / 1080 * height_r)
-        x_grab, y_grab, w_grab, h_grab = (1283 / 1920 * width_r, 437 / 1080 * height_r, 308 / 1920 * width_r, 141 / 1080 * height_r)
-        row, col = (8, 6)
-    else:
-        print('暂不支持该分辨率，请联系作者。')
-    
-    # 贴图坐标组
-    global position
-    position = [(x_initial, y_initial), (x_initial + x_offset, y_initial), (x_initial + 2 * x_offset, y_initial), (x_initial + 3 * x_offset, y_initial), (x_initial + 4 * x_offset, y_initial), (x_initial + 5 * x_offset, y_initial), (x_initial + 6 * x_offset, y_initial), (x_initial + 7 * x_offset, y_initial),
-                (x_initial, y_initial + y_offset), (x_initial + x_offset, y_initial + y_offset), (x_initial + 2 * x_offset, y_initial + y_offset), (x_initial + 3 * x_offset, y_initial + y_offset), (x_initial + 4 * x_offset, y_initial + y_offset), (x_initial + 5 * x_offset, y_initial + y_offset), (x_initial + 6 * x_offset, y_initial + y_offset), (x_initial + 7 * x_offset, y_initial + y_offset),
-                (x_initial, y_initial + 2 * y_offset), (x_initial + x_offset, y_initial + 2 * y_offset), (x_initial + 2 * x_offset, y_initial + 2 * y_offset), (x_initial + 3 * x_offset, y_initial + 2 * y_offset), (x_initial + 4 * x_offset, y_initial + 2 * y_offset), (x_initial + 5 * x_offset, y_initial + 2 * y_offset), (x_initial + 6 * x_offset, y_initial + 2 * y_offset), (x_initial + 7 * x_offset, y_initial + 2 * y_offset),
-                (x_initial, y_initial + 3 * y_offset), (x_initial + x_offset, y_initial + 3 * y_offset), (x_initial + 2 * x_offset, y_initial + 3 * y_offset), (x_initial + 3 * x_offset, y_initial + 3 * y_offset), (x_initial + 4 * x_offset, y_initial + 3 * y_offset), (x_initial + 5 * x_offset, y_initial + 3 * y_offset), (x_initial + 6 * x_offset, y_initial + 3 * y_offset), (x_initial + 7 * x_offset, y_initial + 3 * y_offset),
-                (x_initial, y_initial + 4 * y_offset), (x_initial + x_offset, y_initial + 4 * y_offset), (x_initial + 2 * x_offset, y_initial + 4 * y_offset), (x_initial + 3 * x_offset, y_initial + 4 * y_offset), (x_initial + 4 * x_offset, y_initial + 4 * y_offset), (x_initial + 5 * x_offset, y_initial + 4 * y_offset), (x_initial + 6 * x_offset, y_initial + 4 * y_offset), (x_initial + 7 * x_offset, y_initial + 4 * y_offset),
-                (x_initial, y_initial + 5 * y_offset), (x_initial + x_offset, y_initial + 5 * y_offset), (x_initial + 2 * x_offset, y_initial + 5 * y_offset), (x_initial + 3 * x_offset, y_initial + 5 * y_offset), (x_initial + 4 * x_offset, y_initial + 5 * y_offset), (x_initial + 5 * x_offset, y_initial + 5 * y_offset), (x_initial + 6 * x_offset, y_initial + 5 * y_offset), (x_initial + 7 * x_offset, y_initial + 5 * y_offset),
-                (x_initial, y_initial + 6 * y_offset), (x_initial + x_offset, y_initial + 6 * y_offset), (x_initial + 2 * x_offset, y_initial + 6 * y_offset), (x_initial + 3 * x_offset, y_initial + 6 * y_offset), (x_initial + 4 * x_offset, y_initial + 6 * y_offset), (x_initial + 5 * x_offset, y_initial + 6 * y_offset), (x_initial + 6 * x_offset, y_initial + 6 * y_offset), (x_initial + 7 * x_offset, y_initial + 6 * y_offset)]
-    # 鼠标事件有效坐标区间
-    global xarray, yarray
-    xarray = [(x_left, x_right), (x_left + x_offset, x_right + x_offset), (x_left + 2 * x_offset, x_right + 2 * x_offset), (x_left + 3 * x_offset, x_right + 3 * x_offset), (x_left + 4 * x_offset, x_right + 4 * x_offset), (x_left + 5 * x_offset, x_right + 5 * x_offset), (x_left + 6 * x_offset, x_right + 6 * x_offset), (x_left + 7 * x_offset, x_right + 7 * x_offset)]
-    yarray = [(y_top, y_bottom), (y_top + y_offset, y_bottom + y_offset), (y_top + 2 * y_offset, y_bottom + 2 * y_offset), (y_top + 3 * y_offset, y_bottom + 3 * y_offset), (y_top + 4 * y_offset, y_bottom + 4 * y_offset), (y_top + 5 * y_offset, y_bottom + 5 * y_offset), (y_top + 6 * y_offset, y_bottom + 6 * y_offset), (y_top + 7 * y_offset, y_bottom + 7 * y_offset)]
-
     # 任务栏图标问题
     try:
         from ctypes import windll  # Only exists on Windows.
-        myappid = 'skeathy.keqing.v0.1.1'
+        myappid = 'skeathy.keqing.v0.2.0'
         windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
     except ImportError:
         pass
