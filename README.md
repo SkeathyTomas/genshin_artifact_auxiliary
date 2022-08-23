@@ -1,8 +1,21 @@
+<div align='center'>
+
 # 刻晴办公桌
+
+[![GitHub downloads](https://img.shields.io/github/downloads/SkeathyTomas/genshin_artifact_auxiliary/total?style=flat-square)](https://github.com/SkeathyTomas/genshin_artifact_auxiliary/releases)[![GitHub release (latest by date)](https://img.shields.io/github/downloads/SkeathyTomas/genshin_artifact_auxiliary/latest/total?style=flat-square)](https://github.com/SkeathyTomas/genshin_artifact_auxiliary/releases/latest)
+
+</div>
 
 ## 简介
 
-帮你在游戏中整理圣遗物背包时更便捷地了解、查阅圣遗物的评分，然后把评分最高的圣遗物装配给希望的角色，同时支持背包面板和角色面板。[demo视频](https://www.bilibili.com/video/BV1XB4y1k7au/)
+帮你在游戏中整理圣遗物背包时更便捷地了解、查阅圣遗物的评分，然后把评分最高的圣遗物装配给希望的角色，同时支持背包面板和角色面板。多角色适配，帮你省去了记各角色有效词条、口算/按计算器的时间。
+
+相比于其他评分工具的优势：
+
+1. 与游戏本身有更好的贴合性，可以让玩家对于圣遗物好坏有更加方便直观的判断。
+2. 省去了一些截图、角色装配调来调去、游戏内外来回对比的麻烦。
+
+[demo视频](https://www.bilibili.com/video/BV1XB4y1k7au/)
 
 ![背包面板圣遗物](https://raw.githubusercontent.com/SkeathyTomas/img/main/img/20220801125435.png)
 
@@ -42,7 +55,7 @@
 3. 在主窗口中选择角色（不选的话，默认评估双爆+攻击词条）。
 4. 打开游戏，调整窗口大小为非全屏下最大的一档。（因为全屏状态下评分结果贴图无法置顶。）
 5. 打开背包-圣遗物，随意选择圣遗物，点击**右键**进行圣遗物评分，评分结果随后标记在对应圣遗物右下角。（暂未对滚动条进行适配，若下拉滚动条使第一行圣遗物显示不全，贴图结果可能会有偏离。）
-6. 选中某个贴图结果，使用快捷键`Z`删除该贴图；使用全局快捷键`Ctrl+Z`删除所有贴图，可进行新一批圣遗物的评估。
+6. 选中某个贴图结果，使用快捷键`Ctrl+Z`删除该贴图；使用全局快捷键`Ctrl+Shift+Z`删除所有贴图，可进行新一批圣遗物的评估。
 
 ## 评分方法
 
@@ -56,6 +69,8 @@
 ### 分辨率适配
 
 已适配在16：10，16：9分辨率。分辨率适配框架已经搭好，若有分辨率适配问题，可提供一些不同分辨率的截图做坐标定位和测试了。需要把游戏窗口化为非全屏下最大的一档，打开背包-圣遗物，别去调窗口位置，然后全屏截图私发一下我。
+
+如使用多屏设备（如笔记本外接显示器），请把游戏窗口置于第一屏。
 
 目前已适配分辨率：
 

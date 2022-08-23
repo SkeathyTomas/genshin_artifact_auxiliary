@@ -1,6 +1,7 @@
 '''贴图窗口'''
 
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QShortcut, QKeySequence
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QWidget
 
 import location
@@ -29,9 +30,18 @@ class PasteWindow(QWidget):
         self.label.setStyleSheet(qss)
         layout.addWidget(self.label)
         self.setLayout(layout)
+
+        # 快捷键Ctrl+Z关闭贴图窗口，需焦点在主窗口
+        self.shortcut = QShortcut(QKeySequence('Ctrl+Z'), self)
+        self.shortcut.activated.connect(self.close)
     
     # 按键关闭/重置对应贴图窗口
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Z:
-            print('freshed')
-            self.hide()
+    # def keyPressEvent(self, event):
+    #     if event.key() == Qt.Key_Z:
+    #         print('freshed')
+    #         self.hide()
+    
+    # Ctrl+Z关闭窗口
+    def close(self):
+        # print('canceled!')
+        self.hide()

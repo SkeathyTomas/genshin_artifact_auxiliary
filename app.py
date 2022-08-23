@@ -142,7 +142,7 @@ class MainWindow(QMainWindow):
             self.pastes.append(window)
 
         # 快捷键Ctrl+Z关闭所有贴图窗口，需焦点在主窗口
-        self.shortcut = QShortcut(QKeySequence('Ctrl+Z'), self)
+        self.shortcut = QShortcut(QKeySequence('Ctrl+Shift+Z'), self)
         self.shortcut.activated.connect(self.reset)
 
         # 外部鼠标事件启动识别和贴图弹窗
@@ -195,16 +195,12 @@ class MainWindow(QMainWindow):
                 for j in range(self.row):
                     if y >= self.yarray[j][0] and y <= self.yarray[j][1]:
                         id = j * self.col + i
-                        # 判断贴图是否存在，存在则不更新，不在则更新
-                        if self.pastes[id].isVisible():
-                            break
-                        else:
-                            print('detected')
-                            score = img_process.main(self.character, self.x_grab, self.y_grab, self.w_grab, self.h_grab)
-                            self.pastes[id].label.setText(str(score))
-                            self.pastes[id].show()
-                            self.pastes[id].move(self.position[id][0] / self.SCALE, self.position[id][1] / self.SCALE)
-                            break
+                        print('detected')
+                        score = img_process.main(self.character, self.x_grab, self.y_grab, self.w_grab, self.h_grab)
+                        self.pastes[id].label.setText(str(score))
+                        self.pastes[id].show()
+                        self.pastes[id].move(self.position[id][0] / self.SCALE, self.position[id][1] / self.SCALE)
+                        break
                 break
     
     # 主窗口关闭则所有贴图窗口也关闭
@@ -212,12 +208,12 @@ class MainWindow(QMainWindow):
         for item in self.pastes:
             item.close()
     
-    # 快捷键Ctrl+Z重置贴图窗口
+    # 快捷键Ctrl+Shift+Z重置贴图窗口
     def reset(self):
         for item in self.pastes:
             item.hide()
 
-    # 全局快捷键Ctrl+Z重置贴图窗口
+    # 全局快捷键Ctrl+Shift+Z重置贴图窗口
     def hotkey(self):
         def on_activate():
             print('reset!')
@@ -226,7 +222,7 @@ class MainWindow(QMainWindow):
         def for_canonical(f):
             return lambda k: f(l.canonical(k))
         
-        hotkey = keyboard.HotKey(keyboard.HotKey.parse('<ctrl>+z'), on_activate)
+        hotkey = keyboard.HotKey(keyboard.HotKey.parse('<ctrl>+<shift>+z'), on_activate)
         l = keyboard.Listener(
             on_press = for_canonical(hotkey.press),
             on_release = for_canonical(hotkey.release))
