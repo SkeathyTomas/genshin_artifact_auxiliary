@@ -13,7 +13,7 @@ class PasteWindow(QWidget):
 
         # 设置贴图窗口属性：透明、无边框透明、置顶
         self.setAttribute(Qt.WA_TranslucentBackground)
-        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
+        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool)
     
         # 贴图窗口内容
         layout = QVBoxLayout()

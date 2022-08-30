@@ -41,13 +41,13 @@
 ### 使用打包的exe文件
 
 1. 在release中下载最新的压缩包。
+   1. 含with-tesseract的打包文件已包含tesseract引擎，无需再自行安装。
+   2. 若已手动安装OCR引擎，可下载不含OCR引擎的压缩包。
 2. 解压。
-
-*注：同样需要安装OCR引擎。*
 
 ## 使用教程
 
-1. 方式1：运行打包好的程序。解压好的程序包后，找到并用管理员模式运行keqing.exe（必须，否则程序运行中无法监听游戏中的鼠标操作）。
+1. 方式1：运行打包好的程序。解压压缩包完成后，找到并用管理员模式运行keqing.exe（必须，否则程序运行中无法监听游戏中的鼠标操作）。
 
 ![keqing.exe](https://raw.githubusercontent.com/SkeathyTomas/img/main/img/20220805144258.png)
 

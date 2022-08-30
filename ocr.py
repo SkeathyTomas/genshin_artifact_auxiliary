@@ -3,12 +3,19 @@
 from PIL import Image, ImageGrab
 import pytesseract
 import re
+import json
+import onnxruntime
+import numpy as np
+import cv2
 
 # 截图坐标
 x, y, w, h = (1684, 560, 350, 168)
 
-def tesseract_ocr():
+def tesseract_ocr(x, y, w, h):
     img = ImageGrab.grab(bbox = (x, y, x + w, y + h))
     txt = pytesseract.image_to_string(img, lang = 'chi_sim')
 
     txt = txt.replace(' ', '')
+
+if __name__ == '__main__':
+    tesseract_ocr(x, y, w, h)

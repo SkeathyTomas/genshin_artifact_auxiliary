@@ -114,6 +114,9 @@ class MainWindow(QMainWindow):
         self.combobox.addItem('诺艾尔')
 
         # 草
+        self.combobox.addItem('旅行者-草')
+        self.combobox.addItem('提纳里')
+        self.combobox.addItem('柯莱')
 
         # 图标
         self.label = QLabel()
@@ -232,7 +235,7 @@ def main():
     # 任务栏图标问题
     try:
         from ctypes import windll  # Only exists on Windows.
-        myappid = 'skeathy.keqing.v0.2.0'
+        myappid = 'skeathy.keqing.v0.2.2'
         windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
     except ImportError:
         pass
