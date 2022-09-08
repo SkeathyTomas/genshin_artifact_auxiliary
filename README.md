@@ -15,7 +15,7 @@
 1. 与游戏本身有更好的贴合性，可以让玩家对于圣遗物好坏有更加方便直观的判断。
 2. 省去了一些截图、角色装配调来调去、游戏内外来回对比的麻烦。
 
-[demo视频](https://www.bilibili.com/video/BV1XB4y1k7au/)
+[demo&教程视频](https://www.bilibili.com/video/BV1sg411Q7bL/)
 
 ![背包面板圣遗物](https://raw.githubusercontent.com/SkeathyTomas/img/main/img/20220801125435.png)
 
@@ -30,7 +30,7 @@
 
 ### 如果你需要直接运行python程序
 
-1. Python 3.6+ (作者开发环境Python 3.10.5)。
+1. Python 3.7+ (作者开发环境Python 3.10.5)。
 2. 必备的Python包：
    1. PySide6，GUI框架
    2. pynput，监听窗口外鼠标操作
@@ -63,6 +63,14 @@
 更新了[圣遗物评分方法](https://mp.weixin.qq.com/s/DxyS8Rll3_eLSelvjiwKwQ)，调整了角色的有效词条，增加了每个角色相对于固定词条的二级系数（如同样是大攻击对于一般主C和胡桃的评分系数就有所不同），删除了不同打法流派的角色。
 
 具体每一个角色的有效词条和词条的评分系数可参考[img_process.py](img_process.py)中的配置，如与需求不符可自行前往源文件修改参数。
+
+评分结果参考：
+
+- 30分：勉强够用
+- 40分：准毕业水平
+- 50分：极品
+
+（单个圣遗物评分结果仅供参考，具体角色强度还是要以整体角色面板和具体配队玩法为准。）
 
 ## 已知问题
 

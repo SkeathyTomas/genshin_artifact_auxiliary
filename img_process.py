@@ -127,13 +127,23 @@ def cal_score(txt, character):
     txt = txt.replace('仿', '伤')
     txt = txt.replace('传', '伤')
     txt = txt.replace('传', '伤')
+    txt = txt.replace('伪', '伤')
+
     txt = txt.replace('政', '功')
+    txt = txt.replace('攸', '功')
+
     txt = txt.replace('宇', '击')
     txt = txt.replace('出', '击')
+
+    txt = txt.replace('徒', '御')
+
     txt = txt.replace('宠', '害')
     txt = txt.replace('宓', '害')
+    txt = txt.replace('窑', '害')
+
     txt = txt.replace('演', '暴')
     txt = txt.replace('禀', '暴')
+
     txt = txt.replace('宏', '素')
     txt = txt.replace('泰', '素')
 
