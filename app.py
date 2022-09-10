@@ -102,6 +102,7 @@ class MainWindow(QMainWindow):
         self.combobox.addItem('丽莎')
         self.combobox.addItem('雷泽')
         self.combobox.addItem('北斗')
+        self.combobox.addItem('多莉')
 
         # 岩
         self.combobox.addItem('旅行者-岩')
