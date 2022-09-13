@@ -23,7 +23,7 @@ from PySide6.QtWidgets import (
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        # self.setWindowFlags(Qt.WindowStaysOnTopHint)
+        self.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.setWindowIcon(QIcon(os.path.join(os.path.dirname(__file__), 'src/keqing.ico')))
         self.setWindowTitle("刻晴办公桌")
         self.move(0, 0)
@@ -236,7 +236,7 @@ def main():
     # 任务栏图标问题
     try:
         from ctypes import windll  # Only exists on Windows.
-        myappid = 'skeathy.keqing.v0.2.2'
+        myappid = 'skeathy.keqing.v0.3.0'
         windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
     except ImportError:
         pass

@@ -114,6 +114,7 @@ def ocr(x, y, w, h):
     # 可能未安装ocr引擎
     try:
         img = ImageGrab.grab(bbox = (x, y, x + w, y + h))
+        # img.save('grab.png')
         txt = pytesseract.image_to_string(img, lang = 'chi_sim')
         print(txt)
         return txt
@@ -125,6 +126,9 @@ def cal_score(txt, character):
     txt = txt.replace(' ', '')
 
     # 一些误识别兼容
+    # 部分.1%将%识别为数字的情况
+    txt = txt.replace('.1', '.1%')
+
     txt = txt.replace('仿', '伤')
     txt = txt.replace('传', '伤')
     txt = txt.replace('传', '伤')
@@ -135,6 +139,7 @@ def cal_score(txt, character):
 
     txt = txt.replace('宇', '击')
     txt = txt.replace('出', '击')
+    txt = txt.replace('吉', '击')
 
     txt = txt.replace('徒', '御')
 
@@ -144,6 +149,7 @@ def cal_score(txt, character):
 
     txt = txt.replace('演', '暴')
     txt = txt.replace('禀', '暴')
+    txt = txt.replace('景', '暴')
 
     txt = txt.replace('宏', '素')
     txt = txt.replace('泰', '素')

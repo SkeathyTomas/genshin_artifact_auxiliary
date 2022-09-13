@@ -2,7 +2,8 @@
 
 # 刻晴办公桌
 
-[![GitHub downloads](https://img.shields.io/github/downloads/SkeathyTomas/genshin_artifact_auxiliary/total?style=flat-square)](https://github.com/SkeathyTomas/genshin_artifact_auxiliary/releases)[![GitHub release (latest by date)](https://img.shields.io/github/downloads/SkeathyTomas/genshin_artifact_auxiliary/latest/total?style=flat-square)](https://github.com/SkeathyTomas/genshin_artifact_auxiliary/releases/latest)
+[![GitHub downloads](https://img.shields.io/github/downloads/SkeathyTomas/genshin_artifact_auxiliary/total?style=flat-square)](https://github.com/SkeathyTomas/genshin_artifact_auxiliary/releases)
+[![GitHub release (latest by date)](https://img.shields.io/github/downloads/SkeathyTomas/genshin_artifact_auxiliary/latest/total?style=flat-square)](https://github.com/SkeathyTomas/genshin_artifact_auxiliary/releases/latest)
 
 </div>
 
@@ -53,13 +54,12 @@
 
 2. 方式2：下载源码，使用管理员模式打开命令行工具（必须，否则程序运行中无法监听游戏中的鼠标操作），并打开程序目录，使用命令`python app.py`运行程序。
 3. 在主窗口中选择角色（不选的话，默认评估双爆+攻击词条）。
-4. 打开游戏，调整窗口大小为非全屏下最大的一档。（因为全屏状态下评分结果贴图无法置顶。）
-5. 打开背包-圣遗物，随意选择圣遗物，点击**右键**进行圣遗物评分，评分结果随后标记在对应圣遗物右下角。（暂未对滚动条进行适配，若下拉滚动条使第一行圣遗物显示不全，贴图结果可能会有偏离。）
+4. 打开游戏，使用`ALT+ENTER`使游戏窗口切换为伪全屏状态（顶部出现标题栏，因为真·全屏状态下评分结果贴图无法置顶。）
+5. 打开背包-圣遗物或角色-圣遗物装配（需在主程序中对应选择背包或角色），随意选择圣遗物，点击`右键`进行圣遗物评分，评分结果随后标记在对应圣遗物右下角。
 6. 选中某个贴图结果，使用快捷键`Ctrl+Z`删除该贴图；使用全局快捷键`Ctrl+Shift+Z`删除所有贴图，可进行新一批圣遗物的评估。
 
 ## 评分方法
 
-~~参考[圣遗物评分方法](https://mp.weixin.qq.com/s/EUc-o95gpovHv5ctKaQNFw)。~~
 更新了[圣遗物评分方法](https://mp.weixin.qq.com/s/DxyS8Rll3_eLSelvjiwKwQ)，调整了角色的有效词条，增加了每个角色相对于固定词条的二级系数（如同样是大攻击对于一般主C和胡桃的评分系数就有所不同），删除了不同打法流派的角色。
 
 具体每一个角色的有效词条和词条的评分系数可参考[img_process.py](img_process.py)中的配置，如与需求不符可自行前往源文件修改参数。
@@ -97,9 +97,9 @@
 
 已在主程序中适配了角色面板的圣遗物选择，可通过在主窗口中手动切换至「角色」选项进行使用（默认选的是「背包」）。在手动校验功能出来前此功能都不会特别好用，可能需要多次重新识别。
 
-~~有兴趣可以运行`python test/app_character.py`尝试下效果，~~
-
 ### 关于GUI
+
+暂未对滚动条进行适配，若下拉滚动条使第一行圣遗物显示不全，或者在角色面板点击靠下的圣遗物，因为游戏系统自动会移动滚动条，贴图结果可能会有垂直方向的偏移。
 
 使用了默认的组件，某些高级整合/自改组件Bug一堆，问就是还在学，不过就问你能不能用吧。UI美化、Bug修复等1.0版本再考虑。
 

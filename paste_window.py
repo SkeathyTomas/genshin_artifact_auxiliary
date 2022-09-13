@@ -23,7 +23,7 @@ class PasteWindow(QWidget):
         font = self.label.font()
         font.setPointSize(14 / SCALE)
         self.label.setFont(font)
-        self.label.setFixedSize(36 / SCALE, 36 / SCALE)
+        self.label.setFixedSize(40 / SCALE, 40 / SCALE)
         self.label.setAlignment(Qt.AlignCenter)
         # qss = 'border-image: url(paste.png);'
         qss = 'background-color: rgb(255, 255, 255)'
