@@ -136,6 +136,7 @@ def cal_score(txt, character):
 
     txt = txt.replace('政', '功')
     txt = txt.replace('攸', '功')
+    txt = txt.replace('改', '功')
 
     txt = txt.replace('宇', '击')
     txt = txt.replace('出', '击')
@@ -153,6 +154,8 @@ def cal_score(txt, character):
 
     txt = txt.replace('宏', '素')
     txt = txt.replace('泰', '素')
+
+    txt = txt.replace('交', '充')
 
     line = txt.splitlines()
     pattern_chinese = '[\u4e00-\u9fa5]+'
