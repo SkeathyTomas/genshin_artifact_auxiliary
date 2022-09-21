@@ -58,33 +58,3 @@ yarray_A = [(y_top_A, y_bottom_A), (y_top_A + y_offset_A, y_bottom_A + y_offset_
 
 xarray_B = [(x_left_B, x_right_B), (x_left_B + x_offset_B, x_right_B + x_offset_B), (x_left_B + 2 * x_offset_B, x_right_B + 2 * x_offset_B), (x_left_B + 3 * x_offset_B, x_right_B + 3 * x_offset_B)]
 yarray_B = [(y_top_B, y_bottom_B), (y_top_B + y_offset_B, y_bottom_B + y_offset_B), (y_top_B + 2 * y_offset_B, y_bottom_B + 2 * y_offset_B), (y_top_B + 3 * y_offset_B, y_bottom_B + 3 * y_offset_B), (y_top_B + 4 * y_offset_B, y_bottom_B + 4 * y_offset_B), (y_top_B + 5 * y_offset_B, y_bottom_B + 5 * y_offset_B)]
-
-# 数值返回
-def get_scale():
-    return SCALE
-
-# 背包
-def get_position_A():
-    return position_A
-
-def get_row_col_A():
-    return row_A, col_A
-
-def get_xarray_yarray_A():
-    return xarray_A, yarray_A
-
-def get_x_y_w_h_A():
-    return x_grab_A, y_grab_A, w_grab_A, h_grab_A
-
-# 角色
-def get_position_B():
-    return position_B
-
-def get_row_col_B():
-    return row_B, col_B
-
-def get_xarray_yarray_B():
-    return xarray_B, yarray_B
-
-def get_x_y_w_h_B():
-    return x_grab_B, y_grab_B, w_grab_B, h_grab_B

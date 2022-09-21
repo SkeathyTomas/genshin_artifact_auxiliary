@@ -1,8 +1,7 @@
 import sys, os
 from pynput import keyboard
 
-import location
-import img_process
+import location, img_process, characters
 from extention import OutsideMouseManager, ExtendedComboBox
 from paste_window import PasteWindow
 
@@ -37,87 +36,19 @@ class MainWindow(QMainWindow):
         self.radiobtn2.toggled.connect(lambda: self.radiobtn_state(self.radiobtn2))
 
         # 默认坐标信息
-        self.position = location.get_position_A()
-        self.row, self.col = location.get_row_col_A()
-        self.xarray, self.yarray = location.get_xarray_yarray_A()
-        self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.get_x_y_w_h_A()
-        self.SCALE = location.get_scale()
+        self.position = location.position_A
+        self.row, self.col = location.row_A, location.col_A
+        self.xarray, self.yarray = location.xarray_A, location.yarray_A
+        self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.x_grab_A, location.y_grab_A, location.w_grab_A, location.h_grab_A
+        self.SCALE = location.SCALE
 
         # 选择框
         self.combobox = ExtendedComboBox()
         self.combobox.currentTextChanged.connect(self.current_text_changed)
         self.combobox.addItem('--请选择角色--')
-
-        # 风
-        self.combobox.addItem('鹿野院平藏')
-        self.combobox.addItem('旅行者-风')
-        self.combobox.addItem('枫原万叶')
-        self.combobox.addItem('温迪')
-        self.combobox.addItem('琴')
-        self.combobox.addItem('魈')
-        self.combobox.addItem('早柚')
-        self.combobox.addItem('砂糖')
-
-        # 火
-        self.combobox.addItem('托马')
-        self.combobox.addItem('胡桃')
-        self.combobox.addItem('宵宫')
-        self.combobox.addItem('可莉')
-        self.combobox.addItem('迪卢克')
-        self.combobox.addItem('班尼特')
-        self.combobox.addItem('安柏')
-        self.combobox.addItem('香菱')
-        self.combobox.addItem('辛焱')
-        self.combobox.addItem('烟绯')
-
-        # 水
-        self.combobox.addItem('夜兰')
-        self.combobox.addItem('神里绫人')
-        self.combobox.addItem('达达利亚')
-        self.combobox.addItem('珊瑚宫心海')
-        self.combobox.addItem('莫娜')
-        self.combobox.addItem('行秋')
-        self.combobox.addItem('芭芭拉')
-
-        # 冰
-        self.combobox.addItem('申鹤')
-        self.combobox.addItem('优菈')
-        self.combobox.addItem('埃洛伊')
-        self.combobox.addItem('神里绫华')
-        self.combobox.addItem('七七')
-        self.combobox.addItem('甘雨')
-        self.combobox.addItem('迪奥娜')
-        self.combobox.addItem('重云')
-        self.combobox.addItem('罗莎莉亚')
-        self.combobox.addItem('凯亚')
-
-        # 雷
-        self.combobox.addItem('九岐忍')
-        self.combobox.addItem('旅行者-雷')
-        self.combobox.addItem('八重神子')
-        self.combobox.addItem('雷电将军')
-        self.combobox.addItem('刻晴')
-        self.combobox.addItem('九条裟罗')
-        self.combobox.addItem('菲谢尔')
-        self.combobox.addItem('丽莎')
-        self.combobox.addItem('雷泽')
-        self.combobox.addItem('北斗')
-        self.combobox.addItem('多莉')
-
-        # 岩
-        self.combobox.addItem('旅行者-岩')
-        self.combobox.addItem('云堇')
-        self.combobox.addItem('荒泷一斗')
-        self.combobox.addItem('五郎')
-        self.combobox.addItem('阿贝多')
-        self.combobox.addItem('钟离')
-        self.combobox.addItem('凝光')
-        self.combobox.addItem('诺艾尔')
-
-        # 草
-        self.combobox.addItem('旅行者-草')
-        self.combobox.addItem('提纳里')
-        self.combobox.addItem('柯莱')
+        # 添加角色
+        for key in characters.config:
+            self.combobox.addItem(key)
 
         # 图标
         self.label = QLabel()
@@ -158,10 +89,10 @@ class MainWindow(QMainWindow):
         if btn.text() == '背包':
             if btn.isChecked() == True:
                 # 重置坐标信息
-                self.position = location.get_position_A()
-                self.row, self.col = location.get_row_col_A()
-                self.xarray, self.yarray = location.get_xarray_yarray_A()
-                self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.get_x_y_w_h_A()
+                self.position = location.position_A
+                self.row, self.col = location.row_A, location.col_A
+                self.xarray, self.yarray = location.xarray_A, location.yarray_A
+                self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.x_grab_A, location.y_grab_A, location.w_grab_A, location.h_grab_A
 
                 # 重置贴图窗口组
                 self.pastes = []
@@ -172,10 +103,10 @@ class MainWindow(QMainWindow):
         if btn.text() == '角色':
             if btn.isChecked() == True:
                 # 重置坐标信息
-                self.position = location.get_position_B()
-                self.row, self.col = location.get_row_col_B()
-                self.xarray, self.yarray = location.get_xarray_yarray_B()
-                self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.get_x_y_w_h_B()
+                self.position = location.position_B
+                self.row, self.col = location.row_B, location.col_B
+                self.xarray, self.yarray = location.xarray_B, location.yarray_B
+                self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.x_grab_B, location.y_grab_B, location.w_grab_B, location.h_grab_B
 
                 # 重置贴图窗口组
                 self.pastes = []

@@ -9,7 +9,7 @@ import location
 class PasteWindow(QWidget):
     def __init__(self):
         super().__init__()
-        SCALE = location.get_scale()
+        SCALE = location.SCALE
 
         # 设置贴图窗口属性：透明、无边框透明、置顶
         self.setAttribute(Qt.WA_TranslucentBackground)

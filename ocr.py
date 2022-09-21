@@ -80,22 +80,22 @@ def tesseract_ocr(x, y, w, h):
     
     print(result)
 
-# def yas_ocr():
-#     import numpy as np
-#     import json 
-#     import onnxruntime as rt
+def yas_ocr():
+    import numpy as np
+    import json 
+    import onnxruntime as rt
 
-#     img = Image.open('test/test_img/example.png')
-#     img = img.crop((0, 0, 184, 32))
-#     sess = rt.InferenceSession('model_training.onnx')
+    img = Image.open('test/test_img/example.png')
+    img = img.crop((0, 0, 184, 32))
+    sess = rt.InferenceSession('model_training.onnx')
     
-#     # data = json.dumps({'data': np.asarray(img)})
-#     # data = np.array(json.loads(data)['data']).astype('float32')
+    # data = json.dumps({'data': np.asarray(img)})
+    # data = np.array(json.loads(data)['data']).astype('float32')
 
-#     input_name = sess.get_inputs()[0].name
-#     label_name = sess.get_outputs()[0].name
-#     out = sess.run([label_name], {input_name: np.array(img).astype(np.float32)})
-#     print(out)
+    input_name = sess.get_inputs()[0].name
+    label_name = sess.get_outputs()[0].name
+    out = sess.run([label_name], {input_name: np.array(img).astype(np.float32)})
+    print(out)
 
 if __name__ == '__main__':
     tesseract_ocr(x, y, w, h)
