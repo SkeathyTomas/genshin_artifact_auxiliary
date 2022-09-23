@@ -1,7 +1,7 @@
 import sys, os
 from pynput import keyboard
 
-import location, img_process, characters
+import location, ocr, score, characters
 from extention import OutsideMouseManager, ExtendedComboBox
 from paste_window import PasteWindow
 
@@ -35,14 +35,14 @@ class MainWindow(QMainWindow):
         self.radiobtn2 = QRadioButton('角色')
         self.radiobtn2.toggled.connect(lambda: self.radiobtn_state(self.radiobtn2))
 
-        # 默认坐标信息
+        # 默认坐标信息-背包A
         self.position = location.position_A
         self.row, self.col = location.row_A, location.col_A
         self.xarray, self.yarray = location.xarray_A, location.yarray_A
         self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.x_grab_A, location.y_grab_A, location.w_grab_A, location.h_grab_A
         self.SCALE = location.SCALE
 
-        # 选择框
+        # 角色选择框
         self.combobox = ExtendedComboBox()
         self.combobox.currentTextChanged.connect(self.current_text_changed)
         self.combobox.addItem('--请选择角色--')
@@ -50,7 +50,19 @@ class MainWindow(QMainWindow):
         for key in characters.config:
             self.combobox.addItem(key)
 
-        # 图标
+        # 识别结果显示，初始配置
+        self.name1 = QLabel('请选择圣遗物')
+        self.name2 = QLabel('然后点击右键')
+        self.name3 = QLabel()
+        self.name4 = QLabel()
+        self.name5 = QLabel('总分')
+        self.score1 = QLabel()
+        self.score2 = QLabel()
+        self.score3 = QLabel()
+        self.score4 = QLabel()
+        self.score5 = QLabel('0')
+
+        # GitHub图标与项目链接
         self.label = QLabel()
         self.label.setFixedSize(16, 16)
         pixmap = QPixmap('src/GitHub.png')
@@ -64,7 +76,17 @@ class MainWindow(QMainWindow):
         self.layout.addWidget(self.radiobtn1, 0, 0)
         self.layout.addWidget(self.radiobtn2, 0, 1)
         self.layout.addWidget(self.combobox, 1, 0, 1, 2)
-        self.layout.addWidget(self.label, 2, 0, 1, 2, Qt.AlignRight | Qt.AlignBottom)
+        self.layout.addWidget(self.name1, 2, 0)
+        self.layout.addWidget(self.score1, 2, 1, Qt.AlignRight)
+        self.layout.addWidget(self.name2, 3, 0)
+        self.layout.addWidget(self.score2, 3, 1, Qt.AlignRight)
+        self.layout.addWidget(self.name3, 4, 0)
+        self.layout.addWidget(self.score3, 4, 1, Qt.AlignRight)
+        self.layout.addWidget(self.name4, 5, 0)
+        self.layout.addWidget(self.score4, 5, 1, Qt.AlignRight)
+        self.layout.addWidget(self.name5, 6, 0)
+        self.layout.addWidget(self.score5, 6, 1, Qt.AlignRight)
+        self.layout.addWidget(self.label, 7, 0, 1, 2, Qt.AlignRight | Qt.AlignBottom)
 
         self.widget = QWidget()
         self.widget.setLayout(self.layout)
@@ -75,6 +97,7 @@ class MainWindow(QMainWindow):
         for i in range(self.row * self.col):
             window = PasteWindow()
             self.pastes.append(window)
+            self.pastes[i].move(self.position[i][0] / self.SCALE, self.position[i][1] / self.SCALE)
 
         # 快捷键Ctrl+Z关闭所有贴图窗口，需焦点在主窗口
         self.shortcut = QShortcut(QKeySequence('Ctrl+Shift+Z'), self)
@@ -99,6 +122,7 @@ class MainWindow(QMainWindow):
                 for i in range(self.row * self.col):
                     window = PasteWindow()
                     self.pastes.append(window)
+                    self.pastes[i].move(self.position[i][0] / self.SCALE, self.position[i][1] / self.SCALE)
         
         if btn.text() == '角色':
             if btn.isChecked() == True:
@@ -113,6 +137,7 @@ class MainWindow(QMainWindow):
                 for i in range(self.row * self.col):
                     window = PasteWindow()
                     self.pastes.append(window)
+                    self.pastes[i].move(self.position[i][0] / self.SCALE, self.position[i][1] / self.SCALE)
     
     # 选择框选择角色事件
     def current_text_changed(self, s):
@@ -130,11 +155,26 @@ class MainWindow(QMainWindow):
                 for j in range(self.row):
                     if y >= self.yarray[j][0] and y <= self.yarray[j][1]:
                         id = j * self.col + i
-                        print('detected')
-                        score = img_process.main(self.character, self.x_grab, self.y_grab, self.w_grab, self.h_grab)
-                        self.pastes[id].label.setText(str(score))
+                        print(self.character + 'detected')
+
+                        # ocr识别与结果返回
+                        self.ocr_result = ocr.tesseract_ocr(self.x_grab, self.y_grab, self.w_grab, self.h_grab)
+                        self.score_result = score.cal_score(self.ocr_result, self.character)
+
+                        # 贴图更新总评分
+                        self.pastes[id].label.setText(str(self.score_result[1]))
                         self.pastes[id].show()
-                        self.pastes[id].move(self.position[id][0] / self.SCALE, self.position[id][1] / self.SCALE)
+
+                        # 主窗口更新详细评分
+                        self.score5.setText(str(self.score_result[1]))
+                        self.name1.setText(list(self.ocr_result.keys())[0] + ' ' + str(list(self.ocr_result.values())[0]))
+                        self.score1.setText(str(self.score_result[0][0]))
+                        self.name2.setText(list(self.ocr_result.keys())[1] + ' ' + str(list(self.ocr_result.values())[1]))
+                        self.score2.setText(str(self.score_result[0][1]))
+                        self.name3.setText(list(self.ocr_result.keys())[2] + ' ' + str(list(self.ocr_result.values())[2]))
+                        self.score3.setText(str(self.score_result[0][2]))
+                        self.name4.setText(list(self.ocr_result.keys())[3] + ' ' + str(list(self.ocr_result.values())[3]))
+                        self.score4.setText(str(self.score_result[0][3]))
                         break
                 break
     

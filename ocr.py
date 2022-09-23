@@ -11,10 +11,14 @@ def tesseract_ocr(x, y, w, h):
     img = ImageGrab.grab(bbox = (x, y, x + w, y + h))
     txt = pytesseract.image_to_string(img, lang = 'chi_sim')
     
-    txt = pytesseract.image_to_string(Image.open('test/test_img/example.png'), lang = 'chi_sim') # 本地图片测试用
+    # txt = pytesseract.image_to_string(Image.open('test/test_img/example3.png'), lang = 'chi_sim') # 本地图片测试用
     txt = txt.replace(' ', '')
 
     # 一些误识别兼容
+    # 部分.1%将%识别为数字的情况
+    txt = txt.replace('.1', '.1%')
+    txt = txt.replace('77T7', '777')
+
     txt = txt.replace('仿', '伤')
     txt = txt.replace('传', '伤')
     txt = txt.replace('传', '伤')
@@ -22,9 +26,11 @@ def tesseract_ocr(x, y, w, h):
 
     txt = txt.replace('政', '功')
     txt = txt.replace('攸', '功')
+    txt = txt.replace('改', '功')
 
     txt = txt.replace('宇', '击')
     txt = txt.replace('出', '击')
+    txt = txt.replace('吉', '击')
 
     txt = txt.replace('徒', '御')
 
@@ -34,19 +40,26 @@ def tesseract_ocr(x, y, w, h):
 
     txt = txt.replace('演', '暴')
     txt = txt.replace('禀', '暴')
+    txt = txt.replace('景', '暴')
 
     txt = txt.replace('宏', '素')
     txt = txt.replace('泰', '素')
+
+    txt = txt.replace('交', '充')
+
+    txt = txt.replace('办', '力')
+    txt = txt.replace('刀', '力')
 
     # 中文和数字正则
     pattern_chinese = '[\u4e00-\u9fa5]+'
     pattern_digit = '\d+(\.\d+)?'
 
-    print(txt)
+    # 逐行识别
     line = txt.splitlines()
     result = {}
     for item in line:
         if item != '':
+            print(item)
             try:
                 # 词条名称
                 name = re.findall(pattern_chinese, item)
@@ -74,11 +87,12 @@ def tesseract_ocr(x, y, w, h):
                 elif name == '元素充能效率':
                     result['元素充能效率'] = digit
                 else:
-                    print('「' + item + '」词条识别有误！')
+                    result[item] = 0
             except:
-                print('「' + item + '」词条识别有误！')
+                result[item] = 0
     
     print(result)
+    return result
 
 def yas_ocr():
     import numpy as np
@@ -98,5 +112,7 @@ def yas_ocr():
     print(out)
 
 if __name__ == '__main__':
-    tesseract_ocr(x, y, w, h)
+    # tesseract_ocr(x, y, w, h)
     # yas_ocr()
+    import score
+    print(score.cal_score(tesseract_ocr(x, y, w, h), '雷电将军'))
