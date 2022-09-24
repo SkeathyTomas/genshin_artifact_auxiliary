@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, requests
 from pynput import keyboard
 
 import location, ocr, score, characters
@@ -26,7 +26,6 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon(os.path.join(os.path.dirname(__file__), 'src/keqing.ico')))
         self.setWindowTitle("刻晴办公桌")
         self.move(0, 0)
-        self.character = ''
 
         # 背包/角色面板选择（Radio）
         self.radiobtn1 = QRadioButton('背包')
@@ -63,19 +62,32 @@ class MainWindow(QMainWindow):
         self.score5 = QLabel('0')
 
         # GitHub图标与项目链接
-        self.label = QLabel()
-        self.label.setFixedSize(16, 16)
+        # 更新提示
+        self.upgrade = QLabel()
+        try:
+            response = requests.get('https://api.github.com/repos/SkeathyTomas/genshin_artifact_auxiliary/releases/latest')
+            tag = response.json()['tag_name']
+            if myappid != tag:
+                self.upgrade.setText('有新版本，点击右侧图标前往下载~')
+        except:
+            pass
+        # 图标与release下载链接
+        self.github = QLabel()
+        self.github.setFixedSize(16, 16)
         pixmap = QPixmap('src/GitHub.png')
         pixmap = pixmap.scaled(16, 16)
-        self.label.setPixmap(pixmap)
-        self.label.setCursor(Qt.PointingHandCursor)
-        self.label.mousePressEvent = self.open_github
+        self.github.setPixmap(pixmap)
+        self.github.setCursor(Qt.PointingHandCursor)
+        self.github.mousePressEvent = self.open_github
 
         # layout
         self.layout = QGridLayout()
+        # 面板选择
         self.layout.addWidget(self.radiobtn1, 0, 0)
         self.layout.addWidget(self.radiobtn2, 0, 1)
+        # 角色选择
         self.layout.addWidget(self.combobox, 1, 0, 1, 2)
+        # 识别结果展示
         self.layout.addWidget(self.name1, 2, 0)
         self.layout.addWidget(self.score1, 2, 1, Qt.AlignRight)
         self.layout.addWidget(self.name2, 3, 0)
@@ -86,7 +98,9 @@ class MainWindow(QMainWindow):
         self.layout.addWidget(self.score4, 5, 1, Qt.AlignRight)
         self.layout.addWidget(self.name5, 6, 0)
         self.layout.addWidget(self.score5, 6, 1, Qt.AlignRight)
-        self.layout.addWidget(self.label, 7, 0, 1, 2, Qt.AlignRight | Qt.AlignBottom)
+        # 更新与项目链接
+        self.layout.addWidget(self.upgrade, 7, 0, Qt.AlignLeft | Qt.AlignBottom)
+        self.layout.addWidget(self.github, 7, 1, Qt.AlignRight | Qt.AlignBottom)
 
         self.widget = QWidget()
         self.widget.setLayout(self.layout)
@@ -145,7 +159,7 @@ class MainWindow(QMainWindow):
 
     # 打开外部链接
     def open_github(self, event):
-        QDesktopServices.openUrl(QUrl('https://github.com/SkeathyTomas/genshin_artifact_auxiliary'))
+        QDesktopServices.openUrl(QUrl('https://github.com/SkeathyTomas/genshin_artifact_auxiliary/releases/latest'))
 
     # 启动贴图弹窗
     def open_new_window(self, x, y):
@@ -204,10 +218,12 @@ class MainWindow(QMainWindow):
         l.start()
 
 def main():
+    global myappid
+    myappid = 'v0.4.0'
+
     # 任务栏图标问题
     try:
         from ctypes import windll  # Only exists on Windows.
-        myappid = 'skeathy.keqing.v0.3.0'
         windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
     except ImportError:
         pass

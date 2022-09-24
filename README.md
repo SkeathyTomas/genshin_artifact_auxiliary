@@ -34,10 +34,11 @@
 1. Python 3.7+ (作者开发环境Python 3.10.5)。
 2. 必备的Python包：
    1. PySide6，GUI框架
-   2. pynput，监听窗口外鼠标操作
+   2. pynput，监听游戏窗口内鼠标操作
    3. pywin32，获取设备分辨率、缩放信息，用于兼容不同分辨率
    4. Pillow，截图
    5. pytesseract，tesseract的python接口
+   6. requests，联网查询最新版本信息
 
 ### 使用打包的exe文件
 
@@ -62,7 +63,7 @@
 
 更新了[圣遗物评分方法](https://mp.weixin.qq.com/s/DxyS8Rll3_eLSelvjiwKwQ)，调整了角色的有效词条，增加了每个角色相对于固定词条的二级系数（如同样是大攻击对于一般主C和胡桃的评分系数就有所不同），删除了不同打法流派的角色。
 
-具体每一个角色的有效词条和词条的评分系数可参考[img_process.py](img_process.py)中的配置，如与需求不符可自行前往源文件修改参数。
+具体每一个角色的有效词条和词条的评分系数可参考[characters.py](characters.py)和[score.py](score.py)中的配置，如与需求不符可自行前往源文件修改参数。
 
 评分结果参考：
 

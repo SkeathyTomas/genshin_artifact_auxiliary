@@ -4,9 +4,6 @@ from PIL import Image, ImageGrab
 import pytesseract
 import re
 
-# 截图坐标
-x, y, w, h = (1684, 560, 350, 168)
-
 def tesseract_ocr(x, y, w, h):
     img = ImageGrab.grab(bbox = (x, y, x + w, y + h))
     txt = pytesseract.image_to_string(img, lang = 'chi_sim')
@@ -112,6 +109,8 @@ def yas_ocr():
     print(out)
 
 if __name__ == '__main__':
+    # 截图坐标
+    x, y, w, h = (1684, 560, 350, 168) 
     # tesseract_ocr(x, y, w, h)
     # yas_ocr()
     import score
