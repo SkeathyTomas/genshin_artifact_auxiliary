@@ -41,5 +41,5 @@ def cal_score(ocr_result, character):
         scores.append(score)
         sums += score
     
-    print(scores, sums, '\n')
-    return scores, sums
+    print(scores, round(sums, 1), '\n')
+    return scores, round(sums, 1)

@@ -25,6 +25,7 @@ class MainWindow(QMainWindow):
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.setWindowIcon(QIcon(os.path.join(os.path.dirname(__file__), 'src/keqing.ico')))
         self.setWindowTitle("刻晴办公桌")
+        self.setFocusPolicy(Qt.StrongFocus)
         self.move(0, 0)
 
         # 背包/角色面板选择（Radio）

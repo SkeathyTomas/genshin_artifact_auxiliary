@@ -21,9 +21,10 @@ def tesseract_ocr(x, y, w, h):
     txt = txt.replace('传', '伤')
     txt = txt.replace('伪', '伤')
 
-    txt = txt.replace('政', '功')
-    txt = txt.replace('攸', '功')
-    txt = txt.replace('改', '功')
+    txt = txt.replace('政', '攻')
+    txt = txt.replace('攸', '攻')
+    txt = txt.replace('改', '攻')
+    txt = txt.replace('功', '攻')
 
     txt = txt.replace('宇', '击')
     txt = txt.replace('出', '击')
