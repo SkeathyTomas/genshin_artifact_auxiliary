@@ -18,7 +18,7 @@
 
 [demo&教程视频](https://www.bilibili.com/video/BV1sg411Q7bL/)
 
-![背包面板圣遗物](https://raw.githubusercontent.com/SkeathyTomas/img/main/img/20220920001828.png)
+![背包面板圣遗物](https://raw.githubusercontent.com/SkeathyTomas/img/main/img/20220929234442.png)
 
 ![角色面板圣遗物](https://raw.githubusercontent.com/SkeathyTomas/img/main/img/20220810004718.png)
 

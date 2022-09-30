@@ -5,6 +5,18 @@ import pytesseract
 import re
 
 def tesseract_ocr(x, y, w, h):
+    '''返回使用tesseract ocr引擎识别及处理结果
+    参数：
+        x：截图坐标x
+        y：截图坐标y
+        w：截图宽度w
+        h：截图高度h
+    返回：
+        result：字典
+            key：词条属性（含百分比差异说明）
+            value；词条数值
+            如：{'防御力': 23.0, '元素充能效率': 5.8, '暴击伤害': 5.4}
+    '''
     img = ImageGrab.grab(bbox = (x, y, x + w, y + h))
     txt = pytesseract.image_to_string(img, lang = 'chi_sim')
     
