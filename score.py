@@ -17,6 +17,19 @@ coefficient = {
 }
 
 def cal_score(ocr_result, character):
+    '''计算圣遗物评分
+    参数：
+        ocr_result: ocr识别结果字典dict
+            {'防御力': 23.0, '元素充能效率': 5.8, '暴击伤害': 5.4}
+        character: 角色字符串
+            '旅行者-风'
+    返回：
+        scores: 每个词条单独的评分列表list
+            [0.0, 6.3, 5.4, 0.0]
+        round(sums, 1): 总分float
+            11.7
+    '''
+
     # 获取角色配置，角色未输入或输入错误则取攻击双爆
     try:
         config = characters.config[character]

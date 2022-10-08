@@ -28,13 +28,6 @@ class MainWindow(QMainWindow):
         self.setFocusPolicy(Qt.StrongFocus)
         self.move(0, 0)
 
-        # 背包/角色面板选择（Radio）
-        self.radiobtn1 = QRadioButton('背包')
-        self.radiobtn1.setChecked(True)
-        self.radiobtn1.toggled.connect(lambda: self.radiobtn_state(self.radiobtn1))
-        self.radiobtn2 = QRadioButton('角色')
-        self.radiobtn2.toggled.connect(lambda: self.radiobtn_state(self.radiobtn2))
-
         # 默认坐标信息-背包A
         self.position = location.position_A
         self.row, self.col = location.row_A, location.col_A
@@ -42,9 +35,25 @@ class MainWindow(QMainWindow):
         self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.x_grab_A, location.y_grab_A, location.w_grab_A, location.h_grab_A
         self.SCALE = location.SCALE
 
+        # 预先设定好贴图窗口组&每一个窗口的圣遗物数据
+        self.pastes = []
+        self.artifact = {}
+        for i in range(self.row * self.col):
+            window = PasteWindow()
+            self.pastes.append(window)
+            self.pastes[i].move(self.position[i][0] / self.SCALE, self.position[i][1] / self.SCALE)
+            self.artifact[i] = {}
+
+        # 背包/角色面板选择（Radio）
+        self.radiobtn1 = QRadioButton('背包')
+        self.radiobtn1.setChecked(True)
+        self.radiobtn1.toggled.connect(lambda: self.radiobtn_state(self.radiobtn1))
+        self.radiobtn2 = QRadioButton('角色')
+        self.radiobtn2.toggled.connect(lambda: self.radiobtn_state(self.radiobtn2))
+
         # 角色选择框
         self.combobox = ExtendedComboBox()
-        self.combobox.currentTextChanged.connect(self.current_text_changed)
+        self.combobox.currentIndexChanged.connect(self.current_index_changed)
         self.combobox.addItem('--请选择角色--')
         # 添加角色
         for key in characters.config:
@@ -105,22 +114,16 @@ class MainWindow(QMainWindow):
 
         self.widget = QWidget()
         self.widget.setLayout(self.layout)
-        self.setCentralWidget(self.widget)        
+        self.setCentralWidget(self.widget)
 
-        # 预先设定好贴图窗口组
-        self.pastes = []
-        for i in range(self.row * self.col):
-            window = PasteWindow()
-            self.pastes.append(window)
-            self.pastes[i].move(self.position[i][0] / self.SCALE, self.position[i][1] / self.SCALE)
-
-        # 快捷键Ctrl+Z关闭所有贴图窗口，需焦点在主窗口
+        # 快捷键Ctrl+Shift+Z关闭所有贴图窗口，需焦点在主窗口
         self.shortcut = QShortcut(QKeySequence('Ctrl+Shift+Z'), self)
         self.shortcut.activated.connect(self.reset)
 
         # 外部鼠标事件启动识别和贴图弹窗
         self.manager = OutsideMouseManager()
-        self.manager.released.connect(self.open_new_window)
+        self.manager.right_click.connect(self.open_new_window)
+        self.manager.left_click.connect(self.fresh_main_window)
 
     # 单选框面板选择事件
     def radiobtn_state(self, btn):
@@ -132,12 +135,14 @@ class MainWindow(QMainWindow):
                 self.xarray, self.yarray = location.xarray_A, location.yarray_A
                 self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.x_grab_A, location.y_grab_A, location.w_grab_A, location.h_grab_A
 
-                # 重置贴图窗口组
+                # 重置贴图窗口组&圣遗物数据
                 self.pastes = []
+                self.artifact = {}
                 for i in range(self.row * self.col):
                     window = PasteWindow()
                     self.pastes.append(window)
                     self.pastes[i].move(self.position[i][0] / self.SCALE, self.position[i][1] / self.SCALE)
+                    self.artifact[i] = {}
         
         if btn.text() == '角色':
             if btn.isChecked() == True:
@@ -147,16 +152,25 @@ class MainWindow(QMainWindow):
                 self.xarray, self.yarray = location.xarray_B, location.yarray_B
                 self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.x_grab_B, location.y_grab_B, location.w_grab_B, location.h_grab_B
 
-                # 重置贴图窗口组
+                # 重置贴图窗口组&圣遗物数据
                 self.pastes = []
+                self.artifact = {}
                 for i in range(self.row * self.col):
                     window = PasteWindow()
                     self.pastes.append(window)
                     self.pastes[i].move(self.position[i][0] / self.SCALE, self.position[i][1] / self.SCALE)
+                    self.artifact[i] = {}
     
     # 选择框选择角色事件
-    def current_text_changed(self, s):
-        self.character = s
+    def current_index_changed(self, index):
+        self.character = self.combobox.currentText()
+        # 更新评分贴图
+        id = 0
+        for item in self.pastes:
+            if item.isVisible() == True:
+                self.score_result = score.cal_score(self.artifact[id], self.character)
+                self.pastes[id].label.setText(str(self.score_result[1]))
+            id += 1
 
     # 打开外部链接
     def open_github(self, event):
@@ -173,8 +187,8 @@ class MainWindow(QMainWindow):
                         print(self.character + 'detected')
 
                         # ocr识别与结果返回
-                        self.ocr_result = ocr.tesseract_ocr(self.x_grab, self.y_grab, self.w_grab, self.h_grab)
-                        self.score_result = score.cal_score(self.ocr_result, self.character)
+                        self.artifact[id] = ocr.tesseract_ocr(self.x_grab, self.y_grab, self.w_grab, self.h_grab)
+                        self.score_result = score.cal_score(self.artifact[id], self.character)
 
                         # 贴图更新总评分
                         self.pastes[id].label.setText(str(self.score_result[1]))
@@ -182,15 +196,44 @@ class MainWindow(QMainWindow):
 
                         # 主窗口更新详细评分
                         self.score5.setText(str(self.score_result[1]))
-                        self.name1.setText(list(self.ocr_result.keys())[0] + ' ' + str(list(self.ocr_result.values())[0]))
+                        self.name1.setText(list(self.artifact[id].keys())[0] + ' ' + str(list(self.artifact[id].values())[0]))
                         self.score1.setText(str(self.score_result[0][0]))
-                        self.name2.setText(list(self.ocr_result.keys())[1] + ' ' + str(list(self.ocr_result.values())[1]))
+                        self.name2.setText(list(self.artifact[id].keys())[1] + ' ' + str(list(self.artifact[id].values())[1]))
                         self.score2.setText(str(self.score_result[0][1]))
-                        self.name3.setText(list(self.ocr_result.keys())[2] + ' ' + str(list(self.ocr_result.values())[2]))
+                        self.name3.setText(list(self.artifact[id].keys())[2] + ' ' + str(list(self.artifact[id].values())[2]))
                         self.score3.setText(str(self.score_result[0][2]))
-                        self.name4.setText(list(self.ocr_result.keys())[3] + ' ' + str(list(self.ocr_result.values())[3]))
+                        self.name4.setText(list(self.artifact[id].keys())[3] + ' ' + str(list(self.artifact[id].values())[3]))
                         self.score4.setText(str(self.score_result[0][3]))
                         break
+                break
+
+    # 根据鼠标左键选择的圣遗物刷新主窗口圣遗物副属性和评分
+    def fresh_main_window(self, x, y):
+        for i in range(self.col):
+            if x >= self.xarray[i][0] and x <= self.xarray[i][1]:
+                for j in range(self.row):
+                    if y >= self.yarray[j][0] and y <= self.yarray[j][1]:
+                        id = j * self.col + i
+                        if self.pastes[id].isVisible() == True:
+                        
+                            # 计算评分（计算很快就不另外储存了）
+                            self.score_result = score.cal_score(self.artifact[id], self.character)
+
+                            # 贴图更新总评分
+                            self.pastes[id].label.setText(str(self.score_result[1]))
+                            self.pastes[id].show()
+
+                            # 主窗口更新详细评分
+                            self.score5.setText(str(self.score_result[1]))
+                            self.name1.setText(list(self.artifact[id].keys())[0] + ' ' + str(list(self.artifact[id].values())[0]))
+                            self.score1.setText(str(self.score_result[0][0]))
+                            self.name2.setText(list(self.artifact[id].keys())[1] + ' ' + str(list(self.artifact[id].values())[1]))
+                            self.score2.setText(str(self.score_result[0][1]))
+                            self.name3.setText(list(self.artifact[id].keys())[2] + ' ' + str(list(self.artifact[id].values())[2]))
+                            self.score3.setText(str(self.score_result[0][2]))
+                            self.name4.setText(list(self.artifact[id].keys())[3] + ' ' + str(list(self.artifact[id].values())[3]))
+                            self.score4.setText(str(self.score_result[0][3]))
+                            break
                 break
     
     # 主窗口关闭则所有贴图窗口也关闭

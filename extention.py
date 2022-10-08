@@ -4,7 +4,8 @@ from pynput import mouse
 
 # 外部/系统级鼠标事件处理
 class OutsideMouseManager(QObject):
-    released = Signal(int, int)
+    right_click = Signal(int, int)
+    left_click = Signal(int, int)
     def __init__(self, parent = None):
         super().__init__(parent)
         self._listener = mouse.Listener(on_click = self._handle_click)
@@ -12,7 +13,9 @@ class OutsideMouseManager(QObject):
     
     def _handle_click(self, x, y, button, pressed):
         if button == mouse.Button.right and pressed:
-            self.released.emit(x, y)
+            self.right_click.emit(x, y)
+        if button == mouse.Button.left and pressed:
+            self.left_click.emit(x, y)
 
 # 增强选择框
 class ExtendedComboBox(QComboBox):
