@@ -4,12 +4,9 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QShortcut, QKeySequence
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QWidget
 
-import location
-
 class PasteWindow(QWidget):
     def __init__(self):
         super().__init__()
-        SCALE = location.SCALE
 
         # 设置贴图窗口属性：透明、无边框透明、置顶
         self.setAttribute(Qt.WA_TranslucentBackground)
@@ -21,9 +18,9 @@ class PasteWindow(QWidget):
         self.label = QLabel('Er!')
         # 字体大小
         font = self.label.font()
-        font.setPointSize(14 / SCALE)
+        font.setPointSize(9)
         self.label.setFont(font)
-        self.label.setFixedSize(40 / SCALE, 40 / SCALE)
+        self.label.setFixedSize(24, 24)
         self.label.setAlignment(Qt.AlignCenter)
         # qss = 'border-image: url(paste.png);'
         qss = 'background-color: rgb(255, 255, 255)'

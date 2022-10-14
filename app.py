@@ -42,7 +42,6 @@ class MainWindow(QMainWindow):
             window = PasteWindow()
             self.pastes.append(window)
             self.pastes[i].move(self.position[i][0] / self.SCALE, self.position[i][1] / self.SCALE)
-            self.artifact[i] = {}
 
         # 背包/角色面板选择（Radio）
         self.radiobtn1 = QRadioButton('背包')
@@ -142,7 +141,6 @@ class MainWindow(QMainWindow):
                     window = PasteWindow()
                     self.pastes.append(window)
                     self.pastes[i].move(self.position[i][0] / self.SCALE, self.position[i][1] / self.SCALE)
-                    self.artifact[i] = {}
         
         if btn.text() == '角色':
             if btn.isChecked() == True:
@@ -159,7 +157,6 @@ class MainWindow(QMainWindow):
                     window = PasteWindow()
                     self.pastes.append(window)
                     self.pastes[i].move(self.position[i][0] / self.SCALE, self.position[i][1] / self.SCALE)
-                    self.artifact[i] = {}
     
     # 选择框选择角色事件
     def current_index_changed(self, index):

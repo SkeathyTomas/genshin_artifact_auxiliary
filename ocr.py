@@ -26,6 +26,10 @@ def tesseract_ocr(x, y, w, h):
     # 一些误识别兼容
     # 部分.1%将%识别为数字的情况
     txt = txt.replace('.1', '.1%')
+    # +11.x数字识别错误的情况
+    txt = txt.replace('+1.1', '+11.1')
+    txt = txt.replace('+M1', '+11')
+    txt = txt.replace('+IL', '+11')
     txt = txt.replace('77T7', '777')
 
     txt = txt.replace('仿', '伤')
