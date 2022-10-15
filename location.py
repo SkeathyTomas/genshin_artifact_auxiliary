@@ -38,23 +38,33 @@ else:
     print('暂不支持该分辨率，请联系作者。')
 
 # 贴图坐标组
-position_A = [(x_initial_A, y_initial_A), (x_initial_A + x_offset_A, y_initial_A), (x_initial_A + 2 * x_offset_A, y_initial_A), (x_initial_A + 3 * x_offset_A, y_initial_A), (x_initial_A + 4 * x_offset_A, y_initial_A), (x_initial_A + 5 * x_offset_A, y_initial_A), (x_initial_A + 6 * x_offset_A, y_initial_A), (x_initial_A + 7 * x_offset_A, y_initial_A),
-                (x_initial_A, y_initial_A + y_offset_A), (x_initial_A + x_offset_A, y_initial_A + y_offset_A), (x_initial_A + 2 * x_offset_A, y_initial_A + y_offset_A), (x_initial_A + 3 * x_offset_A, y_initial_A + y_offset_A), (x_initial_A + 4 * x_offset_A, y_initial_A + y_offset_A), (x_initial_A + 5 * x_offset_A, y_initial_A + y_offset_A), (x_initial_A + 6 * x_offset_A, y_initial_A + y_offset_A), (x_initial_A + 7 * x_offset_A, y_initial_A + y_offset_A),
-                (x_initial_A, y_initial_A + 2 * y_offset_A), (x_initial_A + x_offset_A, y_initial_A + 2 * y_offset_A), (x_initial_A + 2 * x_offset_A, y_initial_A + 2 * y_offset_A), (x_initial_A + 3 * x_offset_A, y_initial_A + 2 * y_offset_A), (x_initial_A + 4 * x_offset_A, y_initial_A + 2 * y_offset_A), (x_initial_A + 5 * x_offset_A, y_initial_A + 2 * y_offset_A), (x_initial_A + 6 * x_offset_A, y_initial_A + 2 * y_offset_A), (x_initial_A + 7 * x_offset_A, y_initial_A + 2 * y_offset_A),
-                (x_initial_A, y_initial_A + 3 * y_offset_A), (x_initial_A + x_offset_A, y_initial_A + 3 * y_offset_A), (x_initial_A + 2 * x_offset_A, y_initial_A + 3 * y_offset_A), (x_initial_A + 3 * x_offset_A, y_initial_A + 3 * y_offset_A), (x_initial_A + 4 * x_offset_A, y_initial_A + 3 * y_offset_A), (x_initial_A + 5 * x_offset_A, y_initial_A + 3 * y_offset_A), (x_initial_A + 6 * x_offset_A, y_initial_A + 3 * y_offset_A), (x_initial_A + 7 * x_offset_A, y_initial_A + 3 * y_offset_A),
-                (x_initial_A, y_initial_A + 4 * y_offset_A), (x_initial_A + x_offset_A, y_initial_A + 4 * y_offset_A), (x_initial_A + 2 * x_offset_A, y_initial_A + 4 * y_offset_A), (x_initial_A + 3 * x_offset_A, y_initial_A + 4 * y_offset_A), (x_initial_A + 4 * x_offset_A, y_initial_A + 4 * y_offset_A), (x_initial_A + 5 * x_offset_A, y_initial_A + 4 * y_offset_A), (x_initial_A + 6 * x_offset_A, y_initial_A + 4 * y_offset_A), (x_initial_A + 7 * x_offset_A, y_initial_A + 4 * y_offset_A),
-                (x_initial_A, y_initial_A + 5 * y_offset_A), (x_initial_A + x_offset_A, y_initial_A + 5 * y_offset_A), (x_initial_A + 2 * x_offset_A, y_initial_A + 5 * y_offset_A), (x_initial_A + 3 * x_offset_A, y_initial_A + 5 * y_offset_A), (x_initial_A + 4 * x_offset_A, y_initial_A + 5 * y_offset_A), (x_initial_A + 5 * x_offset_A, y_initial_A + 5 * y_offset_A), (x_initial_A + 6 * x_offset_A, y_initial_A + 5 * y_offset_A), (x_initial_A + 7 * x_offset_A, y_initial_A + 5 * y_offset_A)]
+position_A = []
+for i in range(row_A):
+    for j in range(col_A):
+        position = x_initial_A + j * x_offset_A, y_initial_A + i * y_offset_A
+        position_A.append(position)
 
-position_B = [(x_initial_B, y_initial_B), (x_initial_B + x_offset_B, y_initial_B), (x_initial_B + 2 * x_offset_B, y_initial_B), (x_initial_B + 3 * x_offset_B, y_initial_B),
-                (x_initial_B, y_initial_B + y_offset_B), (x_initial_B + x_offset_B, y_initial_B + y_offset_B), (x_initial_B + 2 * x_offset_B, y_initial_B + y_offset_B), (x_initial_B + 3 * x_offset_B, y_initial_B + y_offset_B),
-                (x_initial_B, y_initial_B + 2 * y_offset_B), (x_initial_B + x_offset_B, y_initial_B + 2 * y_offset_B), (x_initial_B + 2 * x_offset_B, y_initial_B + 2 * y_offset_B), (x_initial_B + 3 * x_offset_B, y_initial_B + 2 * y_offset_B),
-                (x_initial_B, y_initial_B + 3 * y_offset_B), (x_initial_B + x_offset_B, y_initial_B + 3 * y_offset_B), (x_initial_B + 2 * x_offset_B, y_initial_B + 3 * y_offset_B), (x_initial_B + 3 * x_offset_B, y_initial_B + 3 * y_offset_B),
-                (x_initial_B, y_initial_B + 4 * y_offset_B), (x_initial_B + x_offset_B, y_initial_B + 4 * y_offset_B), (x_initial_B + 2 * x_offset_B, y_initial_B + 4 * y_offset_B), (x_initial_B + 3 * x_offset_B, y_initial_B + 4 * y_offset_B),
-                (x_initial_B, y_initial_B + 5 * y_offset_B), (x_initial_B + x_offset_B, y_initial_B + 5 * y_offset_B), (x_initial_B + 2 * x_offset_B, y_initial_B + 5 * y_offset_B), (x_initial_B + 3 * x_offset_B, y_initial_B + 5 * y_offset_B)]
+position_B = []
+for i in range(row_B):
+    for j in range(col_B):
+        position = x_initial_B + j * x_offset_B, y_initial_B + i * y_offset_B
+        position_B.append(position)
 
 # 鼠标事件有效坐标区间
-xarray_A = [(x_left_A, x_right_A), (x_left_A + x_offset_A, x_right_A + x_offset_A), (x_left_A + 2 * x_offset_A, x_right_A + 2 * x_offset_A), (x_left_A + 3 * x_offset_A, x_right_A + 3 * x_offset_A), (x_left_A + 4 * x_offset_A, x_right_A + 4 * x_offset_A), (x_left_A + 5 * x_offset_A, x_right_A + 5 * x_offset_A), (x_left_A + 6 * x_offset_A, x_right_A + 6 * x_offset_A), (x_left_A + 7 * x_offset_A, x_right_A + 7 * x_offset_A)]
-yarray_A = [(y_top_A, y_bottom_A), (y_top_A + y_offset_A, y_bottom_A + y_offset_A), (y_top_A + 2 * y_offset_A, y_bottom_A + 2 * y_offset_A), (y_top_A + 3 * y_offset_A, y_bottom_A + 3 * y_offset_A), (y_top_A + 4 * y_offset_A, y_bottom_A + 4 * y_offset_A), (y_top_A + 5 * y_offset_A, y_bottom_A + 5 * y_offset_A)]
+xarray_A = []
+for i in range(col_A):
+    position = x_left_A + i * x_offset_A, x_right_A + i * x_offset_A
+    xarray_A.append(position)
+yarray_A = []
+for i in range(row_A):
+    position = y_top_A + i * y_offset_A, y_bottom_A + i * y_offset_A
+    yarray_A.append(position)
 
-xarray_B = [(x_left_B, x_right_B), (x_left_B + x_offset_B, x_right_B + x_offset_B), (x_left_B + 2 * x_offset_B, x_right_B + 2 * x_offset_B), (x_left_B + 3 * x_offset_B, x_right_B + 3 * x_offset_B)]
-yarray_B = [(y_top_B, y_bottom_B), (y_top_B + y_offset_B, y_bottom_B + y_offset_B), (y_top_B + 2 * y_offset_B, y_bottom_B + 2 * y_offset_B), (y_top_B + 3 * y_offset_B, y_bottom_B + 3 * y_offset_B), (y_top_B + 4 * y_offset_B, y_bottom_B + 4 * y_offset_B), (y_top_B + 5 * y_offset_B, y_bottom_B + 5 * y_offset_B)]
+xarray_B = []
+for i in range(col_B):
+    position = x_left_B + i * x_offset_B, x_right_B + i * x_offset_B
+    xarray_B.append(position)
+yarray_B = []
+for i in range(row_B):
+    position = y_top_B + i * y_offset_B, y_bottom_B + i * y_offset_B
+    yarray_B.append(position)
