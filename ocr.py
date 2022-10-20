@@ -18,7 +18,11 @@ def tesseract_ocr(x, y, w, h):
             如：{'防御力': 23.0, '元素充能效率': 5.8, '暴击伤害': 5.4}
     '''
     img = ImageGrab.grab(bbox = (x, y, x + w, y + h))
-    txt = pytesseract.image_to_string(img, lang = 'chi_sim')
+    try:
+        txt = pytesseract.image_to_string(img, lang = 'chi_sim')
+    except:
+        txt = ''
+        print('未检测到tesseract ocr引擎或中文语言包，请下载with-tesseract版本或手动安装引擎及语言包')
     
     # txt = pytesseract.image_to_string(Image.open('test/test_img/example3.png'), lang = 'chi_sim') # 本地图片测试用
     txt = txt.replace(' ', '')
