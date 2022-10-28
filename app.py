@@ -53,7 +53,7 @@ class MainWindow(QMainWindow):
         self.radiobtn2 = QRadioButton('角色')
 
         # 角色选择框
-        self.character = ''
+        self.character = '默认攻击双爆'
         self.combobox = ExtendedComboBox()
         self.combobox.addItem('--请选择角色--')
         # 添加角色
@@ -63,17 +63,19 @@ class MainWindow(QMainWindow):
         # 识别结果显示，初始配置
         self.title = QLabel('请选择圣遗物，然后点击右键')
         self.name = []
-        self.ocr_result = []
+        self.digit = []
         self.score = []
         for i in range(4):
             self.name.append(QComboBox())
             text = QLineEdit()
-            text.setFixedWidth(50)
+            # text.setFixedWidth(50)
             text.setAlignment(Qt.AlignRight)
-            self.ocr_result.append(text)
+            self.digit.append(text)
             self.score.append(QLabel())
             self.name[i].addItem('副属性词条'+ str(i + 1))
             self.name[i].addItems(score.coefficient.keys())
+            self.name[i].addItem('无')
+            self.name[i].addItem('识别错误')
         self.name5 = QLabel('总分')
         self.score5 = QLabel('0')
 
@@ -85,6 +87,8 @@ class MainWindow(QMainWindow):
             tag = response.json()['tag_name']
             if myappid != tag:
                 self.upgrade.setText('有新版本，点击右侧图标前往下载~')
+            else:
+                self.upgrade.setText(myappid)
         except:
             pass
         # 图标与release下载链接
@@ -105,7 +109,7 @@ class MainWindow(QMainWindow):
         self.layout.addWidget(self.title, 2, 0, 1, 3)
         for i in range(4):
             self.layout.addWidget(self.name[i], i + 3, 0)
-            self.layout.addWidget(self.ocr_result[i], i + 3, 1)
+            self.layout.addWidget(self.digit[i], i + 3, 1)
             self.layout.addWidget(self.score[i], i + 3, 2, Qt.AlignRight)
         self.layout.addWidget(self.name5, 7, 0)
         self.layout.addWidget(self.score5, 7, 2, Qt.AlignRight)
@@ -151,7 +155,7 @@ class MainWindow(QMainWindow):
                 self.title.setText('请选择圣遗物，然后点击右键')
                 for i in range(4):
                     self.name[i].setCurrentText('副属性词条'+ str(i + 1))
-                    self.ocr_result[i].setText('')
+                    self.digit[i].setText('')
                     self.score[i].setText('')
                 self.score5.setText('0')
         
@@ -173,7 +177,7 @@ class MainWindow(QMainWindow):
                 self.title.setText('请选择圣遗物，然后点击右键')
                 for i in range(4):
                     self.name[i].setCurrentText('副属性词条'+ str(i + 1))
-                    self.ocr_result[i].setText('')
+                    self.digit[i].setText('')
                     self.score[i].setText('')
                 self.score5.setText('0')
     
@@ -187,7 +191,8 @@ class MainWindow(QMainWindow):
                 self.pastes[i].label.setText(str(self.score_result[1]))
         
         # 更新主程序评分详情
-        self.fresh_ocr_result()
+        if self.id != -1:
+            self.fresh_ocr_result()
 
     # 打开外部链接
     def open_github(self, event):
@@ -215,8 +220,9 @@ class MainWindow(QMainWindow):
             if x >= self.xarray[i][0] and x <= self.xarray[i][1]:
                 for j in range(self.row):
                     if y >= self.yarray[j][0] and y <= self.yarray[j][1]:
-                        self.id = j * self.col + i
-                        if self.pastes[self.id].isVisible() == True:
+                        id_temp = j * self.col + i
+                        if self.pastes[id_temp].isVisible() == True:
+                            self.id = id_temp
                             self.fresh_ocr_result()
                             break
                 break
@@ -236,9 +242,19 @@ class MainWindow(QMainWindow):
         # 主窗口更新详细评分
         self.score5.setText(str(self.score_result[1]))
         for i in range(4):
-            self.name[i].setCurrentText(list(self.artifact[self.id].keys())[i])
-            self.ocr_result[i].setText(str(list(self.artifact[self.id].values())[i]))
-            self.score[i].setText(str(self.score_result[0][i]))
+            if i < len(self.artifact[self.id]):
+                if list(self.artifact[self.id].keys())[i] in score.coefficient.keys():
+                    self.name[i].setCurrentText(list(self.artifact[self.id].keys())[i])
+                    self.digit[i].setText(str(list(self.artifact[self.id].values())[i]))
+                    self.score[i].setText(str(self.score_result[0][i]))
+                else:
+                    self.name[i].setCurrentText('识别错误')
+                    self.digit[i].setText(list(self.artifact[self.id].keys())[i])
+                    self.score[i].setText('')
+            else:
+                self.name[i].setCurrentText('无')
+                self.digit[i].setText('')
+                self.score[i].setText('')
     
     # 主窗口关闭则所有贴图窗口也关闭
     def closeEvent(self, event):
