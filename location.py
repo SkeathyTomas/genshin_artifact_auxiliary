@@ -20,7 +20,7 @@ SCALE = width_r / width_s
 if width_r == 2560 and height_r == 1600:
     x_initial_A, y_initial_A, x_offset_A, y_offset_A = (300, 386, 195, 234) # 第一个贴图坐标及偏移
     x_left_A, x_right_A, y_top_A, y_bottom_A = (161, 326, 208, 412) # 第一个圣遗物坐标
-    x_grab_A, y_grab_A, w_grab_A, h_grab_A = (1808, 677 - (2 - SCALE) * 20, 377, 214) # 截图x, y, w, h
+    x_grab_A, y_grab_A, w_grab_A, h_grab_A = (1808, 677 - (2 - SCALE) * 20, 377, 214) # 截图x, y, w, h，y需要根据SCALE的标题栏高度做适配
     row_A, col_A = (6, 8) #圣遗物行列数
 
     x_initial_B, y_initial_B, x_offset_B, y_offset_B = (198, 397, 189, 225)

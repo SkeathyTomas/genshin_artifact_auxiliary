@@ -114,7 +114,7 @@ class MainWindow(QMainWindow):
         self.layout.addWidget(self.name5, 7, 0)
         self.layout.addWidget(self.score5, 7, 2, Qt.AlignRight)
         # 更新与项目链接
-        self.layout.addWidget(self.upgrade, 8, 0, Qt.AlignLeft | Qt.AlignBottom)
+        self.layout.addWidget(self.upgrade, 8, 0, 1, 2, Qt.AlignLeft | Qt.AlignBottom)
         self.layout.addWidget(self.github, 8, 2, Qt.AlignRight | Qt.AlignBottom)
         # layout载入widget中
         self.widget = QWidget()
@@ -144,20 +144,7 @@ class MainWindow(QMainWindow):
                 self.row, self.col = location.row_A, location.col_A
                 self.xarray, self.yarray = location.xarray_A, location.yarray_A
                 self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.x_grab_A, location.y_grab_A, location.w_grab_A, location.h_grab_A
-
-                # 重置贴图窗口组&圣遗物数据&主窗口信息
-                self.pastes = []
-                self.artifact = {}
-                for i in range(self.row * self.col):
-                    window = PasteWindow()
-                    self.pastes.append(window)
-                    self.pastes[i].move(self.position[i][0] / self.SCALE, self.position[i][1] / self.SCALE)
-                self.title.setText('请选择圣遗物，然后点击右键')
-                for i in range(4):
-                    self.name[i].setCurrentText('副属性词条'+ str(i + 1))
-                    self.digit[i].setText('')
-                    self.score[i].setText('')
-                self.score5.setText('0')
+                self.reset()
         
         if btn.text() == '角色':
             if btn.isChecked() == True:
@@ -166,20 +153,7 @@ class MainWindow(QMainWindow):
                 self.row, self.col = location.row_B, location.col_B
                 self.xarray, self.yarray = location.xarray_B, location.yarray_B
                 self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.x_grab_B, location.y_grab_B, location.w_grab_B, location.h_grab_B
-
-                # 重置贴图窗口组&圣遗物数据
-                self.pastes = []
-                self.artifact = {}
-                for i in range(self.row * self.col):
-                    window = PasteWindow()
-                    self.pastes.append(window)
-                    self.pastes[i].move(self.position[i][0] / self.SCALE, self.position[i][1] / self.SCALE)
-                self.title.setText('请选择圣遗物，然后点击右键')
-                for i in range(4):
-                    self.name[i].setCurrentText('副属性词条'+ str(i + 1))
-                    self.digit[i].setText('')
-                    self.score[i].setText('')
-                self.score5.setText('0')
+                self.reset()
     
     # 选择框选择角色事件
     def current_index_changed(self, index):
@@ -227,7 +201,7 @@ class MainWindow(QMainWindow):
                             break
                 break
     
-    # 刷新圣遗物识别结果面板
+    # 刷新圣遗物识别结果面板：切换角色、切换圣遗物
     def fresh_ocr_result(self):
         # 刷新圣遗物id提示
         self.title.setText('圣遗物' + str(self.id + 1))
@@ -256,21 +230,37 @@ class MainWindow(QMainWindow):
                 self.digit[i].setText('')
                 self.score[i].setText('')
     
+    # 重置圣遗物数据&贴图窗口&主程序窗口
+    def reset(self):
+        # 主程序重置
+        self.id = -1
+        self.title.setText('请选择圣遗物，然后点击右键')
+        for i in range(4):
+            self.name[i].setCurrentText('副属性词条'+ str(i + 1))
+            self.digit[i].setText('')
+            self.score[i].setText('')
+        self.score5.setText('0')
+        
+        # 数据重置
+        self.pastes = []
+        self.artifact = {}
+        for i in range(self.row * self.col):
+            window = PasteWindow()
+            self.pastes.append(window)
+            self.pastes[i].move(self.position[i][0] / self.SCALE, self.position[i][1] / self.SCALE)
+
     # 主窗口关闭则所有贴图窗口也关闭
     def closeEvent(self, event):
         for item in self.pastes:
             item.close()
     
-    # 快捷键Ctrl+Shift+Z重置贴图窗口
-    def reset(self):
-        for item in self.pastes:
-            item.hide()
-
     # 全局快捷键Ctrl+Shift+Z重置贴图窗口
     def hotkey(self):
         def on_activate():
             print('reset!')
-            self.reset()
+            # self.reset()
+            for item in self.pastes:
+                item.hide()
         
         def for_canonical(f):
             return lambda k: f(l.canonical(k))
@@ -283,7 +273,7 @@ class MainWindow(QMainWindow):
 
 def main():
     global myappid
-    myappid = 'v0.4.1'
+    myappid = 'v0.5.0'
 
     # 任务栏图标问题
     try:

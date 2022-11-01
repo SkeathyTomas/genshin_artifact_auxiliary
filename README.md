@@ -27,7 +27,7 @@
 ### OCR引擎
 
 1. OCR引擎[tesserect](https://github.com/tesseract-ocr/tesseract)，安装过程详见原项目，或者参考[这篇文章](https://www.jianshu.com/p/f7cb0b3f337a)，安装链接[tesseract-ocr-w64-setup-v5.2.0.20220712.exe](https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-v5.2.0.20220712.exe)(64位)。如果你使用`scoop`，可以使用`scoop install tesseract`快速安装。安装完成后，可在命令行输入`tesseract`检验是否安装成功。
-2. [tesseract中文简体数据文件](https://github.com/tesseract-ocr/tessdata/blob/main/chi_sim.traineddata)，下载完成后保存到tesseract数据目录`tessdata`中（如果是`scoop`安装的话，放在`./scoop/persist/tesseract/tessdata`文件夹中）。
+2. [tesseract中文简体数据文件](https://github.com/tesseract-ocr/tessdata_fast/blob/main/chi_sim.traineddata)，下载完成后保存到tesseract数据目录`tessdata`中（如果是`scoop`安装的话，放在`./scoop/persist/tesseract/tessdata`文件夹中）。
 
 ### 如果你需要直接运行python程序
 
@@ -77,7 +77,7 @@
 
 ### 分辨率适配
 
-已适配在16：10，16：9分辨率。分辨率适配框架已经搭好，若有分辨率适配问题，可提供一些不同分辨率的截图做坐标定位和测试了。需要在游戏全屏模式下按「ALT+ENTER」切换成伪全屏模式，然后全屏截图（带标题栏）私发一下我。
+已适配在16：10，16：9分辨率。分辨率适配框架已经搭好，若有分辨率适配问题，可查看程序目录中的`scr/grab.png`识别截图是否准确，并提供一些不同分辨率的全屏截图做坐标定位和测试了。需要在游戏全屏模式下按「ALT+ENTER」切换成伪全屏模式，然后全屏截图（带标题栏）私发一下我。
 
 如使用多屏设备（如笔记本外接显示器），请把游戏窗口置于第一屏。
 
@@ -110,17 +110,17 @@
 
 - [x] 中文简体
 
-## 风险和声明
+## 声明与支持
 
 本程序不收集任何用户信息，所有数据保留在本地。
 
-理论上未对任何游戏数据进行非法获取和修改，仅通过截图和OCR技术实现相关分析，且没有使用自动化程序帮助玩家获取游戏内资源，应该不在官方打击范围。
+理论上未对任何游戏数据进行非法获取和修改，仅通过截图和OCR技术实现相关分析，且没有使用自动化程序帮助玩家获取游戏内资源，应该不在官方打击范围。如若官方觉得不妥，我就删库跑路。
 
-如若官方觉得不妥，我就删库跑路。
+如果觉得有用/帮到了您的话，欢迎推荐给您的好友！
 
 ## 问题反馈
 
-提Issue，最好提供下命令行的输出（如识别错误、环境错误等）。有人的话可以考虑建个交流群什么的。
+使用中有任何问题可以提Issue，最好提供下命令行的输出（如识别错误、环境错误等）。有人的话可以考虑建个交流群什么的。
 
 ## 需求来源
 

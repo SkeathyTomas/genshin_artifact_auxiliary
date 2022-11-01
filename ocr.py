@@ -31,46 +31,10 @@ def tesseract_ocr(x, y, w, h):
     txt = txt.replace(' ', '')
 
     # 一些误识别兼容
-    # 部分.1%将%识别为数字的情况
-    txt = txt.replace('.1', '.1%')
-    # +11.x数字识别错误的情况
-    txt = txt.replace('+1.', '+11.')
-    txt = txt.replace('+M1', '+11')
-    txt = txt.replace('+IL', '+11')
-    txt = txt.replace('77T7', '777')
-
-    txt = txt.replace('仿', '伤')
-    txt = txt.replace('传', '伤')
-    txt = txt.replace('传', '伤')
-    txt = txt.replace('伪', '伤')
-
-    txt = txt.replace('政', '攻')
-    txt = txt.replace('攸', '攻')
-    txt = txt.replace('改', '攻')
-    txt = txt.replace('功', '攻')
-
-    txt = txt.replace('宇', '击')
-    txt = txt.replace('出', '击')
-    txt = txt.replace('吉', '击')
-
-    txt = txt.replace('徒', '御')
-    txt = txt.replace('绯', '御')
-
-    txt = txt.replace('宠', '害')
-    txt = txt.replace('宓', '害')
-    txt = txt.replace('窑', '害')
-
-    txt = txt.replace('演', '暴')
-    txt = txt.replace('禀', '暴')
-    txt = txt.replace('景', '暴')
-
-    txt = txt.replace('宏', '素')
-    txt = txt.replace('泰', '素')
-
-    txt = txt.replace('交', '充')
-
-    txt = txt.replace('办', '力')
-    txt = txt.replace('刀', '力')
+    txt = txt.replace(':', '.')
+    txt = txt.replace('+1986', '+986')
+    txt = txt.replace('完', '充')
+    txt = txt.replace('为', '力')
 
     # 中文和数字正则
     pattern_chinese = '[\u4e00-\u9fa5]+'
