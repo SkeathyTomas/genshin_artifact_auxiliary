@@ -18,24 +18,24 @@ SCALE = width_r / width_s
 # 分辨率适配，A代表背包面板，B代表角色面板
 # 2560*1600
 if width_r == 2560 and height_r == 1600:
-    x_initial_A, y_initial_A, x_offset_A, y_offset_A = (300, 386, 195, 234) # 第一个贴图坐标及偏移
+    x_initial_A, y_initial_A, x_offset_A, y_offset_A = (300, 386 - (2 - SCALE) * 20, 195, 234) # 第一个贴图坐标及偏移
     x_left_A, x_right_A, y_top_A, y_bottom_A = (161, 326, 208, 412) # 第一个圣遗物坐标
     x_grab_A, y_grab_A, w_grab_A, h_grab_A = (1808, 677 - (2 - SCALE) * 20, 377, 214) # 截图x, y, w, h，y需要根据SCALE的标题栏高度做适配
     row_A, col_A = (6, 8) #圣遗物行列数
 
-    x_initial_B, y_initial_B, x_offset_B, y_offset_B = (198, 397, 189, 225)
+    x_initial_B, y_initial_B, x_offset_B, y_offset_B = (198, 397 - (2 - SCALE) * 20, 189, 225)
     x_left_B, x_right_B, y_top_B, y_bottom_B = (52, 220, 215, 419)
     x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1983, 510 - (2 - SCALE) * 20, 334, 190)
     row_B, col_B = (6, 4)
 
 # 1920*1080 | 2560*1440
 elif (width_r == 1920 and height_r == 1080) or (width_r == 2560 and height_r == 1440):
-    x_initial_A, y_initial_A, x_offset_A, y_offset_A = (224 / 1920 * width_r, 289 / 1080 * height_r, 146 / 1920 * width_r, 175 / 1080 * height_r)
+    x_initial_A, y_initial_A, x_offset_A, y_offset_A = (224 / 1920 * width_r, (289 - (1.5 - SCALE) * 20) / 1080 * height_r, 146 / 1920 * width_r, 175 / 1080 * height_r)
     x_left_A, x_right_A, y_top_A, y_bottom_A = (121 / 1920 * width_r, 246 / 1920 * width_r, 157 / 1080 * height_r, 311 / 1080 * height_r)
     x_grab_A, y_grab_A, w_grab_A, h_grab_A = (1359 / 1920 * width_r, (511 - (1.5 - SCALE) * 20) / 1080 * height_r, 271 / 1920 * width_r, 156 / 1080 * height_r)
     row_A, col_A = (5, 8)
 
-    x_initial_B, y_initial_B, x_offset_B, y_offset_B = (144 / 1920 * width_r, 293 / 1080 * height_r, 142 / 1920 * width_r, 168 / 1080 * height_r)
+    x_initial_B, y_initial_B, x_offset_B, y_offset_B = (144 / 1920 * width_r, (293 - (1.5 - SCALE) * 20) / 1080 * height_r, 142 / 1920 * width_r, 168 / 1080 * height_r)
     x_left_B, x_right_B, y_top_B, y_bottom_B = (39 / 1920 * width_r, 166 / 1920 * width_r, 162 / 1080 * height_r, 315 / 1080 * height_r)
     x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1492 / 1920 * width_r, (384 - (1.5 - SCALE) * 20) / 1080 * height_r, 257 / 1920 * width_r, 141 / 1080 * height_r)
     row_B, col_B = (5, 4)

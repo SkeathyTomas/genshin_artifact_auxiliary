@@ -76,6 +76,7 @@ class MainWindow(QMainWindow):
             self.name[i].addItems(score.coefficient.keys())
             self.name[i].addItem('无')
             self.name[i].addItem('识别错误')
+        self.button = QPushButton('确认修改')
         self.name5 = QLabel('总分')
         self.score5 = QLabel('0')
 
@@ -111,7 +112,8 @@ class MainWindow(QMainWindow):
             self.layout.addWidget(self.name[i], i + 3, 0)
             self.layout.addWidget(self.digit[i], i + 3, 1)
             self.layout.addWidget(self.score[i], i + 3, 2, Qt.AlignRight)
-        self.layout.addWidget(self.name5, 7, 0)
+        self.layout.addWidget(self.button, 7, 0)
+        self.layout.addWidget(self.name5, 7, 1)
         self.layout.addWidget(self.score5, 7, 2, Qt.AlignRight)
         # 更新与项目链接
         self.layout.addWidget(self.upgrade, 8, 0, 1, 2, Qt.AlignLeft | Qt.AlignBottom)
@@ -127,6 +129,8 @@ class MainWindow(QMainWindow):
         self.radiobtn2.toggled.connect(lambda: self.radiobtn_state(self.radiobtn2))
         # 角色下拉框选择
         self.combobox.currentIndexChanged.connect(self.current_index_changed)
+        # 识别结果修改
+        self.button.clicked.connect(self.button_clicked)
         # 图标外部链接
         self.github.setCursor(Qt.PointingHandCursor)
         self.github.mousePressEvent = self.open_github
@@ -166,6 +170,18 @@ class MainWindow(QMainWindow):
         
         # 更新主程序评分详情
         if self.id != -1:
+            self.fresh_ocr_result()
+    
+    # 修改识别结果按钮
+    def button_clicked(self):
+        if self.id != -1:
+            self.artifact[self.id] = {}
+            for i in range(4):
+                try:
+                    self.artifact[self.id][self.name[i].currentText()] = float(self.digit[i].text())
+                except:
+                    pass
+                print(self.artifact[self.id])
             self.fresh_ocr_result()
 
     # 打开外部链接
