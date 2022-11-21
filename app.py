@@ -1,7 +1,7 @@
-import sys, os, requests
+import sys, os, requests, json
 from pynput import keyboard
 
-import location, ocr, score, characters
+import location, ocr, score
 from extention import OutsideMouseManager, ExtendedComboBox
 from paste_window import PasteWindow
 
@@ -57,7 +57,9 @@ class MainWindow(QMainWindow):
         self.combobox = ExtendedComboBox()
         self.combobox.addItem('--请选择角色--')
         # 添加角色
-        for key in characters.config:
+        with open('src/character.json', 'r', encoding = 'UTF-8') as f:
+            characters = json.load(f)
+        for key in characters:
             self.combobox.addItem(key)
 
         # 识别结果显示，初始配置
@@ -168,7 +170,8 @@ class MainWindow(QMainWindow):
                 self.pastes[i].label.setText(str(self.score_result[1]))
         
         # 更新主程序评分详情
-        self.fresh_main_window()
+        if self.artifact != {}:
+            self.fresh_main_window()
     
     # 修改识别结果按钮
     def button_clicked(self):
