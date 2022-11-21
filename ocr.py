@@ -25,7 +25,8 @@ def tesseract_ocr(x, y, w, h):
         txt = ''
         print('未检测到tesseract ocr引擎或中文语言包，请下载with-tesseract版本或手动安装引擎及语言包')
     
-    # txt = pytesseract.image_to_string(Image.open('test/test_img/example2.png'), lang = 'chi_sim') # 本地图片测试用
+    # 本地图片测试用
+    # txt = pytesseract.image_to_string(Image.open('test/test_img/example.png'), lang = 'chi_sim')
     # 纯数字单行测试
     # txt = pytesseract.image_to_string(Image.open('test/test_img/1.png'), lang = 'eng', config='--psm 13 --oem 1 -c tessedit_char_whitelist=0123456789.')
     txt = txt.replace(' ', '')

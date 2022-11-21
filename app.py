@@ -74,7 +74,6 @@ class MainWindow(QMainWindow):
             self.score.append(QLabel())
             self.name[i].addItem('副属性词条'+ str(i + 1))
             self.name[i].addItems(score.coefficient.keys())
-            self.name[i].addItem('无')
             self.name[i].addItem('识别错误')
         self.button = QPushButton('确认修改')
         self.name5 = QLabel('总分')
@@ -169,20 +168,22 @@ class MainWindow(QMainWindow):
                 self.pastes[i].label.setText(str(self.score_result[1]))
         
         # 更新主程序评分详情
-        if self.id != -1:
-            self.fresh_ocr_result()
+        self.fresh_main_window()
     
     # 修改识别结果按钮
     def button_clicked(self):
+        self.artifact[self.id] = {}
+        for i in range(4):
+            try:
+                self.artifact[self.id][self.name[i].currentText()] = float(self.digit[i].text())
+            except:
+                pass
+        print(self.artifact[self.id])
         if self.id != -1:
-            self.artifact[self.id] = {}
-            for i in range(4):
-                try:
-                    self.artifact[self.id][self.name[i].currentText()] = float(self.digit[i].text())
-                except:
-                    pass
-                print(self.artifact[self.id])
-            self.fresh_ocr_result()
+            self.fresh_main_window()
+            self.fresh_paste_window()
+        else:
+            self.fresh_main_window()
 
     # 打开外部链接
     def open_github(self, event):
@@ -195,12 +196,12 @@ class MainWindow(QMainWindow):
             if x >= self.xarray[i][0] and x <= self.xarray[i][1]:
                 for j in range(self.row):
                     if y >= self.yarray[j][0] and y <= self.yarray[j][1]:
-                        self.id = j * self.col + i
                         print(self.character + 'detected')
-                        
                         # ocr识别与结果返回并刷新主面板
+                        self.id = j * self.col + i
                         self.artifact[self.id] = ocr.tesseract_ocr(self.x_grab, self.y_grab, self.w_grab, self.h_grab)
-                        self.fresh_ocr_result()
+                        self.fresh_main_window()
+                        self.fresh_paste_window()                        
                         break
                 break
 
@@ -213,21 +214,17 @@ class MainWindow(QMainWindow):
                         id_temp = j * self.col + i
                         if self.pastes[id_temp].isVisible() == True:
                             self.id = id_temp
-                            self.fresh_ocr_result()
+                            self.fresh_main_window()
                             break
                 break
     
-    # 刷新圣遗物识别结果面板：切换角色、切换圣遗物
-    def fresh_ocr_result(self):
+    # 刷新主程序（识别、选择、切换角色、修改后确认）
+    def fresh_main_window(self):
         # 刷新圣遗物id提示
         self.title.setText('圣遗物' + str(self.id + 1))
 
         # 计算评分（计算很快就不另外储存了）
         self.score_result = score.cal_score(self.artifact[self.id], self.character)
-
-        # 贴图更新总评分
-        self.pastes[self.id].label.setText(str(self.score_result[1]))
-        self.pastes[self.id].show()
 
         # 主窗口更新详细评分
         self.score5.setText(str(self.score_result[1]))
@@ -242,10 +239,15 @@ class MainWindow(QMainWindow):
                     self.digit[i].setText(list(self.artifact[self.id].keys())[i])
                     self.score[i].setText('')
             else:
-                self.name[i].setCurrentText('无')
+                self.name[i].setCurrentText('识别错误')
                 self.digit[i].setText('')
                 self.score[i].setText('')
     
+    # 刷新圣遗物贴图（识别、修改后确认,后于主面板更新）
+    def fresh_paste_window(self):
+        self.pastes[self.id].label.setText(str(self.score_result[1]))
+        self.pastes[self.id].show()
+
     # 重置圣遗物数据&贴图窗口&主程序窗口
     def reset(self):
         # 主程序重置
@@ -275,6 +277,7 @@ class MainWindow(QMainWindow):
         def on_activate():
             print('reset!')
             # self.reset()
+            self.id = -1
             for item in self.pastes:
                 item.hide()
         

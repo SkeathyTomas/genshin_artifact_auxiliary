@@ -1,6 +1,6 @@
 '''计算圣遗物评分'''
 
-import characters
+import json
 
 # 基础词条系数
 coefficient = {
@@ -32,7 +32,9 @@ def cal_score(ocr_result, character):
 
     # 获取角色配置，角色未输入或输入错误则取攻击双爆
     try:
-        config = characters.config[character]
+        with open('src/character.json', 'r', encoding = 'UTF-8') as f:
+            characters = json.load(f)
+        config = characters[character]
     except:
         config = {'生命值': 0, '攻击力': 0.75, '防御力': 0, '暴击率': 1, '暴击伤害': 1, '元素精通': 0, '元素充能效率': 0}
     

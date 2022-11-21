@@ -1,3 +1,5 @@
+'''拓展组件封装：系统级鼠标事件；增强下拉选择框'''
+
 from PySide6.QtCore import QObject, Signal, Qt, QSortFilterProxyModel
 from PySide6.QtWidgets import QComboBox, QCompleter
 from pynput import mouse
