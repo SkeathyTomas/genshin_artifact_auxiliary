@@ -52,14 +52,15 @@ class MainWindow(QMainWindow):
         self.radiobtn1.setChecked(True)
         self.radiobtn2 = QRadioButton('角色')
 
-        # 角色选择框
+        # 默认角色及配置
         self.character = '默认攻击双爆'
+        self.config = {'生命值': 0, '攻击力': 0.75, '防御力': 0, '暴击率': 1, '暴击伤害': 1, '元素精通': 0, '元素充能效率': 0}
+        # 角色选择框
         self.combobox = ExtendedComboBox()
-        self.combobox.addItem('--请选择角色--')
         # 添加角色
         with open('src/character.json', 'r', encoding = 'UTF-8') as f:
-            characters = json.load(f)
-        for key in characters:
+            self.characters = json.load(f)
+        for key in self.characters:
             self.combobox.addItem(key)
 
         # 识别结果显示，初始配置
@@ -163,10 +164,16 @@ class MainWindow(QMainWindow):
     # 选择框选择角色事件
     def current_index_changed(self, index):
         self.character = self.combobox.currentText()
+        try:
+            self.config = self.characters[self.character]
+            if self.config == {}:
+                self.config = {'生命值': 0, '攻击力': 0.75, '防御力': 0, '暴击率': 1, '暴击伤害': 1, '元素精通': 0, '元素充能效率': 0}
+        except:
+            self.config = {'生命值': 0, '攻击力': 0.75, '防御力': 0, '暴击率': 1, '暴击伤害': 1, '元素精通': 0, '元素充能效率': 0}
         # 更新评分贴图
         for i in range(len(self.pastes)):
             if self.pastes[i].isVisible() == True:
-                self.score_result = score.cal_score(self.artifact[i], self.character)
+                self.score_result = score.cal_score(self.artifact[i], self.config)
                 self.pastes[i].label.setText(str(self.score_result[1]))
         
         # 更新主程序评分详情
@@ -227,7 +234,7 @@ class MainWindow(QMainWindow):
         self.title.setText('圣遗物' + str(self.id + 1))
 
         # 计算评分（计算很快就不另外储存了）
-        self.score_result = score.cal_score(self.artifact[self.id], self.character)
+        self.score_result = score.cal_score(self.artifact[self.id], self.config)
 
         # 主窗口更新详细评分
         self.score5.setText(str(self.score_result[1]))
@@ -279,8 +286,7 @@ class MainWindow(QMainWindow):
     def hotkey(self):
         def on_activate():
             print('reset!')
-            # self.reset()
-            self.id = -1
+            # self.reset() # 为啥这里调用就闪退
             for item in self.pastes:
                 item.hide()
         
@@ -295,7 +301,7 @@ class MainWindow(QMainWindow):
 
 def main():
     global myappid
-    myappid = 'v0.5.0'
+    myappid = 'v0.5.1'
 
     # 任务栏图标问题
     try:
