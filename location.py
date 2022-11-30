@@ -24,7 +24,7 @@ if (width_r == 2560 and height_r == 1600) or (width_r == 1280 and height_r == 80
     row_A, col_A = (6, 8) #圣遗物行列数
 
     x_initial_B, y_initial_B, x_offset_B, y_offset_B = (198 / 2560 * width_r, (397 - 50) / 1600 * height_r + SCALE * 25, 189 / 2560 * width_r, 225 / 1600 * height_r)
-    x_left_B, x_right_B, y_top_B, y_bottom_B = (52 / 2560 * width_r, 220 / 2560 * width_r, (215 -50) / 1600 * width_r + SCALE * 25, (419 - 50) / 1600 * height_r + SCALE * 25)
+    x_left_B, x_right_B, y_top_B, y_bottom_B = (52 / 2560 * width_r, 220 / 2560 * width_r, (215 -50) / 1600 * height_r + SCALE * 25, (419 - 50) / 1600 * height_r + SCALE * 25)
     x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1983 / 2560 * width_r, (510 - 50) / 1600 * height_r + SCALE * 25, 334 / 2560 * width_r, 200 / 1600 * height_r)
     row_B, col_B = (6, 4)
 
