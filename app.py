@@ -30,11 +30,11 @@ class MainWindow(QMainWindow):
         self.setFocusPolicy(Qt.StrongFocus)
         self.move(0, 0)
 
-        # 默认坐标信息-背包A
-        self.position = location.position_A
-        self.row, self.col = location.row_A, location.col_A
-        self.xarray, self.yarray = location.xarray_A, location.yarray_A
-        self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.x_grab_A, location.y_grab_A, location.w_grab_A, location.h_grab_A
+        # 默认坐标信息-角色B
+        self.position = location.position_B
+        self.row, self.col = location.row_B, location.col_B
+        self.xarray, self.yarray = location.xarray_B, location.yarray_B
+        self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.x_grab_B, location.y_grab_B, location.w_grab_B, location.h_grab_B
         self.SCALE = location.SCALE
 
         # 预先设定好贴图窗口组&每一个窗口的圣遗物数据
@@ -48,9 +48,9 @@ class MainWindow(QMainWindow):
             self.pastes[i].move(self.position[i][0] / self.SCALE, self.position[i][1] / self.SCALE)
 
         # 背包/角色面板选择（Radio）
-        self.radiobtn1 = QRadioButton('背包')
+        self.radiobtn1 = QRadioButton('角色')
         self.radiobtn1.setChecked(True)
-        self.radiobtn2 = QRadioButton('角色')
+        self.radiobtn2 = QRadioButton('背包')
 
         # 默认角色及配置
         self.character = '默认攻击双爆'
@@ -301,7 +301,7 @@ class MainWindow(QMainWindow):
 
 def main():
     global myappid
-    myappid = 'v0.5.1'
+    myappid = 'v0.5.2'
 
     # 任务栏图标问题
     try:
