@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (
     QComboBox,
     QLineEdit
 )
+import qtvscodestyle
 
 # 主窗口
 class MainWindow(QMainWindow):
@@ -40,6 +41,7 @@ class MainWindow(QMainWindow):
         # 预先设定好贴图窗口组&每一个窗口的圣遗物数据
         self.pastes = []
         self.id = -1
+        # 当前屏幕中圣遗物坐标及副词条dict，{'0': {'暴击率': 2.0}, '2': {'暴击伤害': 4.0}}
         self.artifact = {}
         self.score_result = [[0, 0 ,0 ,0], 0]
         for i in range(self.row * self.col):
@@ -58,7 +60,7 @@ class MainWindow(QMainWindow):
         # 角色选择框
         self.combobox = ExtendedComboBox()
         # 添加角色
-        with open('src/character.json', 'r', encoding = 'UTF-8') as f:
+        with open('src/character.json', 'r', encoding = 'utf-8') as f:
             self.characters = json.load(f)
         for key in self.characters:
             self.combobox.addItem(key)
@@ -82,6 +84,19 @@ class MainWindow(QMainWindow):
         self.name5 = QLabel('总分')
         self.score5 = QLabel('0')
 
+        # 评分方案本地保存，选择框、保存确认按钮
+        self.archive = ExtendedComboBox()
+        self.archive.setEditable(True)
+        self.archive.addItem('----保存此屏结果请输入名称----')
+        try:
+            with open('src/archive.json', 'r', encoding = 'utf-8') as fp:
+                self.artifacts = json.load(fp)
+                for archive_name in self.artifacts:
+                    self.archive.addItem(archive_name)
+        except:
+            self.artifacts = {}
+        self.save = QPushButton('保存')
+
         # GitHub图标与项目链接
         # 更新提示
         self.upgrade = QLabel()
@@ -96,7 +111,7 @@ class MainWindow(QMainWindow):
             pass
         # 图标与release下载链接
         self.github = QLabel()
-        self.github.setFixedSize(16, 16)
+        self.github.setFixedSize(20, 20)
         pixmap = QPixmap('src/GitHub.png')
         pixmap = pixmap.scaled(16, 16)
         self.github.setPixmap(pixmap)
@@ -117,9 +132,12 @@ class MainWindow(QMainWindow):
         self.layout.addWidget(self.button, 7, 0)
         self.layout.addWidget(self.name5, 7, 1)
         self.layout.addWidget(self.score5, 7, 2, Qt.AlignRight)
+        # 保存/读取方案
+        self.layout.addWidget(self.archive, 8, 0, 1, 2)
+        self.layout.addWidget(self.save, 8, 2)
         # 更新与项目链接
-        self.layout.addWidget(self.upgrade, 8, 0, 1, 2, Qt.AlignLeft | Qt.AlignBottom)
-        self.layout.addWidget(self.github, 8, 2, Qt.AlignRight | Qt.AlignBottom)
+        self.layout.addWidget(self.upgrade, 9, 0, 1, 2, Qt.AlignLeft | Qt.AlignBottom)
+        self.layout.addWidget(self.github, 9, 2, Qt.AlignRight | Qt.AlignBottom)
         # layout载入widget中
         self.widget = QWidget()
         self.widget.setLayout(self.layout)
@@ -133,6 +151,10 @@ class MainWindow(QMainWindow):
         self.combobox.currentIndexChanged.connect(self.current_index_changed)
         # 识别结果修改
         self.button.clicked.connect(self.button_clicked)
+        # 本地方案选择
+        self.archive.currentIndexChanged.connect(self.archive_index_changed)
+        # 方案保存按钮
+        self.save.clicked.connect(self.button_save)
         # 图标外部链接
         self.github.setCursor(Qt.PointingHandCursor)
         self.github.mousePressEvent = self.open_github
@@ -173,7 +195,7 @@ class MainWindow(QMainWindow):
         # 更新评分贴图
         for i in range(len(self.pastes)):
             if self.pastes[i].isVisible() == True:
-                self.score_result = score.cal_score(self.artifact[i], self.config)
+                self.score_result = score.cal_score(self.artifact[str(i)], self.config)
                 self.pastes[i].label.setText(str(self.score_result[1]))
         
         # 更新主程序评分详情
@@ -182,18 +204,41 @@ class MainWindow(QMainWindow):
     
     # 修改识别结果按钮
     def button_clicked(self):
-        self.artifact[self.id] = {}
+        self.artifact[str(self.id)] = {}
         for i in range(4):
             try:
-                self.artifact[self.id][self.name[i].currentText()] = float(self.digit[i].text())
+                self.artifact[str(self.id)][self.name[i].currentText()] = float(self.digit[i].text())
             except:
                 pass
-        print(self.artifact[self.id])
+        print(self.artifact[str(self.id)])
         if self.id != -1:
             self.fresh_main_window()
             self.fresh_paste_window()
         else:
             self.fresh_main_window()
+    
+    # 方案选择框事件
+    def archive_index_changed(self, index):
+        self.reset()
+        self.artifact = self.artifacts[self.archive.currentText()]
+        print(self.artifact)
+        for key in self.artifact:
+            self.id = eval(key)
+            if self.id != -1:
+                self.fresh_main_window()
+                self.fresh_paste_window()
+            else:
+                self.fresh_main_window()
+    
+    # 保存方案按钮
+    def button_save(self):
+        new_archive = self.archive.currentText()
+        if new_archive != None and self.artifact != None:
+            if new_archive not in self.artifacts.keys():
+                self.archive.addItem(new_archive)
+            self.artifacts.update({new_archive: self.artifact})
+            with open('src/archive.json', 'w', encoding = 'utf-8') as fp:
+                json.dump(self.artifacts, fp, ensure_ascii = False)
 
     # 打开外部链接
     def open_github(self, event):
@@ -209,9 +254,9 @@ class MainWindow(QMainWindow):
                         print(self.character + 'detected')
                         # ocr识别与结果返回并刷新主面板
                         self.id = j * self.col + i
-                        self.artifact[self.id] = ocr.tesseract_ocr(self.x_grab, self.y_grab, self.w_grab, self.h_grab)
+                        self.artifact[str(self.id)] = ocr.tesseract_ocr(self.x_grab, self.y_grab, self.w_grab, self.h_grab)
                         self.fresh_main_window()
-                        self.fresh_paste_window()                        
+                        self.fresh_paste_window()
                         break
                 break
 
@@ -234,19 +279,19 @@ class MainWindow(QMainWindow):
         self.title.setText('圣遗物' + str(self.id + 1))
 
         # 计算评分（计算很快就不另外储存了）
-        self.score_result = score.cal_score(self.artifact[self.id], self.config)
+        self.score_result = score.cal_score(self.artifact[str(self.id)], self.config)
 
         # 主窗口更新详细评分
         self.score5.setText(str(self.score_result[1]))
         for i in range(4):
-            if i < len(self.artifact[self.id]):
-                if list(self.artifact[self.id].keys())[i] in score.coefficient.keys():
-                    self.name[i].setCurrentText(list(self.artifact[self.id].keys())[i])
-                    self.digit[i].setText(str(list(self.artifact[self.id].values())[i]))
+            if i < len(self.artifact[str(self.id)]):
+                if list(self.artifact[str(self.id)].keys())[i] in score.coefficient.keys():
+                    self.name[i].setCurrentText(list(self.artifact[str(self.id)].keys())[i])
+                    self.digit[i].setText(str(list(self.artifact[str(self.id)].values())[i]))
                     self.score[i].setText(str(self.score_result[0][i]))
                 else:
                     self.name[i].setCurrentText('识别错误')
-                    self.digit[i].setText(list(self.artifact[self.id].keys())[i])
+                    self.digit[i].setText(list(self.artifact[str(self.id)].keys())[i])
                     self.score[i].setText('')
             else:
                 self.name[i].setCurrentText('识别错误')
@@ -287,6 +332,8 @@ class MainWindow(QMainWindow):
         def on_activate():
             print('reset!')
             # self.reset() # 为啥这里调用就闪退
+            self.id = -1
+            self.artifact = {}
             for item in self.pastes:
                 item.hide()
         
@@ -311,6 +358,7 @@ def main():
         pass
 
     app = QApplication(sys.argv)
+    app.setStyleSheet(qtvscodestyle.load_stylesheet(qtvscodestyle.Theme.LIGHT_VS))
     window = MainWindow()
     window.show()
     window.hotkey()
