@@ -5,7 +5,7 @@ import location, ocr, score
 from extention import OutsideMouseManager, ExtendedComboBox
 from paste_window import PasteWindow
 
-from PySide6.QtCore import Qt, QUrl
+from PySide6.QtCore import Qt, QUrl, QTimer
 from PySide6.QtGui import QKeySequence, QShortcut, QIcon, QPixmap, QDesktopServices
 from PySide6.QtWidgets import (
     QApplication,
@@ -91,8 +91,8 @@ class MainWindow(QMainWindow):
         try:
             with open('src/archive.json', 'r', encoding = 'utf-8') as fp:
                 self.artifacts = json.load(fp)
-                for archive_name in self.artifacts:
-                    self.archive.addItem(archive_name)
+            for archive_name in self.artifacts:
+                self.archive.addItem(archive_name)
         except:
             self.artifacts = {}
         self.save = QPushButton('保存')
@@ -220,7 +220,7 @@ class MainWindow(QMainWindow):
     # 方案选择框事件
     def archive_index_changed(self, index):
         self.reset()
-        self.artifact = self.artifacts[self.archive.currentText()]
+        self.artifact = self.artifacts[self.archive.currentText()].copy()
         print(self.artifact)
         for key in self.artifact:
             self.id = eval(key)
@@ -233,12 +233,29 @@ class MainWindow(QMainWindow):
     # 保存方案按钮
     def button_save(self):
         new_archive = self.archive.currentText()
-        if new_archive != None and self.artifact != None:
+        if new_archive != '' and self.artifact != {}:
             if new_archive not in self.artifacts.keys():
                 self.archive.addItem(new_archive)
+                hint_txt = '保存成功！'
+            else:
+                hint_txt = '更新成功！'
             self.artifacts.update({new_archive: self.artifact})
             with open('src/archive.json', 'w', encoding = 'utf-8') as fp:
                 json.dump(self.artifacts, fp, ensure_ascii = False)
+        elif new_archive == '----保存此屏结果请输入名称----':
+            hint_txt = '请输入名称~'
+        else:
+            hint_txt = '未识别圣遗物，无结果保存~'
+        
+        # 保存按钮结果提示
+        self.upgrade.setText(hint_txt)
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.reset_myappid)
+        self.timer.start(2000)
+    
+    # 恢复版本号信息
+    def reset_myappid(self):
+        self.upgrade.setText(myappid)
 
     # 打开外部链接
     def open_github(self, event):
@@ -252,7 +269,7 @@ class MainWindow(QMainWindow):
                 for j in range(self.row):
                     if y >= self.yarray[j][0] and y <= self.yarray[j][1]:
                         print(self.character + 'detected')
-                        # ocr识别与结果返回并刷新主面板
+                        # ocr识别与结果返回并刷新主面板、贴图
                         self.id = j * self.col + i
                         self.artifact[str(self.id)] = ocr.tesseract_ocr(self.x_grab, self.y_grab, self.w_grab, self.h_grab)
                         self.fresh_main_window()
@@ -273,7 +290,7 @@ class MainWindow(QMainWindow):
                             break
                 break
     
-    # 刷新主程序（识别、选择、切换角色、修改后确认）
+    # 刷新主程序（识别、选择、切换角色、修改后确认、加载本地数据）
     def fresh_main_window(self):
         # 刷新圣遗物id提示
         self.title.setText('圣遗物' + str(self.id + 1))
@@ -298,7 +315,7 @@ class MainWindow(QMainWindow):
                 self.digit[i].setText('')
                 self.score[i].setText('')
     
-    # 刷新圣遗物贴图（识别、修改后确认,后于主面板更新）
+    # 刷新圣遗物贴图（识别、修改后确认、加载本地数据,后于主面板更新）
     def fresh_paste_window(self):
         self.pastes[self.id].label.setText(str(self.score_result[1]))
         self.pastes[self.id].show()
@@ -334,6 +351,12 @@ class MainWindow(QMainWindow):
             # self.reset() # 为啥这里调用就闪退
             self.id = -1
             self.artifact = {}
+            self.title.setText('请选择圣遗物，然后点击右键')
+            for i in range(4):
+                self.name[i].setCurrentText('副属性词条'+ str(i + 1))
+                # self.digit[i].setText('')
+                self.score[i].setText('')
+            self.score5.setText('0')
             for item in self.pastes:
                 item.hide()
         
