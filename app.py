@@ -53,6 +53,7 @@ class MainWindow(QMainWindow):
         self.radiobtn1 = QRadioButton('角色')
         self.radiobtn1.setChecked(True)
         self.radiobtn2 = QRadioButton('背包')
+        self.type = '角色'
 
         # 默认角色及配置
         self.character = '默认攻击双爆'
@@ -91,8 +92,8 @@ class MainWindow(QMainWindow):
         try:
             with open('src/archive.json', 'r', encoding = 'utf-8') as fp:
                 self.artifacts = json.load(fp)
-            for archive_name in self.artifacts:
-                self.archive.addItem(archive_name)
+            for name in self.artifacts[self.type]:
+                self.archive.addItem(name)
         except:
             self.artifacts = {}
         self.save = QPushButton('保存')
@@ -167,6 +168,8 @@ class MainWindow(QMainWindow):
     def radiobtn_state(self, btn):
         if btn.text() == '背包':
             if btn.isChecked() == True:
+                self.type = '背包'
+                self.reset_archive()
                 # 重置坐标信息
                 self.position = location.position_A
                 self.row, self.col = location.row_A, location.col_A
@@ -176,6 +179,8 @@ class MainWindow(QMainWindow):
         
         if btn.text() == '角色':
             if btn.isChecked() == True:
+                self.type = '角色'
+                self.reset_archive()
                 # 重置坐标信息
                 self.position = location.position_B
                 self.row, self.col = location.row_B, location.col_B
@@ -183,6 +188,13 @@ class MainWindow(QMainWindow):
                 self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.x_grab_B, location.y_grab_B, location.w_grab_B, location.h_grab_B
                 self.reset()
     
+    # 重置保存结果选择框
+    def reset_archive(self):
+        self.archive.clear()
+        self.archive.addItem('----保存此屏结果请输入名称----')
+        for name in self.artifacts[self.type]:
+            self.archive.addItem(name)
+
     # 选择框选择角色事件
     def current_index_changed(self, index):
         self.character = self.combobox.currentText()
@@ -220,7 +232,7 @@ class MainWindow(QMainWindow):
     # 方案选择框事件
     def archive_index_changed(self, index):
         self.reset()
-        self.artifact = self.artifacts[self.archive.currentText()].copy()
+        self.artifact = self.artifacts[self.type][self.archive.currentText()].copy()
         print(self.artifact)
         for key in self.artifact:
             self.id = eval(key)
@@ -234,15 +246,17 @@ class MainWindow(QMainWindow):
     def button_save(self):
         new_archive = self.archive.currentText()
         if new_archive != '' and self.artifact != {}:
-            if new_archive not in self.artifacts.keys():
+            if new_archive not in self.artifacts[self.type].keys():
                 self.archive.addItem(new_archive)
                 hint_txt = '保存成功！'
             else:
                 hint_txt = '更新成功！'
-            self.artifacts.update({new_archive: self.artifact})
+            self.artifacts[self.type].update({new_archive: self.artifact})
+            dic_sorted = sorted(self.artifacts[self.type].items())
+            self.artifacts[self.type] = {k: v for k, v in dic_sorted}
             with open('src/archive.json', 'w', encoding = 'utf-8') as fp:
                 json.dump(self.artifacts, fp, ensure_ascii = False)
-        elif new_archive == '----保存此屏结果请输入名称----':
+        elif new_archive == '----保存此屏结果请输入名称----' or new_archive == '':
             hint_txt = '请输入名称~'
         else:
             hint_txt = '未识别圣遗物，无结果保存~'
@@ -371,7 +385,7 @@ class MainWindow(QMainWindow):
 
 def main():
     global myappid
-    myappid = 'v0.5.2'
+    myappid = 'v0.6.0'
 
     # 任务栏图标问题
     try:
