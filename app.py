@@ -19,7 +19,7 @@ from PySide6.QtWidgets import (
     QComboBox,
     QLineEdit
 )
-import qtvscodestyle
+import qdarktheme
 
 # 主窗口
 class MainWindow(QMainWindow):
@@ -95,7 +95,9 @@ class MainWindow(QMainWindow):
             for name in self.artifacts[self.type]:
                 self.archive.addItem(name)
         except:
-            self.artifacts = {}
+            with open('src/archive.json', 'w', encoding = 'utf-8') as fp:
+                self.artifacts = {'背包':{}, '角色': {}}
+                json.dump(self.artifacts, fp, ensure_ascii = False)
         self.save = QPushButton('保存')
 
         # GitHub图标与项目链接
@@ -245,7 +247,9 @@ class MainWindow(QMainWindow):
     # 保存方案按钮
     def button_save(self):
         new_archive = self.archive.currentText()
-        if new_archive != '' and self.artifact != {}:
+        if new_archive == '----保存此屏结果请输入名称----' or new_archive == '':
+            hint_txt = '请输入名称~'
+        elif self.artifact != {}:
             if new_archive not in self.artifacts[self.type].keys():
                 self.archive.addItem(new_archive)
                 hint_txt = '保存成功！'
@@ -256,8 +260,6 @@ class MainWindow(QMainWindow):
             self.artifacts[self.type] = {k: v for k, v in dic_sorted}
             with open('src/archive.json', 'w', encoding = 'utf-8') as fp:
                 json.dump(self.artifacts, fp, ensure_ascii = False)
-        elif new_archive == '----保存此屏结果请输入名称----' or new_archive == '':
-            hint_txt = '请输入名称~'
         else:
             hint_txt = '未识别圣遗物，无结果保存~'
         
@@ -395,7 +397,7 @@ def main():
         pass
 
     app = QApplication(sys.argv)
-    app.setStyleSheet(qtvscodestyle.load_stylesheet(qtvscodestyle.Theme.LIGHT_VS))
+    app.setStyleSheet(qdarktheme.load_stylesheet('light'))
     window = MainWindow()
     window.show()
     window.hotkey()
