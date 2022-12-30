@@ -5,7 +5,7 @@ from PySide6.QtGui import QShortcut, QKeySequence
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QWidget
 import location
 
-scale = location.width_r / 1280 / location.SCALE
+scale = location.w_width / 1280 / location.SCALE
 
 class PasteWindow(QWidget):
     def __init__(self):

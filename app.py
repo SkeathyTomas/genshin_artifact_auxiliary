@@ -1,4 +1,4 @@
-import sys, os, requests, json
+import sys, os, requests, json, qdarktheme
 from pynput import keyboard
 
 import location, ocr, score
@@ -19,7 +19,6 @@ from PySide6.QtWidgets import (
     QComboBox,
     QLineEdit
 )
-import qdarktheme
 
 # 主窗口
 class MainWindow(QMainWindow):
@@ -397,7 +396,7 @@ def main():
         pass
 
     app = QApplication(sys.argv)
-    app.setStyleSheet(qdarktheme.load_stylesheet('light'))
+    qdarktheme.setup_theme('light')
     window = MainWindow()
     window.show()
     window.hotkey()
