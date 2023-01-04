@@ -8,6 +8,7 @@ from pynput import mouse
 class OutsideMouseManager(QObject):
     right_click = Signal(int, int)
     left_click = Signal(int, int)
+
     def __init__(self, parent = None):
         super().__init__(parent)
         self._listener = mouse.Listener(on_click = self._handle_click)

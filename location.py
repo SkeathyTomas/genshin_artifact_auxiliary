@@ -13,7 +13,11 @@ SCALE = width_r / width_s
 # 游戏窗口信息获取
 window_title = '原神'
 window = win32gui.FindWindow(None, window_title)
-left, top, right, bottom = win32gui.GetWindowRect(window)
+try:
+    left, top, right, bottom = win32gui.GetWindowRect(window)
+except:
+    print('请将游戏显示模式调至1920*1080窗口，然后重启软件')
+    left, top, right, bottom = (0, 0, 1920, 1100)
 print(f'窗口坐标{left, top, right, bottom}')
 w_left = left * SCALE
 w_top = top * SCALE

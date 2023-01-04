@@ -164,6 +164,8 @@ class MainWindow(QMainWindow):
         self.manager = OutsideMouseManager()
         self.manager.right_click.connect(self.open_new_window)
         self.manager.left_click.connect(self.left_click_artifact)
+        # 数据插入模式
+        self.insert = False
 
     # 单选框面板选择事件
     def radiobtn_state(self, btn):
@@ -284,6 +286,10 @@ class MainWindow(QMainWindow):
                 for j in range(self.row):
                     if y >= self.yarray[j][0] and y <= self.yarray[j][1]:
                         print(self.character + 'detected')
+                        # 插入模式后移数据
+                        self.id = j * self.col + i
+                        if self.insert:
+                            self.insert_data()
                         # ocr识别与结果返回并刷新主面板、贴图
                         self.id = j * self.col + i
                         self.artifact[str(self.id)] = ocr.tesseract_ocr(self.x_grab, self.y_grab, self.w_grab, self.h_grab)
@@ -291,6 +297,22 @@ class MainWindow(QMainWindow):
                         self.fresh_paste_window()
                         break
                 break
+
+    # 插入模式后移数据
+    def insert_data(self):
+        old = {}
+        for key in self.artifact:
+            if eval(key) >= self.id:
+                new = self.artifact[key]
+                self.artifact[key] = old
+                old = new
+        self.artifact[str(len(self.artifact))] = old
+        print(self.artifact)
+        # 贴图需要刷新
+        for key in self.artifact:
+            self.id = eval(key)
+            self.score_result = score.cal_score(self.artifact[str(self.id)], self.config)
+            self.fresh_paste_window()
 
     # 根据鼠标左键选择的圣遗物刷新主窗口圣遗物副属性和评分
     def left_click_artifact(self, x, y):
@@ -369,19 +391,30 @@ class MainWindow(QMainWindow):
             self.title.setText('请选择圣遗物，然后点击右键')
             for i in range(4):
                 self.name[i].setCurrentText('副属性词条'+ str(i + 1))
-                # self.digit[i].setText('')
+                # self.digit[i].setText('') # 不明原因引起闪退，reset()里也是因为这个
                 self.score[i].setText('')
             self.score5.setText('0')
             for item in self.pastes:
                 item.hide()
+            
+        h = keyboard.GlobalHotKeys({'<ctrl>+<shift>+z': on_activate})
+        h.start()
+    
+    # 左Alt键插入新数据模式，之后的圣遗物后移一位
+    def insert_mode(self):
+        def on_press(key):
+            if not self.insert and key == keyboard.Key.alt_l:
+                print('insert start!')
+                self.insert = True
+                self.upgrade.setText('插入模式')
+
+        def on_release(key):
+            if key == keyboard.Key.alt_l:
+                print('insert end!')
+                self.insert = False
+                self.upgrade.setText(myappid)
         
-        def for_canonical(f):
-            return lambda k: f(l.canonical(k))
-        
-        hotkey = keyboard.HotKey(keyboard.HotKey.parse('<ctrl>+<shift>+z'), on_activate)
-        l = keyboard.Listener(
-            on_press = for_canonical(hotkey.press),
-            on_release = for_canonical(hotkey.release))
+        l = keyboard.Listener(on_press = on_press, on_release = on_release)
         l.start()
 
 def main():
@@ -400,6 +433,7 @@ def main():
     window = MainWindow()
     window.show()
     window.hotkey()
+    window.insert_mode()
 
     app.exec()
 
