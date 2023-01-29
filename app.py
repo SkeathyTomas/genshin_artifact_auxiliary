@@ -164,8 +164,11 @@ class MainWindow(QMainWindow):
         self.manager = OutsideMouseManager()
         self.manager.right_click.connect(self.open_new_window)
         self.manager.left_click.connect(self.left_click_artifact)
+        # 全局热键
+        self.hotkey()
         # 数据插入模式
         self.insert = False
+        self.insert_mode()
 
     # 单选框面板选择事件
     def radiobtn_state(self, btn):
@@ -432,8 +435,6 @@ def main():
     qdarktheme.setup_theme('light')
     window = MainWindow()
     window.show()
-    window.hotkey()
-    window.insert_mode()
 
     app.exec()
 

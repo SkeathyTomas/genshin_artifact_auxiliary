@@ -26,7 +26,7 @@ def tesseract_ocr(x, y, w, h):
         print('未检测到tesseract ocr引擎或中文语言包，请下载with-tesseract版本或手动安装引擎及语言包')
     
     # 本地图片测试用
-    # txt = pytesseract.image_to_string(Image.open('test/test_img/example.png'), lang = 'chi_sim')
+    # txt = pytesseract.image_to_string(Image.open('test/test_img/bag_all.png'), lang = 'chi_sim')
     # 纯数字单行测试
     # txt = pytesseract.image_to_string(Image.open('test/test_img/1.png'), lang = 'eng', config='--psm 13 --oem 1 -c tessedit_char_whitelist=0123456789.')
     txt = txt.replace(' ', '')
@@ -100,8 +100,13 @@ def yas_ocr():
 
 if __name__ == '__main__':
     # 截图坐标
-    x, y, w, h = (1684, 560, 350, 168) 
-    # tesseract_ocr(x, y, w, h)
+    x, y, w, h = (1684, 560, 350, 168) # 副词条
+    # x, y, w, h = (1948, 200, 360, 70) # 圣遗物名称
+    import time
+    start = time.time()
+    tesseract_ocr(x, y, w, h)
+    end = time.time()
+    print(end - start)
     # yas_ocr()
-    import score
-    print(score.cal_score(tesseract_ocr(x, y, w, h), '雷电将军'))
+    # import score
+    # print(score.cal_score(tesseract_ocr(x, y, w, h), '雷电将军'))
