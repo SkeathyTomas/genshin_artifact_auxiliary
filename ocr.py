@@ -100,13 +100,13 @@ def yas_ocr():
 
 if __name__ == '__main__':
     # 截图坐标
-    x, y, w, h = (1684, 560, 350, 168) # 副词条
+    # x, y, w, h = (1684, 560, 350, 168) # 副词条
     # x, y, w, h = (1948, 200, 360, 70) # 圣遗物名称
-    import time
-    start = time.time()
-    tesseract_ocr(x, y, w, h)
-    end = time.time()
-    print(end - start)
-    # yas_ocr()
+    # import time
+    # start = time.time()
+    # tesseract_ocr(x, y, w, h)
+    # end = time.time()
+    # print(end - start)
+    yas_ocr()
     # import score
     # print(score.cal_score(tesseract_ocr(x, y, w, h), '雷电将军'))
