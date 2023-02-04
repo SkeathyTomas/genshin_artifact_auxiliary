@@ -34,12 +34,14 @@ else:
 if ratio > 1.55 and ratio < 1.65:
     x_initial_A, y_initial_A, x_offset_A, y_offset_A = (300 / 2560 * w_width + w_left, (386 - 48) / 1600 * w_hight + SCALE * 24 + w_top, 195 / 2560 * w_width, 234 / 1600 * w_hight) # 第一个贴图坐标，y需要根据SCALE的标题栏高度做偏移
     x_left_A, x_right_A, y_top_A, y_bottom_A = (161 / 2560 * w_width + w_left, 326 / 2560 * w_width + w_left, (208 - 48) / 1600 * w_hight + SCALE * 24 + w_top, (412 - 48) / 1600 * w_hight + SCALE * 24 + w_top) # 第一个圣遗物坐标
-    x_grab_A, y_grab_A, w_grab_A, h_grab_A = (1808 / 2560 * w_width + w_left, (677 - 48) / 1600 * w_hight + SCALE * 24 + w_top, 377 / 2560 * w_width, 214 / 1600 * w_hight) # 截图x, y, w, h，y需要根据SCALE的标题栏高度做适配
+    # x_grab_A, y_grab_A, w_grab_A, h_grab_A = (1808 / 2560 * w_width + w_left, (677 - 48) / 1600 * w_hight + SCALE * 24 + w_top, 377 / 2560 * w_width, 214 / 1600 * w_hight) # 截图x, y, w, h，y需要根据SCALE的标题栏高度做适配
+    x_grab_A, y_grab_A, w_grab_A, h_grab_A = (1776 / 2560 * w_width + w_left, (214 - 48) / 1600 * w_hight + SCALE * 24 + w_top, 409 / 2560 * w_width, 677 / 1600 * w_hight) # 截图x, y, w, h，y需要根据SCALE的标题栏高度做适配
     row_A, col_A = (6, 8) #圣遗物行列数
 
     x_initial_B, y_initial_B, x_offset_B, y_offset_B = (198 / 2560 * w_width + w_left, (397 - 48) / 1600 * w_hight + SCALE * 24 + w_top, 189 / 2560 * w_width, 225 / 1600 * w_hight)
     x_left_B, x_right_B, y_top_B, y_bottom_B = (52 / 2560 * w_width + w_left, 220 / 2560 * w_width + w_left, (215 -48) / 1600 * w_hight + SCALE * 24 + w_top, (419 - 48) / 1600 * w_hight + SCALE * 24 + w_top)
-    x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1983 / 2560 * w_width + w_left, (510 - 48) / 1600 * w_hight + SCALE * 24 + w_top, 334 / 2560 * w_width, 190 / 1600 * w_hight)
+    # x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1983 / 2560 * w_width + w_left, (510 - 48) / 1600 * w_hight + SCALE * 24 + w_top, 334 / 2560 * w_width, 190 / 1600 * w_hight)
+    x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1951 / 2560 * w_width + w_left, (196 - 48) / 1600 * w_hight + SCALE * 24 + w_top, 457 / 2560 * w_width, 504 / 1600 * w_hight)
     row_B, col_B = (6, 4)
 
 # 16:9窗口模式

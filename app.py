@@ -1,7 +1,7 @@
 import sys, os, requests, json, qdarktheme
 from pynput import keyboard
 
-import location, ocr, score
+import doc, location, ocr, score
 from extention import OutsideMouseManager, ExtendedComboBox
 from paste_window import PasteWindow
 
@@ -60,7 +60,7 @@ class MainWindow(QMainWindow):
         # 角色选择框
         self.combobox = ExtendedComboBox()
         # 添加角色
-        with open('src/character.json', 'r', encoding = 'utf-8') as f:
+        with open(doc.character_path, 'r', encoding = 'utf-8') as f:
             self.characters = json.load(f)
         for key in self.characters:
             self.combobox.addItem(key)
@@ -88,15 +88,10 @@ class MainWindow(QMainWindow):
         self.archive = ExtendedComboBox()
         self.archive.setEditable(True)
         self.archive.addItem('----保存此屏结果请输入名称----')
-        try:
-            with open('src/archive.json', 'r', encoding = 'utf-8') as fp:
-                self.artifacts = json.load(fp)
-            for name in self.artifacts[self.type]:
-                self.archive.addItem(name)
-        except:
-            with open('src/archive.json', 'w', encoding = 'utf-8') as fp:
-                self.artifacts = {'背包':{}, '角色': {}}
-                json.dump(self.artifacts, fp, ensure_ascii = False)
+        with open(doc.archive_path, 'r', encoding = 'utf-8') as fp:
+            self.artifacts = json.load(fp)
+        for name in self.artifacts[self.type]:
+            self.archive.addItem(name)
         self.save = QPushButton('保存')
 
         # GitHub图标与项目链接
@@ -262,7 +257,7 @@ class MainWindow(QMainWindow):
             self.artifacts[self.type].update({new_archive: self.artifact})
             dic_sorted = sorted(self.artifacts[self.type].items())
             self.artifacts[self.type] = {k: v for k, v in dic_sorted}
-            with open('src/archive.json', 'w', encoding = 'utf-8') as fp:
+            with open(doc.archive_path, 'w', encoding = 'utf-8') as fp:
                 json.dump(self.artifacts, fp, ensure_ascii = False)
         else:
             hint_txt = '未识别圣遗物，无结果保存~'
@@ -295,7 +290,7 @@ class MainWindow(QMainWindow):
                             self.insert_data()
                         # ocr识别与结果返回并刷新主面板、贴图
                         self.id = j * self.col + i
-                        self.artifact[str(self.id)] = ocr.tesseract_ocr(self.x_grab, self.y_grab, self.w_grab, self.h_grab)
+                        self.artifact[str(self.id)] = ocr.ppocr(self.x_grab, self.y_grab, self.w_grab, self.h_grab)
                         self.fresh_main_window()
                         self.fresh_paste_window()
                         break
@@ -422,7 +417,7 @@ class MainWindow(QMainWindow):
 
 def main():
     global myappid
-    myappid = 'v0.6.2'
+    myappid = 'v0.7.0'
 
     # 任务栏图标问题
     try:

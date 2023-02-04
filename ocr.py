@@ -99,21 +99,21 @@ def ppocr(x, y, w, h):
     import cv2
 
     # 截屏与ocr识别
-    # img = ImageGrab.grab(bbox = (x, y, x + w, y + h))
-    # img.save('src/grab.png')
-    # img = cv2.imread('src/grab.png')
-    img = cv2.imread('test/test_img/example3.png') # 本地测试用截图
+    img = ImageGrab.grab(bbox = (x, y, x + w, y + h))
+    img.save('src/grab.png')
+    img = cv2.imread('src/grab.png')
+    # img = cv2.imread('test/test_img/character_all.png') # 本地测试用图片
     ocr = TextSystem()
     result = ocr.detect_and_ocr(img)
     txt = [item.ocr_text for item in result]
-    
+
     # 中文和数字正则
     pattern_chinese = '[\u4e00-\u9fa5]+'
     pattern_digit = '\d+(\.\d+)?'
 
     # 逐行识别
     result = {}
-    for item in txt:
+    for item in txt[-4:]:
         print(item)
         try:
             # 词条名称
