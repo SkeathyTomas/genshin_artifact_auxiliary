@@ -106,12 +106,13 @@ def ppocr(x, y, w, h):
     ocr = TextSystem()
     result = ocr.detect_and_ocr(img)
     txt = [item.ocr_text for item in result]
+    print(txt)
 
     # 中文和数字正则
     pattern_chinese = '[\u4e00-\u9fa5]+'
     pattern_digit = '\d+(\.\d+)?'
 
-    # 逐行识别
+    # 副属性倒数四行逐行识别
     result = {}
     for item in txt[-4:]:
         print(item)
@@ -121,25 +122,25 @@ def ppocr(x, y, w, h):
             name = name[0]
             # 数值
             digit = float(re.search(pattern_digit, item).group())
-            if name == '暴击率':
+            if name in '暴击率':
                 result['暴击率'] = digit
-            elif name == '暴击伤害':
+            elif name in '暴击伤害':
                 result['暴击伤害'] = digit
-            elif name == '元素精通':
+            elif name in '元素精通':
                 result['元素精通'] = digit
-            elif name == '攻击力' and '%' in item:
+            elif name in '攻击力' and '%' in item:
                 result['攻击力百分比'] = digit
-            elif name == '攻击力':
+            elif name in '攻击力':
                 result['攻击力'] = digit
-            elif name == '生命值' and '%' in item:
+            elif name in '生命值' and '%' in item:
                 result['生命值百分比'] = digit
-            elif name == '生命值':
+            elif name in '生命值':
                 result['生命值'] = digit
-            elif name == '防御力' and '%' in item:
+            elif name in '防御力' and '%' in item:
                 result['防御力百分比'] = digit
-            elif name == '防御力':
+            elif name in '防御力':
                 result['防御力'] = digit
-            elif name == '元素充能效率':
+            elif name in '元素充能效率':
                 result['元素充能效率'] = digit
             else:
                 result[item] = 0
