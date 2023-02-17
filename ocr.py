@@ -54,6 +54,11 @@ def tesseract_ocr(x, y, w, h):
                 name = name[0]
                 # 数值
                 digit = float(re.search(pattern_digit, item).group())
+
+                # 兼容千位符
+                if digit < 2:
+                    digit *= 1000
+
                 if name == '暴击率':
                     result['暴击率'] = digit
                 elif name == '暴击伤害':

@@ -20,6 +20,7 @@ from PySide6.QtWidgets import (
     QLineEdit
 )
 
+
 # 主窗口
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -42,7 +43,7 @@ class MainWindow(QMainWindow):
         self.id = -1
         # 当前屏幕中圣遗物坐标及副词条dict，{'0': {'暴击率': 2.0}, '2': {'暴击伤害': 4.0}}
         self.artifact = {}
-        self.score_result = [[0, 0 ,0 ,0], 0]
+        self.score_result = [[0, 0, 0, 0], 0]
         for i in range(self.row * self.col):
             window = PasteWindow()
             self.pastes.append(window)
@@ -56,11 +57,12 @@ class MainWindow(QMainWindow):
 
         # 默认角色及配置
         self.character = '默认攻击双爆'
-        self.config = {'生命值': 0, '攻击力': 0.75, '防御力': 0, '暴击率': 1, '暴击伤害': 1, '元素精通': 0, '元素充能效率': 0}
+        self.config = {'生命值': 0, '攻击力': 0.75, '防御力': 0, '暴击率': 1, '暴击伤害': 1, '元素精通': 0,
+                       '元素充能效率': 0}
         # 角色选择框
         self.combobox = ExtendedComboBox()
         # 添加角色
-        with open(doc.character_path, 'r', encoding = 'utf-8') as f:
+        with open(doc.character_path, 'r', encoding='utf-8') as f:
             self.characters = json.load(f)
         for key in self.characters:
             self.combobox.addItem(key)
@@ -70,14 +72,16 @@ class MainWindow(QMainWindow):
         self.name = []
         self.digit = []
         self.score = []
+        self.strengthen = []
         for i in range(4):
             self.name.append(QComboBox())
             text = QLineEdit()
             # text.setFixedWidth(50)
             text.setAlignment(Qt.AlignRight)
             self.digit.append(text)
-            self.score.append(QLabel())
-            self.name[i].addItem('副属性词条'+ str(i + 1))
+            self.score.append(QLabel("0"))
+            self.strengthen.append(QLabel("+0"))
+            self.name[i].addItem('副属性词条' + str(i + 1))
             self.name[i].addItems(score.coefficient.keys())
             self.name[i].addItem('识别错误')
         self.button = QPushButton('确认修改')
@@ -88,7 +92,7 @@ class MainWindow(QMainWindow):
         self.archive = ExtendedComboBox()
         self.archive.setEditable(True)
         self.archive.addItem('----保存此屏结果请输入名称----')
-        with open(doc.archive_path, 'r', encoding = 'utf-8') as fp:
+        with open(doc.archive_path, 'r', encoding='utf-8') as fp:
             self.artifacts = json.load(fp)
         for name in self.artifacts[self.type]:
             self.archive.addItem(name)
@@ -98,7 +102,8 @@ class MainWindow(QMainWindow):
         # 更新提示
         self.upgrade = QLabel()
         try:
-            response = requests.get('https://api.github.com/repos/SkeathyTomas/genshin_artifact_auxiliary/releases/latest')
+            response = requests.get(
+                'https://api.github.com/repos/SkeathyTomas/genshin_artifact_auxiliary/releases/latest')
             tag = response.json()['tag_name']
             if myappid != tag:
                 self.upgrade.setText('有新版本，点击右侧图标前往下载~')
@@ -125,16 +130,17 @@ class MainWindow(QMainWindow):
         for i in range(4):
             self.layout.addWidget(self.name[i], i + 3, 0)
             self.layout.addWidget(self.digit[i], i + 3, 1)
-            self.layout.addWidget(self.score[i], i + 3, 2, Qt.AlignRight)
+            self.layout.addWidget(self.strengthen[i], i + 3, 2, Qt.AlignRight)
+            self.layout.addWidget(self.score[i], i + 3, 3, Qt.AlignRight)
         self.layout.addWidget(self.button, 7, 0)
         self.layout.addWidget(self.name5, 7, 1)
-        self.layout.addWidget(self.score5, 7, 2, Qt.AlignRight)
+        self.layout.addWidget(self.score5, 7, 3, Qt.AlignRight)
         # 保存/读取方案
         self.layout.addWidget(self.archive, 8, 0, 1, 2)
-        self.layout.addWidget(self.save, 8, 2)
+        self.layout.addWidget(self.save, 8, 3)
         # 更新与项目链接
         self.layout.addWidget(self.upgrade, 9, 0, 1, 2, Qt.AlignLeft | Qt.AlignBottom)
-        self.layout.addWidget(self.github, 9, 2, Qt.AlignRight | Qt.AlignBottom)
+        self.layout.addWidget(self.github, 9, 3, Qt.AlignRight | Qt.AlignBottom)
         # layout载入widget中
         self.widget = QWidget()
         self.widget.setLayout(self.layout)
@@ -177,7 +183,7 @@ class MainWindow(QMainWindow):
                 self.xarray, self.yarray = location.xarray_A, location.yarray_A
                 self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.x_grab_A, location.y_grab_A, location.w_grab_A, location.h_grab_A
                 self.reset()
-        
+
         if btn.text() == '角色':
             if btn.isChecked() == True:
                 self.type = '角色'
@@ -188,7 +194,7 @@ class MainWindow(QMainWindow):
                 self.xarray, self.yarray = location.xarray_B, location.yarray_B
                 self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.x_grab_B, location.y_grab_B, location.w_grab_B, location.h_grab_B
                 self.reset()
-    
+
     # 重置保存结果选择框
     def reset_archive(self):
         self.archive.clear()
@@ -202,19 +208,21 @@ class MainWindow(QMainWindow):
         try:
             self.config = self.characters[self.character]
             if self.config == {}:
-                self.config = {'生命值': 0, '攻击力': 0.75, '防御力': 0, '暴击率': 1, '暴击伤害': 1, '元素精通': 0, '元素充能效率': 0}
+                self.config = {'生命值': 0, '攻击力': 0.75, '防御力': 0, '暴击率': 1, '暴击伤害': 1, '元素精通': 0,
+                               '元素充能效率': 0}
         except:
-            self.config = {'生命值': 0, '攻击力': 0.75, '防御力': 0, '暴击率': 1, '暴击伤害': 1, '元素精通': 0, '元素充能效率': 0}
+            self.config = {'生命值': 0, '攻击力': 0.75, '防御力': 0, '暴击率': 1, '暴击伤害': 1, '元素精通': 0,
+                           '元素充能效率': 0}
         # 更新评分贴图
         for i in range(len(self.pastes)):
             if self.pastes[i].isVisible() == True:
                 self.score_result = score.cal_score(self.artifact[str(i)], self.config)
                 self.pastes[i].label.setText(str(self.score_result[1]))
-        
+
         # 更新主程序评分详情
         if self.artifact != {}:
             self.fresh_main_window()
-    
+
     # 修改识别结果按钮
     def button_clicked(self):
         self.artifact[str(self.id)] = {}
@@ -229,7 +237,7 @@ class MainWindow(QMainWindow):
             self.fresh_paste_window()
         else:
             self.fresh_main_window()
-    
+
     # 方案选择框事件
     def archive_index_changed(self, index):
         self.reset()
@@ -242,7 +250,7 @@ class MainWindow(QMainWindow):
                 self.fresh_paste_window()
             else:
                 self.fresh_main_window()
-    
+
     # 保存方案按钮
     def button_save(self):
         new_archive = self.archive.currentText()
@@ -257,17 +265,17 @@ class MainWindow(QMainWindow):
             self.artifacts[self.type].update({new_archive: self.artifact})
             dic_sorted = sorted(self.artifacts[self.type].items())
             self.artifacts[self.type] = {k: v for k, v in dic_sorted}
-            with open(doc.archive_path, 'w', encoding = 'utf-8') as fp:
-                json.dump(self.artifacts, fp, ensure_ascii = False)
+            with open(doc.archive_path, 'w', encoding='utf-8') as fp:
+                json.dump(self.artifacts, fp, ensure_ascii=False)
         else:
             hint_txt = '未识别圣遗物，无结果保存~'
-        
+
         # 保存按钮结果提示
         self.upgrade.setText(hint_txt)
         self.timer = QTimer()
         self.timer.timeout.connect(self.reset_myappid)
         self.timer.start(2000)
-    
+
     # 恢复版本号信息
     def reset_myappid(self):
         self.upgrade.setText(myappid)
@@ -324,7 +332,7 @@ class MainWindow(QMainWindow):
                             self.fresh_main_window()
                             break
                 break
-    
+
     # 刷新主程序（识别、选择、切换角色、修改后确认、加载本地数据）
     def fresh_main_window(self):
         # 刷新圣遗物id提示
@@ -341,15 +349,18 @@ class MainWindow(QMainWindow):
                     self.name[i].setCurrentText(list(self.artifact[str(self.id)].keys())[i])
                     self.digit[i].setText(str(list(self.artifact[str(self.id)].values())[i]))
                     self.score[i].setText(str(self.score_result[0][i]))
+                    self.strengthen[i].setText("+" + str(self.score_result[2][i]))
                 else:
                     self.name[i].setCurrentText('识别错误')
                     self.digit[i].setText(list(self.artifact[str(self.id)].keys())[i])
-                    self.score[i].setText('')
+                    self.score[i].setText('0')
+                    self.strengthen[i].setText("+0")
             else:
                 self.name[i].setCurrentText('识别错误')
-                self.digit[i].setText('')
-                self.score[i].setText('')
-    
+                self.digit[i].setText('0')
+                self.score[i].setText('0')
+                self.strengthen[i].setText("+0")
+
     # 刷新圣遗物贴图（识别、修改后确认、加载本地数据,后于主面板更新）
     def fresh_paste_window(self):
         self.pastes[self.id].label.setText(str(self.score_result[1]))
@@ -361,11 +372,12 @@ class MainWindow(QMainWindow):
         self.id = -1
         self.title.setText('请选择圣遗物，然后点击右键')
         for i in range(4):
-            self.name[i].setCurrentText('副属性词条'+ str(i + 1))
-            self.digit[i].setText('')
-            self.score[i].setText('')
+            self.name[i].setCurrentText('副属性词条' + str(i + 1))
+            self.digit[i].setText('0')
+            self.score[i].setText('0')
+            self.strengthen[i].setText("+0")
         self.score5.setText('0')
-        
+
         # 数据重置
         self.pastes = []
         self.artifact = {}
@@ -378,7 +390,7 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event):
         for item in self.pastes:
             item.close()
-    
+
     # 全局快捷键Ctrl+Shift+Z重置贴图窗口
     def hotkey(self):
         def on_activate():
@@ -388,16 +400,17 @@ class MainWindow(QMainWindow):
             self.artifact = {}
             self.title.setText('请选择圣遗物，然后点击右键')
             for i in range(4):
-                self.name[i].setCurrentText('副属性词条'+ str(i + 1))
-                # self.digit[i].setText('') # 不明原因引起闪退，reset()里也是因为这个
-                self.score[i].setText('')
+                self.name[i].setCurrentText('副属性词条' + str(i + 1))
+                self.digit[i].setText('0')  # 不明原因引起闪退，reset()里也是因为这个
+                self.score[i].setText('0')
+                self.strengthen[i].setText("+0")
             self.score5.setText('0')
             for item in self.pastes:
                 item.hide()
-            
+
         h = keyboard.GlobalHotKeys({'<ctrl>+<shift>+z': on_activate})
         h.start()
-    
+
     # 左Alt键插入新数据模式，之后的圣遗物后移一位
     def insert_mode(self):
         def on_press(key):
@@ -411,9 +424,10 @@ class MainWindow(QMainWindow):
                 print('insert end!')
                 self.insert = False
                 self.upgrade.setText(myappid)
-        
-        l = keyboard.Listener(on_press = on_press, on_release = on_release)
+
+        l = keyboard.Listener(on_press=on_press, on_release=on_release)
         l.start()
+
 
 def main():
     global myappid
@@ -432,6 +446,7 @@ def main():
     window.show()
 
     app.exec()
+
 
 if __name__ == '__main__':
     main()

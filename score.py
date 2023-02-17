@@ -4,14 +4,27 @@
 coefficient = {
     '暴击率': 2,
     '暴击伤害': 1,
-    '元素精通': 0.33,
-    '攻击力百分比': 1.33,
-    '攻击力': 0.2,
-    '生命值百分比': 1.33,
-    '生命值': 0.017,
-    '防御力百分比': 1.06,
-    '防御力': 0.22,
-    '元素充能效率': 1.2
+    '攻击力百分比': 1.331429,
+    '生命值百分比': 1.331429,
+    '防御力百分比': 1.066362,
+    '攻击力': 0.199146,
+    '生命值': 0.012995,
+    '防御力': 0.162676,
+    '元素精通': 0.332857,
+    '元素充能效率': 1.197943
+}
+
+average = {
+    '暴击率': 3.3,
+    '暴击伤害': 6.6,
+    '攻击力百分比': 5,
+    '生命值百分比': 5,
+    '防御力百分比': 6.2,
+    '攻击力': 17,
+    '生命值': 254,
+    '防御力': 20,
+    '元素精通': 20,
+    '元素充能效率': 5.5
 }
 
 def cal_score(ocr_result, config):
@@ -29,11 +42,12 @@ def cal_score(ocr_result, config):
     '''
         
     scores = []
+    powerupArray = []
     sums = 0
     for key, value in ocr_result.items():
         
         # 兼容角色配置未区分百分比的情况
-        if key == '生命值百分比' or key == '攻击力百分比' or key == '防御力百分比':
+        if key == '生命值百分比' or  key == '攻击力百分比' or key == '防御力百分比':
             key_s = key[:3]
         else:
             key_s = key
@@ -45,6 +59,13 @@ def cal_score(ocr_result, config):
             score = 0
         scores.append(score)
         sums += score
+
+        # 计算强化次数
+        try:
+            powerup = round(value / average[key]) - 1
+        except:
+            powerup = 0
+        powerupArray.append(powerup)
     
     print(scores, round(sums, 1), '\n')
-    return scores, round(sums, 1)
+    return scores, round(sums, 1), powerupArray
