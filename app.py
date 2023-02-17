@@ -241,15 +241,18 @@ class MainWindow(QMainWindow):
     # 方案选择框事件
     def archive_index_changed(self, index):
         self.reset()
-        self.artifact = self.artifacts[self.type][self.archive.currentText()].copy()
-        print(self.artifact)
-        for key in self.artifact:
-            self.id = eval(key)
-            if self.id != -1:
-                self.fresh_main_window()
-                self.fresh_paste_window()
-            else:
-                self.fresh_main_window()
+
+        currentText = self.archive.currentText()
+        if currentText in self.artifacts[self.type]:
+            self.artifact = self.artifacts[self.type][self.archive.currentText()].copy()
+            print(self.artifact)
+            for key in self.artifact:
+                self.id = eval(key)
+                if self.id != -1:
+                    self.fresh_main_window()
+                    self.fresh_paste_window()
+                else:
+                    self.fresh_main_window()
 
     # 保存方案按钮
     def button_save(self):
