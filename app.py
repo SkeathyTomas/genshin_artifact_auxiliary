@@ -385,6 +385,7 @@ class MainWindow(QMainWindow):
             self.score[i].setText('0')
             self.strengthen[i].setText("+0")
         self.score5.setText('0')
+        self.entries.setText('0')
 
         # 数据重置
         self.pastes = []
@@ -413,6 +414,7 @@ class MainWindow(QMainWindow):
                 self.score[i].setText('0')
                 self.strengthen[i].setText("+0")
             self.score5.setText('0')
+            self.entries.setText('0')
             for item in self.pastes:
                 item.hide()
 
