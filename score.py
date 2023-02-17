@@ -44,6 +44,7 @@ def cal_score(ocr_result, config):
     scores = []
     powerupArray = []
     sums = 0
+    entriesSum = 0
     for key, value in ocr_result.items():
         
         # 兼容角色配置未区分百分比的情况
@@ -66,6 +67,12 @@ def cal_score(ocr_result, config):
         except:
             powerup = 0
         powerupArray.append(powerup)
+
+        #计算有效词条数量
+        if key_s in config and config[key_s]>0 :
+            entries = round(value / average[key],1)
+            print(key_s, entries)
+            entriesSum += entries
     
     print(scores, round(sums, 1), '\n')
-    return scores, round(sums, 1), powerupArray
+    return scores, round(sums, 1), powerupArray, round(entriesSum, 1)

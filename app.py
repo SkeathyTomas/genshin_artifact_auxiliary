@@ -85,7 +85,9 @@ class MainWindow(QMainWindow):
             self.name[i].addItems(score.coefficient.keys())
             self.name[i].addItem('识别错误')
         self.button = QPushButton('确认修改')
-        self.name5 = QLabel('总分')
+
+        self.entries = QLabel('0')
+        self.name5 = QLabel('有效词条&总分')
         self.score5 = QLabel('0')
 
         # 评分方案本地保存，选择框、保存确认按钮
@@ -133,7 +135,9 @@ class MainWindow(QMainWindow):
             self.layout.addWidget(self.strengthen[i], i + 3, 2, Qt.AlignRight)
             self.layout.addWidget(self.score[i], i + 3, 3, Qt.AlignRight)
         self.layout.addWidget(self.button, 7, 0)
+
         self.layout.addWidget(self.name5, 7, 1)
+        self.layout.addWidget(self.entries, 7, 2, Qt.AlignRight)
         self.layout.addWidget(self.score5, 7, 3, Qt.AlignRight)
         # 保存/读取方案
         self.layout.addWidget(self.archive, 8, 0, 1, 2)
@@ -346,6 +350,7 @@ class MainWindow(QMainWindow):
 
         # 主窗口更新详细评分
         self.score5.setText(str(self.score_result[1]))
+        self.entries.setText(str(self.score_result[3]))
         for i in range(4):
             if i < len(self.artifact[str(self.id)]):
                 if list(self.artifact[str(self.id)].keys())[i] in score.coefficient.keys():
