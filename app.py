@@ -75,7 +75,7 @@ class MainWindow(QMainWindow):
         self.strengthen = []
         for i in range(4):
             self.name.append(QComboBox())
-            text = QLineEdit()
+            text = QLineEdit("0")
             # text.setFixedWidth(50)
             text.setAlignment(Qt.AlignRight)
             self.digit.append(text)
