@@ -88,7 +88,7 @@ def tesseract_ocr(x, y, w, h):
     return result
 
 def ppocr(x, y, w, h):
-    '''返回使用tesseract ocr引擎识别及处理结果
+    '''返回使用paddle ocr引擎识别及处理结果
     参数：
         x：截图坐标x
         y：截图坐标y
@@ -127,6 +127,9 @@ def ppocr(x, y, w, h):
             name = name[0]
             # 数值
             digit = float(re.search(pattern_digit, item).group())
+            # 兼容千位符
+            if digit < 2:
+                digit *= 1000
             if name in '暴击率':
                 result['暴击率'] = digit
             elif name in '暴击伤害':

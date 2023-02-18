@@ -71,8 +71,8 @@ class MainWindow(QMainWindow):
         self.title = QLabel('请选择圣遗物，然后点击右键')
         self.name = []
         self.digit = []
-        self.score = []
         self.strengthen = []
+        self.score = []
         for i in range(4):
             self.name.append(QComboBox())
             text = QLineEdit("0")
@@ -86,9 +86,9 @@ class MainWindow(QMainWindow):
             self.name[i].addItem('识别错误')
         self.button = QPushButton('确认修改')
 
-        self.entries = QLabel('0')
-        self.name5 = QLabel('有效词条&总分')
-        self.score5 = QLabel('0')
+        self.entries = QLabel('有效词条：0')
+        self.total = QLabel('总分')
+        self.score_total = QLabel('0')
 
         # 评分方案本地保存，选择框、保存确认按钮
         self.archive = ExtendedComboBox()
@@ -126,7 +126,7 @@ class MainWindow(QMainWindow):
         self.layout.addWidget(self.radiobtn1, 0, 0)
         self.layout.addWidget(self.radiobtn2, 0, 1)
         # 角色选择
-        self.layout.addWidget(self.combobox, 1, 0, 1, 3)
+        self.layout.addWidget(self.combobox, 1, 0, 1, 4)
         # 识别结果展示
         self.layout.addWidget(self.title, 2, 0, 1, 3)
         for i in range(4):
@@ -134,13 +134,13 @@ class MainWindow(QMainWindow):
             self.layout.addWidget(self.digit[i], i + 3, 1)
             self.layout.addWidget(self.strengthen[i], i + 3, 2, Qt.AlignRight)
             self.layout.addWidget(self.score[i], i + 3, 3, Qt.AlignRight)
+        # 总分计算结果
         self.layout.addWidget(self.button, 7, 0)
-
-        self.layout.addWidget(self.name5, 7, 1)
-        self.layout.addWidget(self.entries, 7, 2, Qt.AlignRight)
-        self.layout.addWidget(self.score5, 7, 3, Qt.AlignRight)
+        self.layout.addWidget(self.entries, 7, 1, Qt.AlignRight)
+        self.layout.addWidget(self.total, 7, 2, Qt.AlignRight)
+        self.layout.addWidget(self.score_total, 7, 3, Qt.AlignRight)
         # 保存/读取方案
-        self.layout.addWidget(self.archive, 8, 0, 1, 2)
+        self.layout.addWidget(self.archive, 8, 0, 1, 3)
         self.layout.addWidget(self.save, 8, 3)
         # 更新与项目链接
         self.layout.addWidget(self.upgrade, 9, 0, 1, 2, Qt.AlignLeft | Qt.AlignBottom)
@@ -349,8 +349,8 @@ class MainWindow(QMainWindow):
         self.score_result = score.cal_score(self.artifact[str(self.id)], self.config)
 
         # 主窗口更新详细评分
-        self.score5.setText(str(self.score_result[1]))
-        self.entries.setText(str(self.score_result[3]))
+        self.score_total.setText(str(self.score_result[1]))
+        self.entries.setText('有效词条：' + str(self.score_result[3]))
         for i in range(4):
             if i < len(self.artifact[str(self.id)]):
                 if list(self.artifact[str(self.id)].keys())[i] in score.coefficient.keys():
@@ -384,8 +384,8 @@ class MainWindow(QMainWindow):
             self.digit[i].setText('0')
             self.score[i].setText('0')
             self.strengthen[i].setText("+0")
-        self.score5.setText('0')
-        self.entries.setText('0')
+        self.score_total.setText('0')
+        self.entries.setText('有效词条：0')
 
         # 数据重置
         self.pastes = []
@@ -410,11 +410,11 @@ class MainWindow(QMainWindow):
             self.title.setText('请选择圣遗物，然后点击右键')
             for i in range(4):
                 self.name[i].setCurrentText('副属性词条' + str(i + 1))
-                self.digit[i].setText('0')  # 不明原因引起闪退，reset()里也是因为这个
+                # self.digit[i].setText('0')  # 不明原因引起闪退，reset()里也是因为这个
                 self.score[i].setText('0')
                 self.strengthen[i].setText("+0")
-            self.score5.setText('0')
-            self.entries.setText('0')
+            self.score_total.setText('0')
+            self.entries.setText('有效词条：0')
             for item in self.pastes:
                 item.hide()
 
