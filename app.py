@@ -128,7 +128,7 @@ class MainWindow(QMainWindow):
         # 角色选择
         self.layout.addWidget(self.combobox, 1, 0, 1, 4)
         # 识别结果展示
-        self.layout.addWidget(self.title, 2, 0, 1, 3)
+        self.layout.addWidget(self.title, 2, 0, 1, 4)
         for i in range(4):
             self.layout.addWidget(self.name[i], i + 3, 0)
             self.layout.addWidget(self.digit[i], i + 3, 1)
@@ -220,7 +220,7 @@ class MainWindow(QMainWindow):
         # 更新评分贴图
         for i in range(len(self.pastes)):
             if self.pastes[i].isVisible() == True:
-                self.score_result = score.cal_score(self.artifact[str(i)], self.config)
+                self.score_result = score.cal_score(self.artifact[str(i)][1], self.config)
                 self.pastes[i].label.setText(str(self.score_result[1]))
 
         # 更新主程序评分详情
@@ -324,7 +324,7 @@ class MainWindow(QMainWindow):
         # 贴图需要刷新
         for key in self.artifact:
             self.id = eval(key)
-            self.score_result = score.cal_score(self.artifact[str(self.id)], self.config)
+            self.score_result = score.cal_score(self.artifact[str(self.id)][1], self.config)
             self.fresh_paste_window()
 
     # 根据鼠标左键选择的圣遗物刷新主窗口圣遗物副属性和评分
@@ -342,25 +342,25 @@ class MainWindow(QMainWindow):
 
     # 刷新主程序（识别、选择、切换角色、修改后确认、加载本地数据）
     def fresh_main_window(self):
-        # 刷新圣遗物id提示
-        self.title.setText('圣遗物' + str(self.id + 1))
+        # 刷新圣遗物基本信息
+        self.title.setText('-'.join(self.artifact[str(self.id)][0]))
 
         # 计算评分（计算很快就不另外储存了）
-        self.score_result = score.cal_score(self.artifact[str(self.id)], self.config)
+        self.score_result = score.cal_score(self.artifact[str(self.id)][1], self.config)
 
         # 主窗口更新详细评分
         self.score_total.setText(str(self.score_result[1]))
         self.entries.setText('有效词条：' + str(self.score_result[3]))
         for i in range(4):
-            if i < len(self.artifact[str(self.id)]):
-                if list(self.artifact[str(self.id)].keys())[i] in score.coefficient.keys():
-                    self.name[i].setCurrentText(list(self.artifact[str(self.id)].keys())[i])
-                    self.digit[i].setText(str(list(self.artifact[str(self.id)].values())[i]))
+            if i < len(self.artifact[str(self.id)][1]):
+                if list(self.artifact[str(self.id)][1].keys())[i] in score.coefficient.keys():
+                    self.name[i].setCurrentText(list(self.artifact[str(self.id)][1].keys())[i])
+                    self.digit[i].setText(str(list(self.artifact[str(self.id)][1].values())[i]))
                     self.score[i].setText(str(self.score_result[0][i]))
                     self.strengthen[i].setText("+" + str(self.score_result[2][i]))
                 else:
                     self.name[i].setCurrentText('识别错误')
-                    self.digit[i].setText(list(self.artifact[str(self.id)].keys())[i])
+                    self.digit[i].setText(list(self.artifact[str(self.id)][1].keys())[i])
                     self.score[i].setText('0')
                     self.strengthen[i].setText("+0")
             else:
