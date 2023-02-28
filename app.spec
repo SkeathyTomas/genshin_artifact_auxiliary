@@ -47,5 +47,5 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='keqing-0.7.0',
+    name='keqing-0.7.1',
 )
