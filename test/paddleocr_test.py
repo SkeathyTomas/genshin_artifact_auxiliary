@@ -13,7 +13,7 @@ ocr = TextSystem()
 
 # multiline
 start = time.time()
-img = cv2.imread('src/grab.png')
+img = cv2.imread('test/test_img/bag_all.png')
 result = ocr.detect_and_ocr(img)
 end = time.time()
 print(end - start)

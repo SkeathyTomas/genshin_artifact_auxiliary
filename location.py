@@ -1,6 +1,6 @@
 '''不同分辨率、缩放率适配，贴图坐标、圣遗物坐标、截图坐标定位'''
 
-import win32con, win32api, win32gui, win32print
+import win32con, win32api, win32gui, win32print, time
 
 # 基础分辨率，缩放信息获取
 hDC = win32gui.GetDC(0)
@@ -12,13 +12,24 @@ SCALE = width_r / width_s
 
 # 游戏窗口信息获取
 window_title = '原神'
-window = win32gui.FindWindow(None, window_title)
-try:
-    left, top, right, bottom = win32gui.GetWindowRect(window)
-except:
-    print('请将游戏显示模式调至1920*1080窗口，然后重启软件')
-    left, top, right, bottom = (0, 0, 1920, 1100)
-print(f'窗口坐标{left, top, right, bottom}')
+window = win32gui.FindWindow('UnityWndClass', window_title)
+while(not window):
+    print('未找到游戏窗口，请启动游戏！')
+    window = win32gui.FindWindow('UnityWndClass', window_title)
+    time.sleep(5)
+left, top, right, bottom = win32gui.GetWindowRect(window)
+# try:
+#     # print(win32gui.GetClassName(window))
+#     left, top, right, bottom = win32gui.GetWindowRect(window)
+# except:
+#     print('未检测到游戏窗口，正在检测云游戏窗口……')
+#     window_title = 'start云游戏'
+#     window = win32gui.FindWindow(None, window_title)
+#     try:
+#         left, top, right, bottom = win32gui.GetWindowRect(window)
+#     except:
+#         left, top, right, bottom = (0, 0, 1920, 1100)
+# print(f'窗口坐标{left, top, right, bottom}')
 w_left = left * SCALE
 w_top = top * SCALE
 w_width = (right - left - 3) * SCALE

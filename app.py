@@ -182,6 +182,7 @@ class MainWindow(QMainWindow):
                 self.type = '背包'
                 self.reset_archive()
                 # 重置坐标信息
+                # import location
                 self.position = location.position_A
                 self.row, self.col = location.row_A, location.col_A
                 self.xarray, self.yarray = location.xarray_A, location.yarray_A
@@ -193,6 +194,7 @@ class MainWindow(QMainWindow):
                 self.type = '角色'
                 self.reset_archive()
                 # 重置坐标信息
+                # import location
                 self.position = location.position_B
                 self.row, self.col = location.row_B, location.col_B
                 self.xarray, self.yarray = location.xarray_B, location.yarray_B
@@ -323,9 +325,10 @@ class MainWindow(QMainWindow):
         print(self.artifact)
         # 贴图需要刷新
         for key in self.artifact:
-            self.id = eval(key)
-            self.score_result = score.cal_score(self.artifact[str(self.id)][1], self.config)
-            self.fresh_paste_window()
+            if eval(key) > self.id:
+                self.id = eval(key)
+                self.score_result = score.cal_score(self.artifact[str(self.id)][1], self.config)
+                self.fresh_paste_window()
 
     # 根据鼠标左键选择的圣遗物刷新主窗口圣遗物副属性和评分
     def left_click_artifact(self, x, y):
