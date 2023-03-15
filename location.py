@@ -11,11 +11,15 @@ print(f'分辨率{width_r, height_r}')
 SCALE = width_r / width_s
 
 # 游戏窗口信息获取
-window_title = '原神'
-window = win32gui.FindWindow('UnityWndClass', window_title)
+window_sc = win32gui.FindWindow('UnityWndClass', '原神')
+window_start = win32gui.FindWindow('START Cloud Game', 'START云游戏-Game')
+# print(win32gui.GetClassName(window_start))
+window = window_sc or window_start
 while(not window):
     print('未找到游戏窗口，请启动游戏！')
-    window = win32gui.FindWindow('UnityWndClass', window_title)
+    window_sc = win32gui.FindWindow('UnityWndClass', '原神')
+    window_start = win32gui.FindWindow('START Cloud Game', 'START云游戏-Game')
+    window = window_sc or window_start
     time.sleep(5)
 left, top, right, bottom = win32gui.GetWindowRect(window)
 # try:
@@ -51,7 +55,6 @@ if ratio > 1.55 and ratio < 1.65:
 
     x_initial_B, y_initial_B, x_offset_B, y_offset_B = (198 / 2560 * w_width + w_left, (397 - 48) / 1600 * w_hight + SCALE * 24 + w_top, 189 / 2560 * w_width, 225 / 1600 * w_hight)
     x_left_B, x_right_B, y_top_B, y_bottom_B = (52 / 2560 * w_width + w_left, 220 / 2560 * w_width + w_left, (215 -48) / 1600 * w_hight + SCALE * 24 + w_top, (419 - 48) / 1600 * w_hight + SCALE * 24 + w_top)
-    # x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1983 / 2560 * w_width + w_left, (510 - 48) / 1600 * w_hight + SCALE * 24 + w_top, 334 / 2560 * w_width, 190 / 1600 * w_hight)
     x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1951 / 2560 * w_width + w_left, (196 - 48) / 1600 * w_hight + SCALE * 24 + w_top, 457 / 2560 * w_width, 504 / 1600 * w_hight)
     row_B, col_B = (6, 4)
 
@@ -59,13 +62,11 @@ if ratio > 1.55 and ratio < 1.65:
 elif ratio > 1.7 and ratio < 1.8:
     x_initial_A, y_initial_A, x_offset_A, y_offset_A = (224 / 1920 * w_width + w_left, (289 - 36) / 1080 * w_hight + SCALE * 24 + w_top, 146 / 1920 * w_width, 175 / 1080 * w_hight)
     x_left_A, x_right_A, y_top_A, y_bottom_A = (121 / 1920 * w_width + w_left, 246 / 1920 * w_width + w_left, (157 - 36) / 1080 * w_hight + SCALE * 24 + w_top, (311 - 36) / 1080 * w_hight + SCALE * 24 + w_top)
-    # x_grab_A, y_grab_A, w_grab_A, h_grab_A = (1359 / 1920 * w_width + w_left, (511 - 36) / 1080 * w_hight + SCALE * 24 + w_top, 271 / 1920 * w_width, 156 / 1080 * w_hight)
     x_grab_A, y_grab_A, w_grab_A, h_grab_A = (1334 / 1920 * w_width + w_left, (161 - 36) / 1080 * w_hight + SCALE * 24 + w_top, (450 - 50) / 1920 * w_width, 506 / 1080 * w_hight)
     row_A, col_A = (5, 8)
 
     x_initial_B, y_initial_B, x_offset_B, y_offset_B = (144 / 1920 * w_width + w_left, (293 - 36) / 1080 * w_hight + SCALE * 24 + w_top, 142 / 1920 * w_width, 168 / 1080 * w_hight)
     x_left_B, x_right_B, y_top_B, y_bottom_B = (39 / 1920 * w_width + w_left, 166 / 1920 * w_width + w_left, (162 - 36) / 1080 * w_hight + SCALE * 24 + w_top, (315 - 36) / 1080 * w_hight + SCALE * 24 + w_top)
-    # x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1490 / 1920 * w_width + w_left, (384 - 36) / 1080 * w_hight + SCALE * 24 + w_top, 257 / 1920 * w_width, 141 / 1080 * w_hight)
     x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1464 / 1920 * w_width + w_left, (147 - 36) / 1080 * w_hight + SCALE * 24 + w_top, 343 / 1920 * w_width, 378 / 1080 * w_hight)
     row_B, col_B = (5, 4)
 
@@ -73,13 +74,11 @@ elif ratio > 1.7 and ratio < 1.8:
 elif ratio > 1.45 and ratio < 1.55:
     x_initial_A, y_initial_A, x_offset_A, y_offset_A = (254 / 2160 * w_width + w_left, (318 - 36) / 1440 * w_hight + SCALE * 24 + w_top, 165 / 2160 * w_width, 197 / 1440 * w_hight)
     x_left_A, x_right_A, y_top_A, y_bottom_A = (136 / 2160 * w_width + w_left, 276 / 2160 * w_width + w_left, (173 - 36) / 1440 * w_hight + SCALE * 24 + w_top, (344 - 36) / 1440 * w_hight + SCALE * 24 + w_top)
-    # x_grab_A, y_grab_A, w_grab_A, h_grab_A = (1528 / 2160 * w_width + w_left, (564 - 36) / 1440 * w_hight + SCALE * 24 + w_top, 297 / 2160 * w_width, 186 / 1440 * w_hight)
     x_grab_A, y_grab_A, w_grab_A, h_grab_A = (1500 / 1920 * w_width + w_left, (175 - 36) / 1080 * w_hight + SCALE * 24 + w_top, (508 - 50) / 1920 * w_width, 571 / 1080 * w_hight)
     row_A, col_A = (6, 8)
 
     x_initial_B, y_initial_B, x_offset_B, y_offset_B = (160 / 2160 * w_width + w_left, (326 - 36) / 1440 *w_hight + SCALE * 24 + w_top, 160 / 2160 * w_width, 189 / 1440 * w_hight)
     x_left_B, x_right_B, y_top_B, y_bottom_B = (43 / 2160 * w_width + w_left, 186 / 2160 * w_width + w_left, (178 - 36) / 1440 * w_hight + SCALE * 24 + w_top, (350 - 36) / 1440 * w_hight + SCALE * 24 + w_top)
-    # x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1676 / 2160 * w_width + w_left, (429 - 36) / 1440 * w_hight + SCALE * 24 + w_top, 321 / 2160 * w_width, 160 / 1440 * w_hight)
     x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1649 / 1920 * w_width + w_left, (165 - 36) / 1080 * w_hight + SCALE * 24 + w_top, 382 / 1920 * w_width, 421 / 1080 * w_hight)
     row_B, col_B = (6, 4)
 
