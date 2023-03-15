@@ -55,7 +55,7 @@ if ratio > 1.55 and ratio < 1.65:
 
     x_initial_B, y_initial_B, x_offset_B, y_offset_B = (198 / 2560 * w_width + w_left, (397 - 48) / 1600 * w_hight + SCALE * 24 + w_top, 189 / 2560 * w_width, 225 / 1600 * w_hight)
     x_left_B, x_right_B, y_top_B, y_bottom_B = (52 / 2560 * w_width + w_left, 220 / 2560 * w_width + w_left, (215 -48) / 1600 * w_hight + SCALE * 24 + w_top, (419 - 48) / 1600 * w_hight + SCALE * 24 + w_top)
-    x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1951 / 2560 * w_width + w_left, (196 - 48) / 1600 * w_hight + SCALE * 24 + w_top, 457 / 2560 * w_width, 504 / 1600 * w_hight)
+    x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1951 / 2560 * w_width + w_left, (196 - 48) / 1600 * w_hight + SCALE * 24 + w_top, 551 / 2560 * w_width, 504 / 1600 * w_hight)
     row_B, col_B = (6, 4)
 
 # 16:9窗口模式
@@ -67,7 +67,7 @@ elif ratio > 1.7 and ratio < 1.8:
 
     x_initial_B, y_initial_B, x_offset_B, y_offset_B = (144 / 1920 * w_width + w_left, (293 - 36) / 1080 * w_hight + SCALE * 24 + w_top, 142 / 1920 * w_width, 168 / 1080 * w_hight)
     x_left_B, x_right_B, y_top_B, y_bottom_B = (39 / 1920 * w_width + w_left, 166 / 1920 * w_width + w_left, (162 - 36) / 1080 * w_hight + SCALE * 24 + w_top, (315 - 36) / 1080 * w_hight + SCALE * 24 + w_top)
-    x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1464 / 1920 * w_width + w_left, (147 - 36) / 1080 * w_hight + SCALE * 24 + w_top, 343 / 1920 * w_width, 378 / 1080 * w_hight)
+    x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1464 / 1920 * w_width + w_left, (147 - 36) / 1080 * w_hight + SCALE * 24 + w_top, 413 / 1920 * w_width, 378 / 1080 * w_hight)
     row_B, col_B = (5, 4)
 
 # 3:2窗口模式
@@ -79,7 +79,7 @@ elif ratio > 1.45 and ratio < 1.55:
 
     x_initial_B, y_initial_B, x_offset_B, y_offset_B = (160 / 2160 * w_width + w_left, (326 - 36) / 1440 *w_hight + SCALE * 24 + w_top, 160 / 2160 * w_width, 189 / 1440 * w_hight)
     x_left_B, x_right_B, y_top_B, y_bottom_B = (43 / 2160 * w_width + w_left, 186 / 2160 * w_width + w_left, (178 - 36) / 1440 * w_hight + SCALE * 24 + w_top, (350 - 36) / 1440 * w_hight + SCALE * 24 + w_top)
-    x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1649 / 1920 * w_width + w_left, (165 - 36) / 1080 * w_hight + SCALE * 24 + w_top, 382 / 1920 * w_width, 421 / 1080 * w_hight)
+    x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1649 / 1920 * w_width + w_left, (165 - 36) / 1080 * w_hight + SCALE * 24 + w_top, 461 / 1920 * w_width, 421 / 1080 * w_hight)
     row_B, col_B = (6, 4)
 
 else:
