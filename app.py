@@ -444,7 +444,7 @@ class MainWindow(QMainWindow):
 
 def main():
     global myappid
-    myappid = 'v0.7.1'
+    myappid = 'v0.7.2'
 
     # 任务栏图标问题
     try:
