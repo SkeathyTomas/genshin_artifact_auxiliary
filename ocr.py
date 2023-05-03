@@ -35,7 +35,7 @@ def ppocr(x, y, w, h):
     txt = [re.sub(pattern_thou, item.ocr_text.replace(',', '').replace('.', ''), item.ocr_text) for item in result]
     print(txt)
 
-    name = txt[0].replace('谢落的席', '谢落的筵席').replace('明威之谭', '明威之镡').replace('角斗士的希翼', '角斗士的希冀').replace('角斗士的醋醉', '角斗士的酣醉')
+    name = txt[0].replace('谢落的席', '谢落的筵席').replace('明威之谭', '明威之镡').replace('角斗士的希翼', '角斗士的希冀').replace('角斗士的醋醉', '角斗士的酣醉').replace('岭游者之壶', '吟游者之壶')
     parts = txt[1]
     main_name = txt[2]
     main_digit = txt[3]
