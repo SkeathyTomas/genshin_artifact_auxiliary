@@ -307,7 +307,7 @@ class MainWindow(QMainWindow):
                             self.insert_data()
                         # ocr识别与结果返回并刷新主面板、贴图
                         self.id = j * self.col + i
-                        self.artifact[str(self.id)] = ocr.ppocr(self.x_grab, self.y_grab, self.w_grab, self.h_grab)
+                        self.artifact[str(self.id)] = ocr.rapidocr(self.x_grab, self.y_grab, self.w_grab, self.h_grab)
                         self.fresh_main_window()
                         self.fresh_paste_window()
                         break
@@ -444,7 +444,7 @@ class MainWindow(QMainWindow):
 
 def main():
     global myappid
-    myappid = 'v0.7.2'
+    myappid = 'v0.7.3'
 
     # 任务栏图标问题
     try:
