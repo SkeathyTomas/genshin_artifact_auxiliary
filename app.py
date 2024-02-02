@@ -231,10 +231,10 @@ class MainWindow(QMainWindow):
 
     # 修改识别结果按钮
     def button_clicked(self):
-        self.artifact[str(self.id)] = {}
+        self.artifact[str(self.id)][1] = {}
         for i in range(4):
             try:
-                self.artifact[str(self.id)][self.name[i].currentText()] = float(self.digit[i].text())
+                self.artifact[str(self.id)][1][self.name[i].currentText()] = float(self.digit[i].text())
             except:
                 pass
         print(self.artifact[str(self.id)])
