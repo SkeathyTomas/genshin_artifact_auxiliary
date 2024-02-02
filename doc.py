@@ -1,8 +1,8 @@
 '''个人数据另外储存'''
 import json, os, shutil
 
-username = os.getlogin()
-folder = 'C:/Users/' + username + '/Documents/keqing'
+folder = os.path.expanduser('~/Documents')
+folder = folder + '/keqing'
 character_path = folder + '/character.json'
 archive_path = folder + '/archive.json'
 
@@ -26,7 +26,8 @@ if os.path.exists(folder):
         with open(archive_path, 'w', encoding = 'utf-8') as fp:
             artifacts = {'背包':{}, '角色': {}}
             json.dump(artifacts, fp, ensure_ascii = False)
-# 数据文件夹不不存在则复制、新建相关数据文件
+
+# 数据文件夹不存在则复制、新建相关数据文件
 else:
     os.makedirs(folder)
     shutil.copy('src/character.json', character_path)

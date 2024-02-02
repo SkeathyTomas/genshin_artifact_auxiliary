@@ -67,7 +67,7 @@ elif ratio > 1.7 and ratio < 1.8:
 
     x_initial_B, y_initial_B, x_offset_B, y_offset_B = (144 / 1920 * w_width + w_left, (293 - 36) / 1080 * w_hight + SCALE * 24 + w_top, 142 / 1920 * w_width, 168 / 1080 * w_hight)
     x_left_B, x_right_B, y_top_B, y_bottom_B = (39 / 1920 * w_width + w_left, 166 / 1920 * w_width + w_left, (162 - 36) / 1080 * w_hight + SCALE * 24 + w_top, (315 - 36) / 1080 * w_hight + SCALE * 24 + w_top)
-    x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1464 / 1920 * w_width + w_left, (147 - 36) / 1080 * w_hight + SCALE * 24 + w_top, 413 / 1920 * w_width, 378 / 1080 * w_hight)
+    x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1460 / 1920 * w_width + w_left, (147 - 36) / 1080 * w_hight + SCALE * 24 + w_top, 413 / 1920 * w_width, 378 / 1080 * w_hight)
     row_B, col_B = (5, 4)
 
 # 3:2窗口模式
