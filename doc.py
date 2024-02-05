@@ -5,6 +5,7 @@ folder = os.path.expanduser('~/Documents')
 folder = folder + '/keqing'
 character_path = folder + '/character.json'
 archive_path = folder + '/archive.json'
+mona_path = folder + '/mona.json'
 
 if os.path.exists(folder):
     # 角色配置不存在就复制一份，存在进行对比，有新角色添加则增量更新
