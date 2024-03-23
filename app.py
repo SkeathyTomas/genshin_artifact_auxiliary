@@ -1,4 +1,5 @@
-import sys, os, requests, json, qdarktheme
+import sys, os, requests, json
+import qdarktheme
 from pynput import keyboard
 
 import doc, location, ocr, score
@@ -445,7 +446,7 @@ class MainWindow(QMainWindow):
 
 def main():
     global myappid
-    myappid = 'v0.7.4'
+    myappid = 'v0.8.0'
 
     # 任务栏图标问题
     try:
