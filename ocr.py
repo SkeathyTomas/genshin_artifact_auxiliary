@@ -2,6 +2,9 @@
 
 from PIL import ImageGrab, Image
 import re
+from rapidocr_onnxruntime import RapidOCR
+
+ocr = RapidOCR(det_use_dml=True, rec_use_dml=True)
 
 def rapidocr(x, y, w, h):
     '''返回使用paddle ocr引擎识别及处理结果
@@ -16,20 +19,18 @@ def rapidocr(x, y, w, h):
             ['雷云之笼', '时之沙', '攻击力', '46.6%', '+20']
         result：副词条属性dict
             key：词条属性（含百分比差异说明）
-            value；词条数值
+            value：词条数值
             如：{'防御力': 23.0, '元素充能效率': 5.8, '暴击伤害': 5.4}
     '''
-    from rapidocr_onnxruntime import RapidOCR
 
     # 截屏与ocr识别
     img = ImageGrab.grab(bbox = (x, y, x + w, y + h))
     img.save('src/grab.png')
-    ocr = RapidOCR()
     result, elapse = ocr('src/grab.png', use_det=True, use_cls=False, use_rec=True)
     result = [item [1] for item in result]
 
     # 千位符（含误识别的.）兼容
-    pattern_thou = '\d\.\d{3}|\d\,\d{3}'
+    pattern_thou = r'\d\.\d{3}|\d\,\d{3}'
     txt = [re.sub(pattern_thou, item.replace(',', '').replace('.', ''), item) for item in result]
     print(txt)
 
@@ -41,8 +42,8 @@ def rapidocr(x, y, w, h):
     basic = [name, parts, main_name, main_digit, lvl]
 
     # 中文和数字正则
-    pattern_chinese = '[\u4e00-\u9fa5]+'
-    pattern_digit = '\d+(\.\d+)?'
+    pattern_chinese = r'[\u4e00-\u9fa5]+'
+    pattern_digit = r'\d+(\.\d+)?'
 
     result = {}
     for item in txt[-4:]:
@@ -91,7 +92,6 @@ if __name__ == '__main__':
     # ocr测试
     import time
     start = time.time()
-    # ppocr(x, y, w, h)
     rapidocr(x, y, w, h)
     end = time.time()
     print(end - start)

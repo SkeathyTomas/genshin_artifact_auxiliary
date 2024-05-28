@@ -446,7 +446,7 @@ class MainWindow(QMainWindow):
 
 def main():
     global myappid
-    myappid = 'v0.8.0'
+    myappid = 'v0.8.1'
 
     # 任务栏图标问题
     try:
@@ -456,7 +456,8 @@ def main():
         pass
 
     app = QApplication(sys.argv)
-    qdarktheme.setup_theme('light')
+    # qdarktheme.setup_theme('light')
+    app.setStyleSheet(qdarktheme.load_stylesheet("light"))
     window = MainWindow()
     window.show()
 
