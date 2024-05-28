@@ -2,12 +2,14 @@
 
 
 block_cipher = None
+from PyInstaller.utils.hooks import collect_dynamic_libs
+binaries= collect_dynamic_libs('onnxruntime', destdir='onnxruntime/capi')
 
 
 a = Analysis(
     ['app.py'],
     pathex=[],
-    binaries=[],
+    binaries=binaries,
     datas=[('src', 'src')],
     hiddenimports=[],
     hookspath=[],
