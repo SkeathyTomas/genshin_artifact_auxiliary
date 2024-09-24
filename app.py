@@ -2,7 +2,7 @@ import sys, os, requests, json
 import qdarktheme
 from pynput import keyboard
 
-import doc, location, ocr, score
+import doc, location, ocr, score, mona
 from extention import OutsideMouseManager, ExtendedComboBox
 from paste_window import PasteWindow
 
@@ -277,7 +277,7 @@ class MainWindow(QMainWindow):
             self.artifacts[self.type] = {k: v for k, v in dic_sorted}
             with open(doc.archive_path, 'w', encoding='utf-8') as fp:
                 json.dump(self.artifacts, fp, ensure_ascii=False)
-            import mona #保存一次更新一次mona格式的导出
+            mona.update() #保存一次更新一次mona格式的导出
         else:
             hint_txt = '未识别圣遗物，无结果保存~'
 
