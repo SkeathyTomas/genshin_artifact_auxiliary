@@ -175,6 +175,9 @@ class MainWindow(QMainWindow):
         # 数据插入模式
         self.insert = False
         self.insert_mode()
+        # 数据删除模式
+        self.delete = False
+        self.delete_mode()
 
     # 单选框面板选择事件
     def radiobtn_state(self, btn):
@@ -303,10 +306,14 @@ class MainWindow(QMainWindow):
                 for j in range(self.row):
                     if y >= self.yarray[j][0] and y <= self.yarray[j][1]:
                         print(self.character + 'detected')
-                        # 插入模式后移数据
                         self.id = j * self.col + i
+                        # 插入模式后移数据
                         if self.insert:
                             self.insert_data()
+                        # 删除模式前移数据
+                        if self.delete:
+                            self.delete_data()
+                            break
                         # ocr识别与结果返回并刷新主面板、贴图
                         self.id = j * self.col + i
                         self.artifact[str(self.id)] = ocr.rapidocr(self.x_grab, self.y_grab, self.w_grab, self.h_grab)
@@ -314,23 +321,6 @@ class MainWindow(QMainWindow):
                         self.fresh_paste_window()
                         break
                 break
-
-    # 插入模式后移数据
-    def insert_data(self):
-        old = {}
-        for key in self.artifact:
-            if eval(key) >= self.id:
-                new = self.artifact[key]
-                self.artifact[key] = old
-                old = new
-        self.artifact[str(len(self.artifact))] = old
-        print(self.artifact)
-        # 贴图需要刷新
-        for key in self.artifact:
-            if eval(key) > self.id:
-                self.id = eval(key)
-                self.score_result = score.cal_score(self.artifact[str(self.id)][1], self.config)
-                self.fresh_paste_window()
 
     # 根据鼠标左键选择的圣遗物刷新主窗口圣遗物副属性和评分
     def left_click_artifact(self, x, y):
@@ -374,7 +364,7 @@ class MainWindow(QMainWindow):
                 self.score[i].setText('0')
                 self.strengthen[i].setText("+0")
 
-    # 刷新圣遗物贴图（识别、修改后确认、加载本地数据,后于主面板更新）
+    # 刷新圣遗物贴图（识别、修改后确认、加载本地数据，后于主面板更新）
     def fresh_paste_window(self):
         self.pastes[self.id].label.setText(str(self.score_result[1]))
         self.pastes[self.id].show()
@@ -442,7 +432,58 @@ class MainWindow(QMainWindow):
 
         l = keyboard.Listener(on_press=on_press, on_release=on_release)
         l.start()
+    
+    # 插入模式后移数据
+    def insert_data(self):
+        old = {}
+        for key in self.artifact:
+            if eval(key) >= self.id:
+                new = self.artifact[key]
+                self.artifact[key] = old
+                old = new
+        self.artifact[str(len(self.artifact))] = old
+        print(self.artifact)
+        # 贴图需要刷新
+        for key in self.artifact:
+            if eval(key) > self.id:
+                self.id = eval(key)
+                self.score_result = score.cal_score(self.artifact[str(self.id)][1], self.config)
+                self.fresh_paste_window()
 
+    # 左Ctrl键删除数据模式，清空目标位置的数据，之后的圣遗物前移一位，一般用于尾部
+    def delete_mode(self):
+        def on_press(key):
+            if not self.delete and key == keyboard.Key.ctrl_l:
+                print('delete start!')
+                self.delete = True
+                self.upgrade.setText('删除模式')
+
+        def on_release(key):
+            if key == keyboard.Key.ctrl_l:
+                print('delete end!')
+                self.delete = False
+                self.upgrade.setText(myappid)
+
+        l = keyboard.Listener(on_press=on_press, on_release=on_release)
+        l.start()
+
+    # 删除模式前移数据
+    def delete_data(self):
+        for key in self.artifact:
+            if key == list(self.artifact.keys())[-1]:
+                self.artifact.pop(key, None)
+                self.pastes[eval(key)].hide()
+                break
+            if eval(key) >= self.id:
+                self.artifact[key] = self.artifact[list(self.artifact.keys())[eval(key) + 1]]
+        print(self.artifact)
+        # 主面板贴图需要刷新
+        self.fresh_main_window()
+        for key in self.artifact:
+            if eval(key) >= self.id:
+                self.id = eval(key)
+                self.score_result = score.cal_score(self.artifact[str(self.id)][1], self.config)
+                self.fresh_paste_window()
 
 def main():
     global myappid
