@@ -32,17 +32,18 @@ class MainWindow(QMainWindow):
         self.setFocusPolicy(Qt.StrongFocus)
         self.move(0, 0)
 
-        # 默认坐标信息-角色B
-        self.position = location.position_B
-        self.row, self.col = location.row_B, location.col_B
-        self.xarray, self.yarray = location.xarray_B, location.yarray_B
-        self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.x_grab_B, location.y_grab_B, location.w_grab_B, location.h_grab_B
+        # 默认坐标信息-背包A
+        self.position = location.position_A
+        self.row, self.col = location.row_A, location.col_A
+        self.xarray, self.yarray = location.xarray_A, location.yarray_A
+        self.x_grab, self.y_grab, self.w_grab, self.h_grab = location.x_grab_A, location.y_grab_A, location.w_grab_A, location.h_grab_A
         self.SCALE = location.SCALE
 
         # 预先设定好贴图窗口组&每一个窗口的圣遗物数据
         self.pastes = []
         self.id = -1
-        # 当前屏幕中圣遗物坐标及副词条dict，{'0': {'暴击率': 2.0}, '2': {'暴击伤害': 4.0}}
+        # 当前屏幕中圣遗物坐标、名称、主词条、副词条dict，如：
+        # {"0": [["月女的华彩", "生之花", "生命值", "4780", "+20"], {"元素充能效率": 23.3, "防御力百分比": 7.3, "生命值百分比": 9.9, "元素精通": 40.0}]}
         self.artifact = {}
         self.score_result = [[0, 0, 0, 0], 0]
         for i in range(self.row * self.col):
@@ -51,10 +52,10 @@ class MainWindow(QMainWindow):
             self.pastes[i].move(self.position[i][0] / self.SCALE, self.position[i][1] / self.SCALE)
 
         # 背包/角色面板选择（Radio）
-        self.radiobtn1 = QRadioButton('角色')
+        self.radiobtn1 = QRadioButton('背包')
         self.radiobtn1.setChecked(True)
-        self.radiobtn2 = QRadioButton('背包')
-        self.type = '角色'
+        self.radiobtn2 = QRadioButton('角色')
+        self.type = '背包'
 
         # 默认角色及配置
         self.character = '默认攻击双爆'
@@ -92,7 +93,7 @@ class MainWindow(QMainWindow):
         self.score_total = QLabel('0')
 
         # 评分方案本地保存，选择框、保存确认按钮
-        self.archive = ExtendedComboBox()
+        self.archive = ExtendedComboBox() # 一屏圣遗物结果保存结果选择框
         self.archive.setEditable(True)
         self.archive.addItem('----保存此屏结果请输入名称----')
         with open(doc.archive_path, 'r', encoding='utf-8') as fp:
@@ -316,7 +317,7 @@ class MainWindow(QMainWindow):
                             break
                         # ocr识别与结果返回并刷新主面板、贴图
                         self.id = j * self.col + i
-                        self.artifact[str(self.id)] = ocr.rapidocr(self.x_grab, self.y_grab, self.w_grab, self.h_grab)
+                        self.artifact[str(self.id)] = list(ocr.rapidocr(self.x_grab, self.y_grab, self.w_grab, self.h_grab))
                         self.fresh_main_window()
                         self.fresh_paste_window()
                         break
@@ -369,6 +370,13 @@ class MainWindow(QMainWindow):
         self.pastes[self.id].label.setText(str(self.score_result[1]))
         self.pastes[self.id].show()
 
+    # 推荐圣遗物，贴图底色突出
+    def recommend_paste(self):
+        qss = 'background-color: rgb(0, 255, 0)'
+        for item in self.artifact:
+            item
+        self.pastes[self.id].label.setStyleSheet(qss)
+        
     # 重置圣遗物数据&贴图窗口&主程序窗口
     def reset(self):
         # 主程序重置
