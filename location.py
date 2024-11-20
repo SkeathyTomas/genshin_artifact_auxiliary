@@ -22,22 +22,13 @@ while(not window):
     window = window_sc or window_start
     time.sleep(5)
 left, top, right, bottom = win32gui.GetWindowRect(window)
-# try:
-#     # print(win32gui.GetClassName(window))
-#     left, top, right, bottom = win32gui.GetWindowRect(window)
-# except:
-#     print('未检测到游戏窗口，正在检测云游戏窗口……')
-#     window_title = 'start云游戏'
-#     window = win32gui.FindWindow(None, window_title)
-#     try:
-#         left, top, right, bottom = win32gui.GetWindowRect(window)
-#     except:
-#         left, top, right, bottom = (0, 0, 1920, 1100)
-# print(f'窗口坐标{left, top, right, bottom}')
-w_left = left * SCALE
-w_top = top * SCALE
-w_width = (right - left - 3) * SCALE
-w_hight = (bottom - top - 26) * SCALE
+print(f'修正前窗口x,y,w,h{left, top, right, bottom}')
+
+# 缩放、标题栏修正
+w_left = (left + 7) * SCALE
+w_top = (top + 31) * SCALE
+w_width = (right - left - 14) * SCALE
+w_hight = (bottom - top - 38) * SCALE
 print(f'窗口x,y,w,h{w_left, w_top, w_width, w_hight}')
 if w_hight != 0:
     ratio = w_width / w_hight
@@ -59,14 +50,14 @@ if ratio > 1.55 and ratio < 1.65:
 
 # 16:9窗口模式
 elif ratio > 1.7 and ratio < 1.8:
-    x_initial_A, y_initial_A, x_offset_A, y_offset_A = (224 / 1920 * w_width + w_left, (289 - 36) / 1080 * w_hight + SCALE * 24 + w_top, 146 / 1920 * w_width, 175 / 1080 * w_hight)
-    x_left_A, x_right_A, y_top_A, y_bottom_A = (121 / 1920 * w_width + w_left, 246 / 1920 * w_width + w_left, (157 - 36) / 1080 * w_hight + SCALE * 24 + w_top, (311 - 36) / 1080 * w_hight + SCALE * 24 + w_top)
-    x_grab_A, y_grab_A, w_grab_A, h_grab_A = (1334 / 1920 * w_width + w_left, (161 - 36) / 1080 * w_hight + SCALE * 24 + w_top, (450 - 50) / 1920 * w_width, 506 / 1080 * w_hight)
+    x_initial_A, y_initial_A, x_offset_A, y_offset_A = (226 / 1920 * w_width + w_left, 317 / 1080 * w_hight + w_top, 146 / 1920 * w_width, 175 / 1080 * w_hight)
+    x_left_A, x_right_A, y_top_A, y_bottom_A = (117 / 1920 * w_width + w_left, 242 / 1920 * w_width + w_left, 179 / 1080 * w_hight + w_top, 333 / 1080 * w_hight + w_top)
+    x_grab_A, y_grab_A, w_grab_A, h_grab_A = (1331 / 1920 * w_width + w_left, 125 / 1080 * w_hight + w_top, 450 / 1920 * w_width, 506 / 1080 * w_hight)
     row_A, col_A = (5, 8)
 
-    x_initial_B, y_initial_B, x_offset_B, y_offset_B = (144 / 1920 * w_width + w_left, (293 - 36) / 1080 * w_hight + SCALE * 24 + w_top, 142 / 1920 * w_width, 168 / 1080 * w_hight)
-    x_left_B, x_right_B, y_top_B, y_bottom_B = (39 / 1920 * w_width + w_left, 166 / 1920 * w_width + w_left, (162 - 36) / 1080 * w_hight + SCALE * 24 + w_top, (315 - 36) / 1080 * w_hight + SCALE * 24 + w_top)
-    x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1460 / 1920 * w_width + w_left, (147 - 36) / 1080 * w_hight + SCALE * 24 + w_top, 413 / 1920 * w_width, 378 / 1080 * w_hight)
+    x_initial_B, y_initial_B, x_offset_B, y_offset_B = (147 / 1920 * w_width + w_left, 261 / 1080 * w_hight + w_top, 142 / 1920 * w_width, 168 / 1080 * w_hight)
+    x_left_B, x_right_B, y_top_B, y_bottom_B = (37 / 1920 * w_width + w_left, 164 / 1920 * w_width + w_left, 125 / 1080 * w_hight + w_top, 278 / 1080 * w_hight + w_top)
+    x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1461 / 1920 * w_width + w_left, 111 / 1080 * w_hight + w_top, 413 / 1920 * w_width, 378 / 1080 * w_hight)
     row_B, col_B = (5, 4)
 
 # 3:2窗口模式
@@ -83,15 +74,15 @@ elif ratio > 1.45 and ratio < 1.55:
 
 else:
     print('请将游戏显示模式调至1920*1080窗口，然后重启软件')
-    x_initial_A, y_initial_A, x_offset_A, y_offset_A = (300 / 2560 * w_width + w_left, (386 - 48) / 1600 * w_hight + SCALE * 24 + w_top, 195 / 2560 * w_width, 234 / 1600 * w_hight) # 第一个贴图坐标，y需要根据SCALE的标题栏高度做偏移
-    x_left_A, x_right_A, y_top_A, y_bottom_A = (161 / 2560 * w_width + w_left, 326 / 2560 * w_width + w_left, (208 - 48) / 1600 * w_hight + SCALE * 24 + w_top, (412 - 48) / 1600 * w_hight + SCALE * 24 + w_top) # 第一个圣遗物坐标
-    x_grab_A, y_grab_A, w_grab_A, h_grab_A = (1808 / 2560 * w_width + w_left, (677 - 48) / 1600 * w_hight + SCALE * 24 + w_top, 377 / 2560 * w_width, 214 / 1600 * w_hight) # 截图x, y, w, h，y需要根据SCALE的标题栏高度做适配
-    row_A, col_A = (6, 8) #圣遗物行列数
+    x_initial_A, y_initial_A, x_offset_A, y_offset_A = (226 / 1920 * w_width + w_left, 317 / 1080 * w_hight + w_top, 146 / 1920 * w_width, 175 / 1080 * w_hight)
+    x_left_A, x_right_A, y_top_A, y_bottom_A = (117 / 1920 * w_width + w_left, 242 / 1920 * w_width + w_left, 179 / 1080 * w_hight + w_top, 333 / 1080 * w_hight + w_top)
+    x_grab_A, y_grab_A, w_grab_A, h_grab_A = (1331 / 1920 * w_width + w_left, 125 / 1080 * w_hight + w_top, 450 / 1920 * w_width, 506 / 1080 * w_hight)
+    row_A, col_A = (5, 8)
 
-    x_initial_B, y_initial_B, x_offset_B, y_offset_B = (198 / 2560 * w_width + w_left, (397 - 48) / 1600 * w_hight + SCALE * 24 + w_top, 189 / 2560 * w_width, 225 / 1600 * w_hight)
-    x_left_B, x_right_B, y_top_B, y_bottom_B = (52 / 2560 * w_width + w_left, 220 / 2560 * w_width + w_left, (215 -48) / 1600 * w_hight + SCALE * 24 + w_top, (419 - 48) / 1600 * w_hight + SCALE * 24 + w_top)
-    x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1983 / 2560 * w_width + w_left, (510 - 48) / 1600 * w_hight + SCALE * 24 + w_top, 334 / 2560 * w_width, 190 / 1600 * w_hight)
-    row_B, col_B = (6, 4)
+    x_initial_B, y_initial_B, x_offset_B, y_offset_B = (147 / 1920 * w_width + w_left, 261 / 1080 * w_hight + w_top, 142 / 1920 * w_width, 168 / 1080 * w_hight)
+    x_left_B, x_right_B, y_top_B, y_bottom_B = (37 / 1920 * w_width + w_left, 164 / 1920 * w_width + w_left, 125 / 1080 * w_hight + w_top, 278 / 1080 * w_hight + w_top)
+    x_grab_B, y_grab_B, w_grab_B, h_grab_B = (1461 / 1920 * w_width + w_left, 111 / 1080 * w_hight + w_top, 413 / 1920 * w_width, 378 / 1080 * w_hight)
+    row_B, col_B = (5, 4)
 
 # 贴图坐标组
 position_A = []
