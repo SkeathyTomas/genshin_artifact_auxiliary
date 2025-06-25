@@ -33,13 +33,13 @@
 
 ### 如果你需要直接运行 python 程序
 
-1. Python 3.7~3.12 (作者开发环境 Python 3.12.3)。
+1. Python 3.7~3.13 (作者开发环境 Python 3.13.5)。
 2. 必备的Python包：
    1. PySide6，GUI 框架
    2. pynput，监听游戏窗口内鼠标操作
    3. pywin32，获取设备分辨率、缩放信息，用于兼容不同分辨率
    4. pyqtdarktheme，GUI 样式，使用了 0.1.7 老版本，新版本有兼容性问题
-   5. rapidocr-onnxruntime，paddleocr 使用 onnx 模型接口，需另外安装 onnxruntime-directml 使用 GPU 加速，详见 rapidocr 文档
+   5. rapidocr，paddleocr 使用 onnx 模型接口，需另外安装 onnxruntime-directml 使用 GPU 加速，详见 rapidocr 文档
    6. requests，新版本提醒
 
 ### 使用打包好的 exe 程序

@@ -59,7 +59,7 @@ if ratio > 1.55 and ratio < 1.65:
 elif ratio > 1.7 and ratio < 1.8:
     x_initial_A, y_initial_A, x_offset_A, y_offset_A = (226 / 1920 * w_width + w_left, 317 / 1080 * w_hight + w_top, 146 / 1920 * w_width, 175 / 1080 * w_hight)
     x_left_A, x_right_A, y_top_A, y_bottom_A = (117 / 1920 * w_width + w_left, 242 / 1920 * w_width + w_left, 179 / 1080 * w_hight + w_top, 333 / 1080 * w_hight + w_top)
-    x_grab_A, y_grab_A, w_grab_A, h_grab_A = (1331 / 1920 * w_width + w_left, 125 / 1080 * w_hight + w_top, 450 / 1920 * w_width, 506 / 1080 * w_hight)
+    x_grab_A, y_grab_A, w_grab_A, h_grab_A = (1331 / 1920 * w_width + w_left, 120 / 1080 * w_hight + w_top, 450 / 1920 * w_width, 510 / 1080 * w_hight)
     row_A, col_A = (5, 8)
 
     x_initial_B, y_initial_B, x_offset_B, y_offset_B = (147 / 1920 * w_width + w_left, 261 / 1080 * w_hight + w_top, 142 / 1920 * w_width, 168 / 1080 * w_hight)

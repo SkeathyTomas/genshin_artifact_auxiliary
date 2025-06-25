@@ -2,11 +2,13 @@
 
 from PIL import ImageGrab, Image
 import re
-from rapidocr_onnxruntime import RapidOCR
+from rapidocr import RapidOCR, OCRVersion
 
-ocr = RapidOCR(det_use_dml=True, rec_use_dml=True)
+ocr = RapidOCR(params={"EngineConfig.onnxruntime.use_dml": True,
+                       "Det.ocr_version": OCRVersion.PPOCRV4,
+                       "Rec.ocr_version": OCRVersion.PPOCRV5})
 
-def rapidocr(x, y, w, h):
+def rapid_ocr(x, y, w, h):
     '''返回使用paddle ocr引擎识别及处理结果
     参数：
         x：截图坐标x
@@ -26,22 +28,39 @@ def rapidocr(x, y, w, h):
     # 截屏与ocr识别
     img = ImageGrab.grab(bbox = (x, y, x + w, y + h))
     img.save('src/grab.png')
-    result, elapse = ocr('src/grab.png', use_det=True, use_cls=False, use_rec=True)
-    result = [item [1] for item in result]
+    result = ocr('src/grab.png', use_det=True, use_cls=False, use_rec=True)
+    result.vis('src/out.png')
 
-    # 千位符（含误识别的.）兼容
+    # 千位符（含误识别的.）兼容并转化为list
     pattern_thou = r'\d\.\d{3}|\d\,\d{3}'
-    txt = [re.sub(pattern_thou, item.replace(',', '').replace('.', ''), item) for item in result]
+    txt = [re.sub(pattern_thou, item.replace(',', '').replace('.', ''), item) for item in result.txts]
     print(txt)
 
-    name = txt[0].replace('明威之', '明威之镡').replace('无边醋乐之笼', '无边酣乐之筵').replace('无边醋乐之筵', '无边酣乐之筵').replace('浮溯之玉', '浮溯之珏').replace('阳之遗', '阳辔之遗').replace('遮雷之姿', '虺雷之姿').replace('海祗之冠', '海祇之冠').replace('海低之冠', '海祇之冠').replace('海张之冠', '海祇之冠').replace('蛋笑之面', '嗤笑之面').replace('金铜时唇', '金铜时晷').replace('将帅兜', '将帅兜鍪').replace('雷灾的子遗', '雷灾的孑遗').replace('星罗圭璧之唇', '星罗圭璧之晷').replace('魔岩琢塑之樽', '巉岩琢塑之樽').replace('宗室银瓷', '宗室银瓮').replace('l笑之面', '嗤笑之面')
+    # ocr错误修正，并构建基础信息
+    name = txt[0]
+    ocr_correct = [['灵髓的根脈', '灵髓的根脉'],
+                   ['角斗士的酬醉', '角斗士的酣醉'],
+                   ['雷灾的子遗', '雷灾的孑遗'],
+                   ['傑作的序曲', '杰作的序曲'],
+                   ['康慨的墨水瓶', '慷慨的墨水瓶'],
+                   ['命途轮转的谐滤', '命途轮转的谐谑']]
+    for item in ocr_correct:
+        if name == item[0]:
+            name = name.replace(item[0], item[1])
+            break
     parts = txt[1]
     main_name = txt[2]
     main_digit = txt[3]
-    lvl = txt[4]
+    # 有时候「星星」会作为特殊符号被识别出来，需要兼容下
+    for i in range(5):
+        if '+' not in txt[i+4]:
+            continue
+        else:
+            lvl = txt[i+4]
+            break
     basic = [name, parts, main_name, main_digit, lvl]
 
-    # 中文和数字正则
+    # 副词条构建，中文和数字正则
     pattern_chinese = r'[\u4e00-\u9fa5]+'
     pattern_digit = r'\d+(\.\d+)?'
 
@@ -50,7 +69,7 @@ def rapidocr(x, y, w, h):
         try:
             # 词条名称
             name = re.findall(pattern_chinese, item)
-            name = name[0]
+            name = name[0] # 末尾可能识别出奇怪的中文字符，所以以第一个搜索到的中文字符串为准
             # 数值
             digit = float(re.search(pattern_digit, item).group())
             # 兼容千位符
@@ -92,7 +111,7 @@ if __name__ == '__main__':
     # ocr测试
     import time
     start = time.time()
-    rapidocr(x, y, w, h)
+    rapid_ocr(x, y, w, h)
     end = time.time()
     print(end - start)
     

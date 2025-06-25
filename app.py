@@ -317,7 +317,7 @@ class MainWindow(QMainWindow):
                             break
                         # ocr识别与结果返回并刷新主面板、贴图
                         self.id = j * self.col + i
-                        self.artifact[str(self.id)] = list(ocr.rapidocr(self.x_grab, self.y_grab, self.w_grab, self.h_grab))
+                        self.artifact[str(self.id)] = list(ocr.rapid_ocr(self.x_grab, self.y_grab, self.w_grab, self.h_grab))
                         self.fresh_main_window()
                         self.fresh_paste_window()
                         break
