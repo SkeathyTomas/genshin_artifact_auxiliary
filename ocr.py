@@ -5,7 +5,7 @@ import re
 from rapidocr import RapidOCR, OCRVersion
 
 ocr = RapidOCR(params={"EngineConfig.onnxruntime.use_dml": True,
-                       "Det.ocr_version": OCRVersion.PPOCRV4,
+                       "Det.ocr_version": OCRVersion.PPOCRV5,
                        "Rec.ocr_version": OCRVersion.PPOCRV5})
 
 def rapid_ocr(x, y, w, h):
@@ -65,11 +65,14 @@ def rapid_ocr(x, y, w, h):
     pattern_digit = r'\d+(\.\d+)?'
 
     result = {}
-    for item in txt[-4:]:
+    normal_name = ['攻击力', '生命值', '防御力', '元素精通', '元素充能效率', '暴击率', '暴击伤害']
+    for item in txt[-5:]:
         try:
             # 词条名称
             name = re.findall(pattern_chinese, item)
             name = name[0] # 末尾可能识别出奇怪的中文字符，所以以第一个搜索到的中文字符串为准
+            if name not in normal_name:
+                continue
             # 数值
             digit = float(re.search(pattern_digit, item).group())
             # 兼容千位符
@@ -98,7 +101,7 @@ def rapid_ocr(x, y, w, h):
             else:
                 result[item] = 0
         except:
-            result[item] = 0
+            pass
     
     print(basic, result)
     return basic, result

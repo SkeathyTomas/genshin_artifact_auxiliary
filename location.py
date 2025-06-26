@@ -47,7 +47,7 @@ else:
 if ratio > 1.55 and ratio < 1.65:
     x_initial_A, y_initial_A, x_offset_A, y_offset_A = (303 / 2560 * w_width + w_left, 424 / 1600 * w_hight + w_top, 195 / 2560 * w_width, 234 / 1600 * w_hight) # 第一个贴图坐标，y需要根据SCALE的标题栏高度做偏移
     x_left_A, x_right_A, y_top_A, y_bottom_A = (156 / 2560 * w_width + w_left, 321 / 2560 * w_width + w_left, 238 / 1600 * w_hight + w_top, 442 / 1600 * w_hight + w_top) # 第一个圣遗物坐标
-    x_grab_A, y_grab_A, w_grab_A, h_grab_A = (1776 / 2560 * w_width + w_left, 169 / 1600 * w_hight + w_top, 602 / 2560 * w_width, 677 / 1600 * w_hight) # 截图x, y, w, h，y需要根据SCALE的标题栏高度做适配
+    x_grab_A, y_grab_A, w_grab_A, h_grab_A = (1776 / 2560 * w_width + w_left, 169 / 1600 * w_hight + w_top, 602 / 2560 * w_width, 725 / 1600 * w_hight) # 截图x, y, w, h，y需要根据SCALE的标题栏高度做适配
     row_A, col_A = (5, 8) #圣遗物行列数
 
     x_initial_B, y_initial_B, x_offset_B, y_offset_B = (200 / 2560 * w_width + w_left, 355 / 1600 * w_hight + w_top, 189 / 2560 * w_width, 225 / 1600 * w_hight)
@@ -59,7 +59,7 @@ if ratio > 1.55 and ratio < 1.65:
 elif ratio > 1.7 and ratio < 1.8:
     x_initial_A, y_initial_A, x_offset_A, y_offset_A = (226 / 1920 * w_width + w_left, 317 / 1080 * w_hight + w_top, 146 / 1920 * w_width, 175 / 1080 * w_hight)
     x_left_A, x_right_A, y_top_A, y_bottom_A = (117 / 1920 * w_width + w_left, 242 / 1920 * w_width + w_left, 179 / 1080 * w_hight + w_top, 333 / 1080 * w_hight + w_top)
-    x_grab_A, y_grab_A, w_grab_A, h_grab_A = (1331 / 1920 * w_width + w_left, 120 / 1080 * w_hight + w_top, 450 / 1920 * w_width, 510 / 1080 * w_hight)
+    x_grab_A, y_grab_A, w_grab_A, h_grab_A = (1331 / 1920 * w_width + w_left, 120 / 1080 * w_hight + w_top, 450 / 1920 * w_width, 550 / 1080 * w_hight)
     row_A, col_A = (5, 8)
 
     x_initial_B, y_initial_B, x_offset_B, y_offset_B = (147 / 1920 * w_width + w_left, 261 / 1080 * w_hight + w_top, 142 / 1920 * w_width, 168 / 1080 * w_hight)
