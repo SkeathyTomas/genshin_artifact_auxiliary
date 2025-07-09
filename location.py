@@ -13,15 +13,16 @@ SCALE = width_r / width_s
 # 游戏窗口信息获取
 window_sc = win32gui.FindWindow('UnityWndClass', '原神')
 window_start = win32gui.FindWindow('START Cloud Game', 'START云游戏-Game')
-# print(win32gui.GetClassName(window_start))
 window = window_sc or window_start
+# 未检测到窗口时循环直到检测到窗口
 while(not window):
     print('未找到游戏窗口，请启动游戏！')
     window_sc = win32gui.FindWindow('UnityWndClass', '原神')
     window_start = win32gui.FindWindow('START Cloud Game', 'START云游戏-Game')
-    window = window_sc or window_start
     time.sleep(5)
+    window = window_sc or window_start
 left, top, right, bottom = win32gui.GetWindowRect(window)
+# left, top, right, bottom = (0, 0, 2560, 1600) # 游戏窗口不打开时后门，测试用
 print(f'修正前窗口left,top,right,bottom{left, top, right, bottom}')
 
 # 缩放、标题栏修正
