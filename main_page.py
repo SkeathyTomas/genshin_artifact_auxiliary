@@ -1,4 +1,5 @@
-# main_page.py
+'''主页面'''
+
 import requests, json
 from pynput import keyboard
 
@@ -7,7 +8,7 @@ from extention import OutsideMouseManager, ExtendedComboBox
 from paste_window import PasteWindow
 
 from PySide6.QtCore import Qt, QUrl, QTimer
-from PySide6.QtGui import QIcon, QPixmap, QDesktopServices
+from PySide6.QtGui import QPixmap, QDesktopServices
 from PySide6.QtWidgets import (
     QLabel, QPushButton, QWidget, QGridLayout,
     QRadioButton, QComboBox, QLineEdit
