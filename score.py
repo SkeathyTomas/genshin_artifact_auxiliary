@@ -1,18 +1,8 @@
 '''计算圣遗物评分、词条数、词条强化次数'''
 
-# 基础词条系数
-coefficient = {
-    '暴击率': 2,
-    '暴击伤害': 1,
-    '攻击力百分比': 1.331429,
-    '生命值百分比': 1.331429,
-    '防御力百分比': 1.066362,
-    '攻击力': 0.199146,
-    '生命值': 0.012995,
-    '防御力': 0.162676,
-    '元素精通': 0.332857,
-    '元素充能效率': 1.197943
-}
+import json
+from doc import coefficient_path  # 导入 coefficient_path
+
 # 平均单词条数值
 average = {
     '暴击率': 3.3,
@@ -26,6 +16,12 @@ average = {
     '元素精通': 19.75,
     '元素充能效率': 5.5
 }
+
+# 基础词条系数动态加载
+def load_coefficient():
+    with open(coefficient_path, "r", encoding = 'utf-8') as f:
+        return json.load(f)
+coefficient = load_coefficient()
 
 def cal_score(ocr_result_sub, config):
     '''计算圣遗物评分、词条数、词条强化次数
@@ -44,7 +40,7 @@ def cal_score(ocr_result_sub, config):
         round(entriesSum, 1): 有效词条数float
             4.5
     '''
-        
+    
     scores = []
     powerupArray = []
     sums = 0
